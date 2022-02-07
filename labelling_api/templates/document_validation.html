@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <title>mitera</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+   </head>
+   <body>
+      <section>
+         <div class="container">
+            <div class="alert alert-primary text-center my-4">
+               <h5>Military Technology Radar, more details: </h5>
+               <a href="https://taris.fkie.fraunhofer.de:8443/sri.sai.praveen.gadiyaram/technology_scouting_from_newsfeeds.git" target="_blank">Source code</a>
+            </div>
+            <div class="row justify-content-center">
+               <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+                  <div class="row">
+                     <div class="col text-center">
+                        <h3>Document validation</h3>
+                        <br>
+                     <br>
+                     </div>
+                  </div>
+
+                  <!-- <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+
+                     <form action="/remove_documents" method="POST" id='formid_1'>
+                     <div class="row align-items-center">
+                        <div class="form-group">
+                           <h5><label for="exampleFormControlTextarea1" class="font-weight-bold">Enter page ids with newline</label></h5>
+                           <textarea class="form-control" id="irrelevant_page_ids" rows="5" name="irrelevant_page_ids"></textarea>
+                        </div>
+                     </div>
+                     <div class="row align-items-center">
+                        <input type="submit" class="btn btn-primary mt-4" value="Mark Irrelevant" id="form-submit-1" name="form-submit-1">
+                     </div>
+                     <br>
+                     <br>
+                  </form>
+                  </div> -->
+                  <div class="row">
+                     <div class="col text-center">
+                        <h5>Document type: {{document_type}}</h5>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col text-center">
+                        <h5>Total No.of Documents: {{total_doc_cnt}}</h5>
+                     </div>
+                  </div>
+                  <!-- <form action="/load_subclass_details" method="POST" id='formid_2'>
+
+                  <div class="row align-items-center">
+                     <div class="col mt-12">
+                        <select class="form-select form-control" name="subclass" id="select-doc" aria-label="Default select example">
+                           {% for choice in sub_class_list %}
+                           <option value="{{choice}}">{{choice}}</option>
+                           {% endfor %}
+                        </select>
+                     </div>
+                  </div>
+                  <div class="row align-items-center">
+                     <input type="submit" class="btn btn-primary mt-4" value="Get subclass data" id="form-submit-2" name="form-submit-2">
+                  </div>
+               </form>
+                  <br>
+                  <br>
+               </div>
+               <div class="row">
+                  <div class="col text-center">
+                     <h5>Sub-class selected: {{subclass}}</h5>
+                  </div>
+               </div>
+               
+               <br>
+               <br> -->
+            </div>
+         </div>
+               {% for data in result_list %}
+               <div class ="col-12">
+                  <div class="card">
+                     <div class="card-header">
+                        <h5 class="card-title">{{data['page_id']}}</h5>
+                        <h5 class="card-title">{{data['title']}}</h5>
+                     </div>
+                     <div class="card-body">
+                        <p class="card-text">{{data['text']}}</p>
+                        <a href="{{data['page_url']}}" class="btn btn-primary"  target="_blank">source</a>
+                        <button type="button" class="btn btn-primary" onclick="add_relevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark relevant</button>
+                        <button type="button" class="btn btn-primary" onclick="remove_irrelevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark irrelevant</button>
+
+                     </div>
+                  </div>
+                  <br>
+               </div> 
+               
+                  {% endfor %}
+                  <br>
+                  <br>
+           
+      </section>
+      <script type="text/javascript">
+         async function remove_irrelevant_document(e) {
+          console.log(e.id);
+          console.log(e.value);
+         //  e.parents(".col-md-4").hide();
+         var parent = e.parentElement.parentElement;
+         parent.parentElement.removeChild(parent);
+
+         try {
+                var formData = new FormData();
+                formData.append('irrelevant_page_id', e.value)
+         
+                var response = await fetch('/mark_irrelevant', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                
+              let data = await response.json();
+                 data = JSON.parse(data)
+                console.log(data);
+                
+                
+            } catch (error) {
+                console.error(error);
+            }
+         }
+
+         async function add_relevant_document(e) {
+          console.log(e.id);
+          console.log(e.value);
+         //  e.parents(".col-md-4").hide();
+         var parent = e.parentElement.parentElement;
+         parent.parentElement.removeChild(parent);
+
+         try {
+                var formData = new FormData();
+                formData.append('relevant_page_id', e.value)
+         
+                var response = await fetch('/mark_relevant', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                
+              let data = await response.json();
+                 data = JSON.parse(data)
+                console.log(data);
+                
+                
+            } catch (error) {
+                console.error(error);
+            }
+         }
+
+      </script>
+   </body>
+</html>

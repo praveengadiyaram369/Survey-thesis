@@ -1,0 +1,30 @@
+############################# environment setup ##############################
+1) Install pipenv, if it is already not installed on your system.
+    pip3 install pipenv
+
+2) Create pipenv python environment.
+    pipenv --python 3.7.9
+
+3) Install libraries using below command.
+    pipenv shell   -- to open the pipenv terminal
+    pipenv install -- install all required libraries
+
+############################# starting the server ##############################
+
+1) Run below commands to start the server locally.
+    cd labelling_api
+    uvicorn app:app
+
+2) Access the UI at http://127.0.0.1:8000/.
+
+############################# environment creation ##############################
+
+1) Install pipenv, if it is already not installed on your system.
+    pip3 install pipenv
+
+2) Create pipenv python environment.
+    pipenv --python 3.7.9
+
+3) Install below libraries required for the project.
+    pipenv shell
+    pipenv install fastapi pydantic python-multipart starlette uvicorn jinja2
