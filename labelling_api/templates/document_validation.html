@@ -86,7 +86,8 @@
                      <div class="card-body">
                         <p class="card-text">{{data['text']}}</p>
                         <a href="{{data['page_url']}}" class="btn btn-primary"  target="_blank">source</a>
-                        <button type="button" class="btn btn-primary" onclick="add_relevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark relevant</button>
+                        <button type="button" class="btn btn-primary" onclick="add_tech_relevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark relevant to Technology</button>
+                        <button type="button" class="btn btn-primary" onclick="add_military_relevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark relevant to Military</button>
                         <button type="button" class="btn btn-primary" onclick="remove_irrelevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark irrelevant</button>
 
                      </div>
@@ -127,7 +128,7 @@
             }
          }
 
-         async function add_relevant_document(e) {
+         async function add_tech_relevant_document(e) {
           console.log(e.id);
           console.log(e.value);
          //  e.parents(".col-md-4").hide();
@@ -138,7 +139,7 @@
                 var formData = new FormData();
                 formData.append('relevant_page_id', e.value)
          
-                var response = await fetch('/mark_relevant', {
+                var response = await fetch('/mark_relevant_tech', {
                     method: 'POST',
                     body: formData
                 });
@@ -153,6 +154,34 @@
                 console.error(error);
             }
          }
+
+         async function add_military_relevant_document(e) {
+          console.log(e.id);
+          console.log(e.value);
+         //  e.parents(".col-md-4").hide();
+         var parent = e.parentElement.parentElement;
+         parent.parentElement.removeChild(parent);
+
+         try {
+                var formData = new FormData();
+                formData.append('relevant_page_id', e.value)
+         
+                var response = await fetch('/mark_relevant_milt', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                
+              let data = await response.json();
+                 data = JSON.parse(data)
+                console.log(data);
+                
+                
+            } catch (error) {
+                console.error(error);
+            }
+         }
+
 
       </script>
    </body>

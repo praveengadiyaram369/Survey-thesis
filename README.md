@@ -4,4 +4,4 @@ This project contains the setup for the Web interface to annotate unlabeled docu
 
 # project setup
 
-Follow the environment setups mentioned in the file conf/environment_setup.txt
+Follow the environment steps mentioned in the file conf/environment_setup.txt
