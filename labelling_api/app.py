@@ -39,6 +39,18 @@ async def validate_military(request: Request):
 
     return templates.TemplateResponse('document_validation.html', context={'request': request, 'total_doc_cnt': total_doc_cnt,  'result_list': result_list, 'document_type': document_type})
 
+@app.get("/validate_augdata")
+async def validate_augdata(request: Request):
+
+    global document_data, document_type, tech_relevant_document_data, milt_relevant_document_data, irrelevant_document_data
+    document_type = 'technology'
+    document_data, tech_relevant_document_data, milt_relevant_document_data, irrelevant_document_data = load_document_data(type=document_type)
+    result_list = get_subclass_data(key=None)
+    total_doc_cnt = get_total_documentcount()
+    print(result_list[:2])
+
+    return templates.TemplateResponse('validate_dataaug.html', context={'request': request, 'total_doc_cnt': total_doc_cnt,  'result_list': result_list, 'document_type': document_type})
+
 @app.post("/mark_irrelevant")
 async def mark_documents_irrelevant(request: Request, irrelevant_page_id: str=Form(1)):
 
@@ -58,6 +70,18 @@ async def mark_documents_relevant(request: Request, relevant_page_id: str=Form(1
     print(relevant_page_id)
     print(category_list)
     update_document_data(relevant_page_id, category_list, marked_document_type='military', type='relevant')
+
+@app.post("/accept_augdata")
+async def accept_augdata(request: Request, aug_page_id: str=Form(1)):
+
+    print(aug_page_id)
+    # update_document_data(irrelevant_page_id, None, marked_document_type='irrelevant', type='irrelevant')
+
+@app.post("/reject_data")
+async def reject_data(request: Request, aug_page_id: str=Form(1)):
+
+    print(aug_page_id)
+    # update_document_data(irrelevant_page_id, None, marked_document_type='irrelevant', type='irrelevant')
 
 @app.get("/validate_irrelevant")
 async def validate_irrelevant(request: Request):

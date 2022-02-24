@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <title>mitera</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+   </head>
+   <body>
+      <section>
+         <div class="container">
+            <div class="alert alert-primary text-center my-4">
+               <h5>Military Technology Radar, more details: </h5>
+               <a href="https://taris.fkie.fraunhofer.de:8443/sri.sai.praveen.gadiyaram/technology_scouting_from_newsfeeds.git" target="_blank">Source code</a>
+            </div>
+            <div class="row justify-content-center">
+               <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+                  <div class="row">
+                     <div class="col text-center">
+                        <h3>Augmented Data Validation</h3>
+                        <br>
+                     </div>
+                  </div>
+
+                
+                  <div class="row">
+                     <div class="col text-center">
+                        <h5>Document type: {{document_type}}</h5>
+                     </div>
+                  </div>
+                  <div class="row">
+                     <div class="col text-center">
+                        <h5>Total No.of Documents: {{total_doc_cnt}}</h5>
+                     </div>
+                  </div>
+                  <br>
+                 
+            </div>
+         </div>
+               {% for data in result_list %}
+               <div class ="row">
+                <div class="col-md-6">
+                  <div class="card">
+                     <div class="card-header">
+                        <h5 class="card-title">Original Text</h5>
+                        <h5 class="card-title">{{data['title']}}</h5>
+                     </div>
+                     <div class="card-body">
+                        <p class="card-text">{{data['text']}}</p>
+                        <a href="{{data['page_url']}}" class="btn btn-primary"  target="_blank">source</a>
+                     </div>
+                  </div>
+                </div>
+
+                <div class="col-md-6">
+                  <div class="card">
+                    <div class="card-header">
+                       <h5 class="card-title">Augmented Text</h5>
+                    </div>
+                    <div class="card-body">
+                       <p class="card-text">{{data['text']}}</p>
+                       <button type="button" class="btn btn-primary" onclick="accept_data(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Accept</button>
+                       <button type="button" class="btn btn-primary" onclick="reject_data(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Reject</button>
+
+                    </div>
+                 </div>
+                </div>
+                  <br>
+               </div> 
+               <br>
+               
+                  {% endfor %}
+                  <br>
+                  <br>
+           
+      </section>
+      <script type="text/javascript">
+         async function accept_data(e) {
+
+         var parent = e.parentElement.parentElement.parentElement.parentElement;
+         console.log(parent)
+         parent.parentElement.removeChild(parent);
+
+         try {
+                var formData = new FormData();
+                formData.append('page_id', e.value)
+         
+                var response = await fetch('/accept_augdata', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                
+              let data = await response.json();
+                 data = JSON.parse(data)
+                console.log(data);
+                
+                
+            } catch (error) {
+                console.error(error);
+            }
+         }
+
+         async function reject_data(e) {
+
+         var parent = e.parentElement.parentElement.parentElement.parentElement;
+         console.log(parent)
+         parent.parentElement.removeChild(parent);
+
+         try {
+            var formData = new FormData();
+                formData.append('page_id', e.value)
+         
+                var response = await fetch('/reject_augdata', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                
+              let data = await response.json();
+                 data = JSON.parse(data)
+                console.log(data);
+                
+            } catch (error) {
+                console.error(error);
+            }
+         }
+
+
+      </script>
+   </body>
+</html>
