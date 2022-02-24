@@ -129,26 +129,35 @@
          }
 
          async function add_tech_relevant_document(e) {
-          console.log(e.id);
-          console.log(e.value);
-         //  e.parents(".col-md-4").hide();
-         var parent = e.parentElement.parentElement;
-         parent.parentElement.removeChild(parent);
+
 
          try {
-                var formData = new FormData();
-                formData.append('relevant_page_id', e.value)
-         
-                var response = await fetch('/mark_relevant_tech', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                
-              let data = await response.json();
-                 data = JSON.parse(data)
-                console.log(data);
-                
+                var category_list = prompt("Enter relevant categories with comma separated ..","Add");
+                if(category_list == null){
+                  alert('Mark relevant action is cancelled..')
+                  return;
+                } else {
+                  console.log(e.id);
+                  console.log(e.value);
+                  //  e.parents(".col-md-4").hide();
+                  var parent = e.parentElement.parentElement;
+                  parent.parentElement.removeChild(parent);
+                  
+                  var formData = new FormData();
+                  formData.append('relevant_page_id', e.value)
+                  formData.append('category_list', category_list)
+            
+                  var response = await fetch('/mark_relevant_tech', {
+                     method: 'POST',
+                     body: formData
+                  });
+                  
+                  
+               let data = await response.json();
+                  data = JSON.parse(data)
+                  console.log(data);
+                  
+                }
                 
             } catch (error) {
                 console.error(error);
@@ -156,27 +165,34 @@
          }
 
          async function add_military_relevant_document(e) {
-          console.log(e.id);
-          console.log(e.value);
-         //  e.parents(".col-md-4").hide();
-         var parent = e.parentElement.parentElement;
-         parent.parentElement.removeChild(parent);
 
-         try {
-                var formData = new FormData();
-                formData.append('relevant_page_id', e.value)
-         
-                var response = await fetch('/mark_relevant_milt', {
-                    method: 'POST',
-                    body: formData
-                });
-                
-                
-              let data = await response.json();
-                 data = JSON.parse(data)
-                console.log(data);
-                
-                
+            try {
+            var category_list = prompt("Enter relevant categories with comma separated ..","Add");
+                if(category_list == null){
+                  alert('Mark relevant action is cancelled..')
+                  return;
+                } else {
+                  console.log(e.id);
+                  console.log(e.value);
+                  //  e.parents(".col-md-4").hide();
+                  var parent = e.parentElement.parentElement;
+                  parent.parentElement.removeChild(parent);
+                  
+                  var formData = new FormData();
+                  formData.append('relevant_page_id', e.value)
+                  formData.append('category_list', category_list)
+            
+                  var response = await fetch('/mark_relevant_milt', {
+                     method: 'POST',
+                     body: formData
+                  });
+                  
+                  
+               let data = await response.json();
+                  data = JSON.parse(data)
+                  console.log(data);
+                  
+                }
             } catch (error) {
                 console.error(error);
             }
