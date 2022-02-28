@@ -1,4 +1,4 @@
-############################# environment setup ##############################
+############################# environment setup -- python ##############################
 1) Install pipenv, if it is already not installed on your system.
     pip3 install pipenv
 
@@ -9,13 +9,34 @@
     pipenv shell   -- to open the pipenv terminal
     pipenv install -- install all required libraries
 
-############################# starting the server ##############################
+############################# starting the server -- python ##############################
 
 1) Run below commands to start the server locally.
     cd labelling_api
     uvicorn app:app
 
 2) Access the UI at http://127.0.0.1:8000/.
+
+############################# environment setup -- Docker ##############################
+
+1) Update volumes configuration inside docker-compose-web.yml
+    - unzipped_folder_completepath:/usr/src/web_app/data
+
+2) Allow both read and write permissions on the unzipped_folder_completepath.
+
+3) Check whether proxy is needed or not and comment or uncomment the below configurations appropriately inside Dockerfile.web_app.
+
+    - http_proxy
+    - https_proxy
+    - no_proxy
+
+3) Build and start the docker image and container with below command.
+
+    build the image: docker-compose -f docker-compose-web.yml up --build
+    start the container: docker-compose -f docker-compose-web.yml up -d
+
+4) Access the server at below URI.
+    http://127.0.0.1:8080/
 
 ############################# environment creation ##############################
 

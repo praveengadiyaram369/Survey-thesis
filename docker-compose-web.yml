@@ -7,8 +7,8 @@ services:
     image: web_app:v1
     container_name: fastapi_webapp
     volumes: 
-      # - /home/mitera/rss_backup/210705_news/results:/usr/src/web_app/data
-      - C:/Users/sri.sai.praveen.gadi/Downloads/scraping_output/210705_news/data:/usr/src/web_app/data
+      - /home/mitera/rss_backup/210705_news/data:/usr/src/web_app/data
+      # - C:/Users/sri.sai.praveen.gadi/Downloads/scraping_output/210705_news/data:/usr/src/web_app/data
     ports:
       - 8080:8080
     expose:
