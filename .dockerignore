@@ -1,0 +1,20 @@
+# _folders
+.git
+.scrapy
+.ipynb_checkpoints
+
+# _file patterns
+*.7z
+*.log
+*.html
+*.pyc
+*.db
+
+# _project folders
+conf
+input
+Pipfile
+Pipfile.lock
+
+# _individual files
+README.md
