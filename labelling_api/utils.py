@@ -1,12 +1,14 @@
 import json
 import os
 
-technology_document_data_path = os.getcwd() + '/../data/input/technologie_document_data.json'
-military_document_data_path = os.getcwd() + '/../data/input/military_document_data.json'
+basepath = '/usr/src/web_app/data'
 
-relevant_technology_data_path = os.getcwd() + '/../data/output/relevant_documents_tech.json'
-relevant_military_data_path = os.getcwd() + '/../data/output/relevant_documents_milt.json'
-irrelevant_document_data_path = os.getcwd() + '/../data/output/irrelevant_documents.json'
+technology_document_data_path = basepath + '/input/technologie_document_data.json'
+military_document_data_path =   basepath + '/input/military_document_data.json'
+
+relevant_technology_data_path = basepath + '/output/relevant_documents_tech.json'
+relevant_military_data_path =   basepath + '/output/relevant_documents_milt.json'
+irrelevant_document_data_path = basepath + '/output/irrelevant_documents.json'
 
 def read_document_data(filepath):
 
