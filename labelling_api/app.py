@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 
 from utils import *
 
-app = FastAPI(debug=True)
+app = FastAPI(debug=True, root_path="/mda")
 templates = Jinja2Templates(directory="templates/")
 
 document_type = None
