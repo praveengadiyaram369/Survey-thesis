@@ -24,7 +24,7 @@
 
                   <!-- <div class="col-12 col-md-8 col-lg-8 col-xl-6">
 
-                     <form action="/remove_documents" method="POST" id='formid_1'>
+                     <form action="/mda/remove_documents" method="POST" id='formid_1'>
                      <div class="row align-items-center">
                         <div class="form-group">
                            <h5><label for="exampleFormControlTextarea1" class="font-weight-bold">Enter page ids with newline</label></h5>
@@ -48,7 +48,7 @@
                         <h5>Total No.of Documents: {{total_doc_cnt}}</h5>
                      </div>
                   </div>
-                  <!-- <form action="/load_subclass_details" method="POST" id='formid_2'>
+                  <!-- <form action="/mda/load_subclass_details" method="POST" id='formid_2'>
 
                   <div class="row align-items-center">
                      <div class="col mt-12">
@@ -112,7 +112,7 @@
                 var formData = new FormData();
                 formData.append('irrelevant_page_id', e.value)
          
-                var response = await fetch('/mark_irrelevant', {
+                var response = await fetch('/mda/mark_irrelevant', {
                     method: 'POST',
                     body: formData
                 });
@@ -147,7 +147,7 @@
                   formData.append('relevant_page_id', e.value)
                   formData.append('category_list', category_list)
             
-                  var response = await fetch('/mark_relevant_tech', {
+                  var response = await fetch('/mda/mark_relevant_tech', {
                      method: 'POST',
                      body: formData
                   });
@@ -182,7 +182,7 @@
                   formData.append('relevant_page_id', e.value)
                   formData.append('category_list', category_list)
             
-                  var response = await fetch('/mark_relevant_milt', {
+                  var response = await fetch('/mda/mark_relevant_milt', {
                      method: 'POST',
                      body: formData
                   });

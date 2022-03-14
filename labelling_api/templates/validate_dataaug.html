@@ -84,7 +84,7 @@
                 var formData = new FormData();
                 formData.append('page_id', e.value)
          
-                var response = await fetch('/accept_augdata', {
+                var response = await fetch('/mda/accept_augdata', {
                     method: 'POST',
                     body: formData
                 });
@@ -110,7 +110,7 @@
             var formData = new FormData();
                 formData.append('page_id', e.value)
          
-                var response = await fetch('/reject_augdata', {
+                var response = await fetch('/mda/reject_augdata', {
                     method: 'POST',
                     body: formData
                 });
