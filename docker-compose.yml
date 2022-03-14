@@ -1,0 +1,24 @@
+version: '3.8'
+
+networks:
+  backend:
+  public_frontend:
+    external: true
+
+services:
+  mda-webapp:
+    build: 
+      context: ./
+      dockerfile: Dockerfile
+    command: ["uvicorn", "app:app", "--root-path", "/mda", "--host", "0.0.0.0", "--port", "8080"]
+    image: mda-webapp:latest
+    volumes: 
+      - /mnt/data/mitera-osint/data:/usr/src/web_app/data
+      # - C:/Users/sri.sai.praveen.gadi/Downloads/scraping_output/210705_news/data:/usr/src/web_app/data
+    networks:
+      - public_frontend
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.mda.rule=PathPrefix(`/mda`)"
+      - "traefik.http.routers.mda.middlewares=strip-mda@docker"
+      - "traefik.http.middlewares.strip-mda.stripprefix.prefixes=/mda"
