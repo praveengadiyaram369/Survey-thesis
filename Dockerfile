@@ -1,8 +1,8 @@
 # syntax=docker/dockerfile:experimental
 FROM python:3.7-slim
 
-# HEALTHCHECK --interval=60s --timeout=5s --retries=3 --start-period=10s CMD wget --no-proxy -O - -q localhost:8080
-HEALTHCHECK NONE
+HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget --no-proxy -O - -q localhost:8080
+# HEALTHCHECK NONE
 
 ENV http_proxy=http://www-proxy.fkie.fraunhofer.de:3128/
 ENV https_proxy=http://www-proxy.fkie.fraunhofer.de:3128/
