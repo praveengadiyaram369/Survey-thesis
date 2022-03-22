@@ -10,6 +10,8 @@ relevant_technology_data_path = basepath + '/output/relevant_documents_tech.json
 relevant_military_data_path =   basepath + '/output/relevant_documents_milt.json'
 irrelevant_document_data_path = basepath + '/output/irrelevant_documents.json'
 
+classified_pos_docs_path = basepath + '/input/predicted_unlabeled_docs.json'
+
 def read_document_data(filepath):
 
     try:

@@ -87,6 +87,15 @@ async def reject_data(request: Request, aug_page_id: str=Form(1)):
 async def validate_irrelevant(request: Request):
     return templates.TemplateResponse('index.html', context={'request': request})
 
+@app.get("/validate_pos_docs")
+async def validate_pos_docs(request: Request):
+
+    data_dict = read_document_data(classified_pos_docs_path)
+    result_list = []
+    for key, val in data_dict.items():
+        result_list.append(val)
+    return templates.TemplateResponse('pos_docs.html', context={'request': request, 'result_list': result_list})
+
 def update_document_data(page_id, category_list, marked_document_type, type):
 
     global document_data, tech_relevant_document_data, milt_relevant_document_data, irrelevant_document_data
