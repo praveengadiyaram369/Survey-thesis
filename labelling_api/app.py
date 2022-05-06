@@ -42,12 +42,12 @@ async def validate_military(request: Request):
 @app.get("/validate_augdata")
 async def validate_augdata(request: Request):
 
-    global document_data, document_type, tech_relevant_document_data, milt_relevant_document_data, irrelevant_document_data
-    document_type = 'technology'
-    document_data, tech_relevant_document_data, milt_relevant_document_data, irrelevant_document_data = load_document_data(type=document_type)
+    global document_data
+    document_type = 'aug_pos'
+    document_data = load_document_data(type=document_type)
     result_list = get_subclass_data(key=None)
     total_doc_cnt = get_total_documentcount()
-    print(result_list[:2])
+    print(result_list)
 
     return templates.TemplateResponse('validate_dataaug.html', context={'request': request, 'total_doc_cnt': total_doc_cnt,  'result_list': result_list, 'document_type': document_type})
 
@@ -75,13 +75,13 @@ async def mark_documents_relevant(request: Request, relevant_page_id: str=Form(1
 async def accept_augdata(request: Request, aug_page_id: str=Form(1)):
 
     print(aug_page_id)
-    # update_document_data(irrelevant_page_id, None, marked_document_type='irrelevant', type='irrelevant')
+    write_data_to_file(aug_docs_path, 'accepted:'+aug_page_id)
 
-@app.post("/reject_data")
+@app.post("/reject_augdata")
 async def reject_data(request: Request, aug_page_id: str=Form(1)):
 
     print(aug_page_id)
-    # update_document_data(irrelevant_page_id, None, marked_document_type='irrelevant', type='irrelevant')
+    write_data_to_file(aug_docs_path, 'rejected:'+aug_page_id)
 
 @app.get("/validate_irrelevant")
 async def validate_irrelevant(request: Request):
@@ -95,6 +95,12 @@ async def validate_pos_docs(request: Request):
     for key, val in data_dict.items():
         result_list.append(val)
     return templates.TemplateResponse('pos_docs.html', context={'request': request, 'result_list': result_list})
+
+@app.post("/add_document_thirdclass")
+async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
+
+    print(third_page_id)
+    write_data_to_file(third_class_docs_path, third_page_id)
 
 def update_document_data(page_id, category_list, marked_document_type, type):
 

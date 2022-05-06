@@ -16,7 +16,7 @@
                <div class="col-12 col-md-8 col-lg-8 col-xl-6">
                   <div class="row">
                      <div class="col text-center">
-                        <h3>Classified Positive Documents</h3>
+                        <h3>Classify Positive Documents</h3>
                         <br>
                      <br>
                      </div>
@@ -31,6 +31,7 @@
                      </div>
                      <div class="card-body">
                         <p class="card-text">{{data['text']}}</p>
+                        <button type="button" class="btn btn-primary" onclick="add_document_thirdclass(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Add to 3. Clsss(ND)</button>
                      </div>
                   </div>
                   <br>
@@ -41,6 +42,35 @@
                   <br>
            
       </section>
+      <script type="text/javascript">
+         async function add_document_thirdclass(e) {
+          console.log(e.id);
+          console.log(e.value);
+
+          var parent = e.parentElement.parentElement.parentElement;
+            console.log(parent)
+            parent.parentElement.removeChild(parent);
+
+         try {
+                var formData = new FormData();
+                formData.append('third_page_id', e.value)
+         
+                var response = await fetch('/mda/add_document_thirdclass', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                
+              let data = await response.json();
+                 data = JSON.parse(data)
+                console.log(data);
+                
+                
+            } catch (error) {
+                console.error(error);
+            }
+         }
+         </script>
      
    </body>
 </html>

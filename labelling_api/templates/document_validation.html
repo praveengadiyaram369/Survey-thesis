@@ -81,7 +81,7 @@
                   <div class="card">
                      <div class="card-header">
                         <h5 class="card-title">{{data['page_id']}}</h5>
-                        <h5 class="card-title">{{data['title']}}</h5>
+                        <!-- <h5 class="card-title">{{data['title']}}</h5> -->
                      </div>
                      <div class="card-body">
                         <p class="card-text">{{data['text']}}</p>
@@ -89,7 +89,6 @@
                         <button type="button" class="btn btn-primary" onclick="add_tech_relevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark relevant to Technology</button>
                         <button type="button" class="btn btn-primary" onclick="add_military_relevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark relevant to Military</button>
                         <button type="button" class="btn btn-primary" onclick="remove_irrelevant_document(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Mark irrelevant</button>
-
                      </div>
                   </div>
                   <br>

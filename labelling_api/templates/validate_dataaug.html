@@ -41,12 +41,10 @@
                 <div class="col-md-6">
                   <div class="card">
                      <div class="card-header">
-                        <h5 class="card-title">Original Text</h5>
-                        <h5 class="card-title">{{data['title']}}</h5>
+                        <h5 class="card-title">Original Text: {{data['page_id']}}</h5>
                      </div>
                      <div class="card-body">
-                        <p class="card-text">{{data['text']}}</p>
-                        <a href="{{data['page_url']}}" class="btn btn-primary"  target="_blank">source</a>
+                        <p class="card-text">{{data['original_text']}}</p>
                      </div>
                   </div>
                 </div>
@@ -54,12 +52,14 @@
                 <div class="col-md-6">
                   <div class="card">
                     <div class="card-header">
-                       <h5 class="card-title">Augmented Text</h5>
+                     <h5 class="card-title">Augmented Text: {{data['augmented_page_id']}}</h5>
+                     <h5 class="card-title">Jacc Sim: {{data['jacc_sim']}}</h5></h5>
+                     <h5 class="card-title">BERT Sim: {{data['doc_sim']}}</h5>
                     </div>
                     <div class="card-body">
-                       <p class="card-text">{{data['text']}}</p>
-                       <button type="button" class="btn btn-primary" onclick="accept_data(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Accept</button>
-                       <button type="button" class="btn btn-primary" onclick="reject_data(this);" id="name_{{data['page_id']}}" value="{{data['page_id']}}">Reject</button>
+                       <p class="card-text">{{data['augmented_text']}}</p>
+                       <button type="button" class="btn btn-primary" onclick="accept_data(this);" id="name_{{data['page_id']}}" value="{{data['augmented_page_id']}}">Accept</button>
+                       <button type="button" class="btn btn-primary" onclick="reject_data(this);" id="name_{{data['page_id']}}" value="{{data['augmented_page_id']}}">Reject</button>
 
                     </div>
                  </div>
@@ -82,7 +82,7 @@
 
          try {
                 var formData = new FormData();
-                formData.append('page_id', e.value)
+                formData.append('aug_page_id', e.value)
          
                 var response = await fetch('/mda/accept_augdata', {
                     method: 'POST',
@@ -108,7 +108,7 @@
 
          try {
             var formData = new FormData();
-                formData.append('page_id', e.value)
+                formData.append('aug_page_id', e.value)
          
                 var response = await fetch('/mda/reject_augdata', {
                     method: 'POST',
