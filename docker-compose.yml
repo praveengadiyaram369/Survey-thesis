@@ -13,18 +13,14 @@ services:
       - /mnt/data/mitera-osint/rss_backup/210705_news:/usr/src/web_app/data
       # - C:/Users/sri.sai.praveen.gadi/Downloads/scraping_output/210705_news/data:/usr/src/web_app/data
     networks:
-      - elastic
+      - public_frontend
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.mda.rule=PathPrefix(`/mda`)"
       - "traefik.http.routers.mda.middlewares=strip-mda@docker"
       - "traefik.http.middlewares.strip-mda.stripprefix.prefixes=/mda"
 
-volumes:
-  data01:
-    driver: local
-
 networks:
-  backend:
-  elastic:
+  public_frontend:
+    driver: bridge
     external: true

@@ -123,52 +123,11 @@ def handle_search_queries(es, query, lang, phrase_query, fuzzy_query, match_top)
 
     return total_hits, result_list
 
-def get_keyword_query(query, lang, key='match'):
 
-    root_query = {'query':{key: {}}}
-
-    if lang == 1:
-        root_query['query'][key]['contents.de'] = query
-    elif lang == 2:
-        root_query['query'][key]['contents.en'] = query
-    elif lang == 3:
-        root_query['query'][key]['contents.default'] = query
-
-    return root_query
-
-
-def generate_query(query, lang, phrase_query):
-
-    if not phrase_query:
-        return get_keyword_query(query, lang, key='match')
-    elif phrase_query:
-        return get_keyword_query(query, lang, key='match_phrase')
-
-def handle_search_queries(es, query, lang, phrase_query, match_top):
-
-    search_query = json.dumps(generate_query(query, lang, phrase_query))
-    results = es.search(index=index, body=search_query, size=match_top)
-
-    total_hits = results['hits']['total']['value']
-    results = results['hits']['hits']
-
-    result_list = []
-    for doc_data in results:
-        doc_dict = dict()
-
-        doc_dict['title'] = doc_data['_source']['title']
-        doc_dict['text'] = doc_data['_source']['contents']['default']
-        doc_dict['page_url'] = doc_data['_source']['page_url']
-
-        result_list.append(doc_dict)
-
-    return total_hits, result_list
-
-
-def get_query_result(es, query, lang, phrase_query, search_concept, match_top):
+def get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top):
 
     if not search_concept:
-        return handle_search_queries(es, query, lang, phrase_query, match_top)
+        return handle_search_queries(es, query, lang, phrase_query, fuzzy_query, match_top)
 
 def get_query_result_semantic(query, lang, match_top):
 
