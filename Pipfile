@@ -12,6 +12,11 @@ uvicorn = "*"
 jinja2 = "*"
 faiss-cpu = "*"
 elasticsearch = "*"
+numpy = "*"
+tensorflow = "*"
+tensorflow-hub = "*"
+tensorflow-text = "*"
+pandas = "*"
 
 [dev-packages]
 

@@ -123,23 +123,6 @@ def handle_search_queries(es, query, lang, phrase_query, fuzzy_query, match_top)
 
     return total_hits, result_list
 
-def handle_count_queries(es, query, match_top):
-
-    result_list = []
-    total_hits = 0
-
-    for term in concept_mapping_dict[query]:
-        count_query = json.dumps(get_keyword_query(term, 3, key='match_phrase'))
-        results = es.count(index=index, body=count_query)
-
-        concept_hits = results['count']
-        result_list.append({'term': term, 'hits': concept_hits, 'url': f'?name1=value1'})
-
-        total_hits += concept_hits
-
-    return total_hits, result_list
-
-
 def get_keyword_query(query, lang, key='match'):
 
     root_query = {'query':{key: {}}}
