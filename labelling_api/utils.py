@@ -11,24 +11,24 @@ import tensorflow_hub as hub
 basepath = '/usr/src/web_app/data'
 # basepath = 'C:\\Users\\sri.sai.praveen.gadi\\Documents\\Projects\\mitera_data_annotator\\data'
 
-technology_document_data_path = basepath + '/input/technologie_document_data.json'
-military_document_data_path =   basepath + '/input/military_document_data.json'
-augmented_pos_document_data_path =  basepath + '/input/augmented_pos_document_data.json'
+technology_document_data_path = basepath + '/data/input/technologie_document_data.json'
+military_document_data_path =   basepath + '/data/input/military_document_data.json'
+augmented_pos_document_data_path =  basepath + '/data/input/augmented_pos_document_data.json'
 
-relevant_technology_data_path = basepath + '/output/relevant_documents_tech.json'
-relevant_military_data_path =  basepath + '/output/relevant_documents_milt.json'
-irrelevant_document_data_path = basepath + '/output/irrelevant_documents.json'
+relevant_technology_data_path = basepath + '/data/output/relevant_documents_tech.json'
+relevant_military_data_path =  basepath + '/data/output/relevant_documents_milt.json'
+irrelevant_document_data_path = basepath + '/data/output/irrelevant_documents.json'
 
-# classified_pos_docs_path = basepath + '/input/predicted_unlabeled_docs.json'
-classified_pos_docs_path = basepath + '/input/new_labeled_negative_set.json'
-third_class_docs_path = basepath + '/output/third_class_data.txt'
-aug_docs_path = basepath + '/output/doc_aug_info_data.txt'
+# classified_pos_docs_path = basepath + '/data/input/predicted_unlabeled_docs.json'
+classified_pos_docs_path = basepath + '/data/input/new_labeled_negative_set.json'
+third_class_docs_path = basepath + '/data/output/third_class_data.txt'
+aug_docs_path = basepath + '/data/output/doc_aug_info_data.txt'
 
 es_index = 'mitera_scraped_docs'
 
-tf_model = hub.load(basepath+ '/../input/USE_model')
-index = faiss.read_index(basepath+"/../input/vector.index")
-doc_df = pd.read_pickle(basepath+'/../input/final_dataframe.pkl')
+tf_model = hub.load(basepath+ '/models/USE_model')
+index = faiss.read_index(basepath+"/vector.index")
+doc_df = pd.read_pickle(basepath+'/final_dataframe.pkl')
 
 def read_document_data(filepath):
 
