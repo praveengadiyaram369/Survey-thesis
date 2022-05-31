@@ -1,11 +1,21 @@
+import time
 import uvicorn
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
-
+from elasticsearch import helpers, Elasticsearch
 from utils import *
 
 app = FastAPI(debug=True, root_path="/mda")
 templates = Jinja2Templates(directory="templates/")
+
+username = 'elastic'
+password = 'mit22fkie!'
+
+hostname = 'elasticsearch'
+port = '9200'
+
+# time.sleep(5)
+es = Elasticsearch([f"http://{username}:{password}@{hostname}:{port}"])
 
 document_type = None
 document_data = None
@@ -101,6 +111,62 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
 
     print(third_page_id)
     write_data_to_file(third_class_docs_path, third_page_id)
+
+def get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top):
+
+    if not search_concept:
+        return handle_search_queries(es, query, lang, phrase_query, fuzzy_query, match_top)
+    else:
+        return handle_count_queries(es, query, match_top)
+
+def get_query_result_semantic(query, lang, match_top):
+
+    query_embedding = tf_model(query)['outputs'].numpy()[0].reshape(1, -1)
+    result = index.search(np.float32(query_embedding), match_top)
+
+    df = doc_df.iloc[result[1][0]]
+
+    if lang == 1:
+        language_code = 'de'
+    elif lang == 2:
+        language_code = 'en'
+    elif lang == 3:
+        language_code = 'xlm'
+
+    result_list = []
+    for idx, doc_data in df.iterrows():
+        doc_dict = dict()
+
+        if language_code == doc_data['lang'] or language_code == 'xlm':
+
+            doc_dict['title'] = doc_data['title']
+            doc_dict['text'] = doc_data['text']
+            doc_dict['page_url'] = doc_data['url']
+
+            result_list.append(doc_dict)
+
+    total_hits = len(result_list)
+
+    return total_hits, result_list
+
+@app.post('/keyword_search')
+async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+
+    match_top = int(match_top)
+    semantic_query = False
+
+    if search_type == 'semantic_search':
+        semantic_query = True
+
+    if not semantic_query:
+        total_hits, results = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+    else:
+        total_hits, results = get_query_result_semantic(query, lang, match_top)
+
+    if not search_concept:
+        return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query})
+    else:
+        return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': total_hits, 'result_list': [], 'concept_list': results, 'query': query})
 
 def update_document_data(page_id, category_list, marked_document_type, type):
 

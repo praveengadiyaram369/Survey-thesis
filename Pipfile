@@ -10,6 +10,8 @@ python-multipart = "*"
 starlette = "*"
 uvicorn = "*"
 jinja2 = "*"
+faiss-cpu = "*"
+elasticsearch = "*"
 
 [dev-packages]
 

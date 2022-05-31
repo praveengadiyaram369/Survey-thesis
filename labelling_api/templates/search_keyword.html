@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="utf-8" />
+      <title>mitera</title>
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+   </head>
+   <body>
+      <section>
+         <div class="container">
+            <div class="alert alert-primary text-center my-4">
+               <h5>Military Technology Radar, more details: </h5>
+               <a href="https://taris.fkie.fraunhofer.de:8443/sri.sai.praveen.gadiyaram/technology_scouting_from_newsfeeds.git" target="_blank">Source code</a>
+            </div>
+            <div class="row justify-content-center">
+               <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+                  <div class="row">
+                     <div class="col text-center">
+                        <h3>Search Newsfeeds</h3>
+                     </div>
+                  </div>
+                  <form action="/keyword_search" method="POST" id='formid'>
+                  <div class="input-group mb-3">
+                     <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">query</span>
+                     </div>
+                     <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name='query' required>
+                  </div>
+                  
+                     <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
+                        </div>
+                        <select class="form-select form-control" name="lang" id="select-doc" aria-label="Default select example">
+                           <option value="1" >Deutsch (de)</option>
+                           <option value="2">English (en)</option>
+                           <option value="3" selected>Multi-lingual (xlm)</option>
+                        </select>
+                     </div>
+                     <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text" id="inputGroup-sizing-default">Retrieval count</span>
+                        </div>
+                       <input type="number" min="1" value="10" class="form-control" id="match_top" name="match_top">
+                     </div>
+                  
+                     <div class="m-2">
+                        <div class="btn-group  btn-group-toggle">
+                            <input type="radio" class="btn-check" name="search_type" value="es_search" id="radio1" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="radio1">BM-25 search</label>
+                        
+                            <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" >
+                            <label class="btn btn-outline-primary" for="radio2">Semantic search</label>
+                        </div>
+                    </div>
+                  
+                  <div class="form-check">
+                     <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="phrase_query">
+                     <label class="form-check-label" for="phrase_search">Phrase query</label>
+                  </div>
+                  <div class="form-check">
+                     <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="fuzzy_query">
+                     <label class="form-check-label" for="fuzzy_search">Fuzzy query</label>
+                  </div>
+                  <div class="form-check">
+                     <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="search_concept" disabled>
+                     <label class="form-check-label" for="concept_search">Search Concept</label>
+                  </div>
+                  <div class="form-check">
+                     <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="search_archive" disabled>
+                     <label class="form-check-label" for="search_archive">Search Archive</label>
+                  </div>
+                  <input type="submit" class="btn btn-primary mt-4">
+                  <br>
+                  <br>
+                  <br>
+                  <div class="row">
+                     <div class="col-8 d-flex justify-content-center text-center">
+                        <h5>Total hits:  {{ total_hits }}</h5>
+                     </div>
+                  </div>
+                  <br>
+               </div>
+            </div>
+            {% for data in result_list %}
+            <div class="card">
+               <div class="card-header">
+                  <h5 class="card-title">{{data['title']}}</h5>
+               </div>
+               <div class="card-body">
+                  <p class="card-text">{{data['text']}}</p>
+                  <a href="{{data['page_url']}}" class="btn btn-primary"  target="_blank">source</a>
+               </div>
+            </div>
+            <br>
+            <br>
+            {% endfor %}
+            {% for data in concept_list %}
+            <div class="col-sm-3">
+               <div class="card">
+                  <div class="card-body">
+                     <h5 class="card-title">{{data['term']}}: {{data['hits']}}</h5>
+                  </div>
+               </div>
+            </div>
+            {% endfor %}
+         </div>
+      </section>
+   </body>
+</html>
