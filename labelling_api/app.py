@@ -17,6 +17,12 @@ port = '9200'
 # time.sleep(5)
 es = Elasticsearch([f"http://{username}:{password}@{hostname}:{port}"])
 
+if not es.ping():
+    print("##################### Connection failed ######################\n")
+else:
+    print("###################### Connection successful ######################\n")
+
+
 document_type = None
 document_data = None
 tech_relevant_document_data = None

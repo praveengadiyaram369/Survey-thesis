@@ -1,5 +1,10 @@
 version: '3.8'
 
+networks:
+  backend:
+  public_frontend:
+    external: true
+
 services:
         
   mda:
@@ -19,8 +24,3 @@ services:
       - "traefik.http.routers.mda.rule=PathPrefix(`/mda`)"
       - "traefik.http.routers.mda.middlewares=strip-mda@docker"
       - "traefik.http.middlewares.strip-mda.stripprefix.prefixes=/mda"
-
-networks:
-  public_frontend:
-    driver: bridge
-    external: true
