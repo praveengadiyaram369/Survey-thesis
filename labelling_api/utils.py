@@ -1,12 +1,17 @@
+from distutils.util import check_environ
 import json
 import os
 import faiss
 import pandas as pd
 import numpy as np
+import fasttext
+import spellchecker
 
 import tensorflow as tf
 import tensorflow_text
 import tensorflow_hub as hub
+from compound_split import char_split
+from spellchecker import SpellChecker
 
 basepath = '/usr/src/web_app/data'
 # basepath = 'C:\\Users\\sri.sai.praveen.gadi\\Documents\\Projects\\mitera_data_annotator\\data'
@@ -27,8 +32,14 @@ aug_docs_path = basepath + '/data/output/doc_aug_info_data.txt'
 es_index = 'mitera_scraped_docs'
 
 tf_model = hub.load(basepath+ '/models/USE_model')
+fasttext_model = fasttext.load_model(os.getcwd() + '/models/lid.176.bin')
+fasttext.FastText.eprint = lambda x: None
+
 index = faiss.read_index(basepath+"/vector.index")
 doc_df = pd.read_pickle(basepath+'/final_dataframe.pkl')
+
+english_checker = SpellChecker(language='en')
+german_checker = SpellChecker(language='de')
 
 def read_document_data(filepath):
 
@@ -123,6 +134,13 @@ def handle_search_queries(es, query, lang, phrase_query, fuzzy_query, match_top)
 
     return total_hits, result_list
 
+def handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False):
+
+    query_dict = generate_query(query, lang, phrase_query, fuzzy_query)
+    results = es.count(index=es_index, query=query_dict)
+
+    return results['count']
+
 
 def get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top):
 
@@ -158,3 +176,104 @@ def get_query_result_semantic(query, lang, match_top):
     total_hits = len(result_list)
 
     return total_hits, result_list
+
+def portion_of_capital_letters(w):
+    upper_cases = ''.join([c for c in w if c.isupper()])
+    return len(upper_cases)/len(w)
+
+def detect_language(text):
+    
+    lang_label = fasttext_model.predict(text)[0][0].split('__label__')[1]
+    return lang_label
+
+def detect_spelling_mistake(query, lang):
+
+    spell_checker = None
+    if lang == 'de':
+        spell_checker = german_checker
+    elif lang == 'en':
+        spell_checker = english_checker
+
+    correct_spelling = spell_checker.correction(query)
+    return correct_spelling
+
+def detect_german_compoundword(query):
+
+    nouns_list = char_split.split_compound(query)
+    if len(nouns_list) == 1 and nouns_list[0][0] < 0:
+        return False
+    return True
+
+def get_optimum_search_strategy(es, query):
+
+    lang = detect_language(query)
+    search_type = None
+    query_type = None
+    updated_query = None
+    comments = None
+    query_parts = query.split()
+
+    if lang == 'de':
+        lang = '1'
+    elif lang == 'en':
+        lang = '2'
+
+    if len(query_parts) > 3:
+        search_type = 'semantic_search'
+        query_type = None
+        updated_query = None
+        comments = 'Sentence query, token length > 3'
+    elif len(query_parts) < 3 and len(query_parts) > 1:
+        search_type = 'es_search'
+        query_type = 'phrase_query'
+        updated_query = None
+        comments = 'Phrase match, token length < 3 and >1'
+    elif len(query_parts) == 1:
+
+        if portion_of_capital_letters(query) >= 0.75:
+            search_type = 'es_search'
+            query_type = None
+            updated_query = None
+            comments = 'Abbreviation detected'
+
+        updated_query = detect_spelling_mistake(query, lang)
+        if detect_german_compoundword(query):
+            search_type = 'semantic_search'
+            query_type = None
+            updated_query = updated_query
+            comments = 'German compound word detected'
+        
+        query_count_bm25 = handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False)
+
+        if query_count_bm25 == 0:
+            search_type = 'es_search'
+            query_type = 'fuzzy_query'
+            updated_query = updated_query
+            comments = 'Fuzzy match, zero BM-25 results'
+        else:
+            search_type = 'es_search'
+            query_type = None
+            updated_query = updated_query
+            comments = 'Simple query match'
+
+    return lang, search_type, query_type, updated_query
+
+def get_search_type(search_type):
+
+    if search_type == 'es_search':
+        return 'BM-25'
+    elif search_type == 'semantic_search':
+        return 'Semantic search'
+    elif search_type == 'optimistic_search':
+        return 'Optimistic search'
+    elif search_type == 'hybrid_search':
+        return 'Hybrid search'
+
+def get_language(lang):
+
+    if lang == 'de' or lang == 1:
+        return 'Deutsch'
+    elif lang == 'en' or lang == 2:
+        return 'English'
+    elif lang == 'xlm' or lang == 3:
+        return 'Mulit-lingual'

@@ -17,6 +17,10 @@ tensorflow = "*"
 tensorflow-hub = "*"
 tensorflow-text = "*"
 pandas = "*"
+fasttext = "*"
+rapidfuzz = "*"
+pyspellchecker = "*"
+compound-split = "*"
 
 [dev-packages]
 
