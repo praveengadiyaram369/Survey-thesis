@@ -32,7 +32,7 @@ aug_docs_path = basepath + '/data/output/doc_aug_info_data.txt'
 es_index = 'mitera_scraped_docs'
 
 tf_model = hub.load(basepath+ '/models/USE_model')
-fasttext_model = fasttext.load_model(os.getcwd() + '/models/lid.176.bin')
+fasttext_model = fasttext.load_model(basepath + '/models/lid.176.bin')
 fasttext.FastText.eprint = lambda x: None
 
 index = faiss.read_index(basepath+"/vector.index")
@@ -189,9 +189,9 @@ def detect_language(text):
 def detect_spelling_mistake(query, lang):
 
     spell_checker = None
-    if lang == 'de':
+    if lang == 'de' or lang == 1:
         spell_checker = german_checker
-    elif lang == 'en':
+    elif lang == 'en' or lang == 2:
         spell_checker = english_checker
 
     correct_spelling = spell_checker.correction(query)
@@ -214,9 +214,9 @@ def get_optimum_search_strategy(es, query):
     query_parts = query.split()
 
     if lang == 'de':
-        lang = '1'
+        lang = 1
     elif lang == 'en':
-        lang = '2'
+        lang = 2
 
     if len(query_parts) > 3:
         search_type = 'semantic_search'
@@ -256,7 +256,7 @@ def get_optimum_search_strategy(es, query):
             updated_query = updated_query
             comments = 'Simple query match'
 
-    return lang, search_type, query_type, updated_query
+    return lang, search_type, query_type, updated_query, comments
 
 def get_search_type(search_type):
 

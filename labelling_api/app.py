@@ -120,7 +120,7 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
 
 @app.get("/search_keyword")
 async def load_search_homepage(request: Request):
-    return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': []})
+    return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
 @app.post('/keyword_search')
 async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
