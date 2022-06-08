@@ -180,7 +180,7 @@ def get_query_result_semantic(query, lang, match_top):
 
 def portion_of_capital_letters(query):
     upper_cases = ''.join([c for c in query if c.isupper()])
-    return len(upper_cases)/len(query)
+    return float(len(upper_cases)/len(query))
 
 def detect_language(text):
     
@@ -200,8 +200,10 @@ def detect_spelling_mistake(query, lang):
 
 def detect_german_compoundword(query):
 
-    if len(query) > 14 and char_split.split_compound(query)[0][0] > 0:
-        nouns_list = char_split.split_compound(query)
+    nouns_list = char_split.split_compound(query)
+    print(nouns_list)
+    if len(query) > 14:
+
         if len(nouns_list) > 1 and nouns_list[0][0] > 0:
             return True
     return False
@@ -211,7 +213,6 @@ def get_optimum_search_strategy(es, query):
     lang = detect_language(query)
     search_type = None
     query_type = None
-    updated_query = None
     comments = None
     query_parts = query.split()
 
@@ -223,41 +224,37 @@ def get_optimum_search_strategy(es, query):
     if len(query_parts) > 3:
         search_type = 'semantic_search'
         query_type = None
-        updated_query = None
         comments = 'Sentence query, token length > 3'
     elif len(query_parts) < 3 and len(query_parts) > 1:
         search_type = 'es_search'
         query_type = 'phrase_query'
-        updated_query = None
         comments = 'Phrase match, token length < 3 and >1'
     elif len(query_parts) == 1:
 
-        if portion_of_capital_letters(query) >= 0.75:
+        capital_ratio = portion_of_capital_letters(query)
+        print(capital_ratio)
+
+        if capital_ratio >= 0.75:
             search_type = 'es_search'
             query_type = None
-            updated_query = None
             comments = 'Abbreviation detected'
 
         if detect_german_compoundword(query):
             search_type = 'semantic_search'
             query_type = None
-            updated_query = None
             comments = 'German compound word detected'
         
         query_count_bm25 = handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False)
-        if query_count_bm25 == 0:
-            updated_query = detect_spelling_mistake(query, lang)
+        if query_count_bm25 == 0 and detect_spelling_mistake(query, lang) != query.lower():
             search_type = 'es_search'
             query_type = 'fuzzy_query'
-            updated_query = updated_query
             comments = 'Fuzzy match, zero BM-25 results and spelling correction'
         else:
             search_type = 'es_search'
             query_type = None
-            updated_query = updated_query
             comments = 'Simple query match'
 
-    return lang, search_type, query_type, updated_query, comments
+    return lang, search_type, query_type, comments
 
 def get_search_type(search_type):
 
