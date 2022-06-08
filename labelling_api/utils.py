@@ -231,21 +231,15 @@ def get_optimum_search_strategy(es, query):
         comments = 'Phrase match, token length < 3 and >1'
     elif len(query_parts) == 1:
 
-        capital_ratio = portion_of_capital_letters(query)
-        print(capital_ratio)
-
-        if capital_ratio >= 0.75:
+        if portion_of_capital_letters(query) >= 0.75:
             search_type = 'es_search'
             query_type = None
             comments = 'Abbreviation detected'
-
-        if detect_german_compoundword(query):
+        elif detect_german_compoundword(query):
             search_type = 'semantic_search'
             query_type = None
-            comments = 'German compound word detected'
-        
-        query_count_bm25 = handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False)
-        if query_count_bm25 == 0 and detect_spelling_mistake(query, lang) != query.lower():
+            comments = 'German compound word detected' 
+        elif handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False) == 0 and detect_spelling_mistake(query, lang) != query.lower():
             search_type = 'es_search'
             query_type = 'fuzzy_query'
             comments = 'Fuzzy match, zero BM-25 results and spelling correction'
