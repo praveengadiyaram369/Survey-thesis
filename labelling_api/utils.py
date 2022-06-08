@@ -250,7 +250,7 @@ def get_optimum_search_strategy(es, query):
             search_type = 'es_search'
             query_type = 'fuzzy_query'
             updated_query = updated_query
-            comments = 'Fuzzy match, zero BM-25 results and correct spelling'
+            comments = 'Fuzzy match, zero BM-25 results and spelling correction'
         else:
             search_type = 'es_search'
             query_type = None
