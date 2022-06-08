@@ -125,11 +125,11 @@ async def load_search_homepage(request: Request):
 @app.post('/keyword_search')
 async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
+    print(query)
     search_data = {
         'original_query':query,
         'search_type': 'NA',
         'search_strategy':'NA',
-        'updated_query':'NA',
         'language': 'NA',
         'total_hits': 'NA',
         'comments': 'NA'
@@ -146,13 +146,10 @@ async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(
     elif search_type == 'es_search':
         semantic_query = False
     elif search_type == 'optimistic_search':
-        lang, search_type, query_type, updated_query, comments = get_optimum_search_strategy(es, query)
+        lang, search_type, query_type, comments = get_optimum_search_strategy(es, query)
         search_data['language'] = get_language(lang)
         search_data['search_type'] = get_search_type(search_type)
         search_data['comments'] = comments
-
-        if updated_query != query:
-            search_data['updated_query'] = updated_query
 
         if query_type == 'phrase_query':
             phrase_query = True
