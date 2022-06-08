@@ -6,6 +6,7 @@ import pandas as pd
 import numpy as np
 import fasttext
 import spellchecker
+# from recursive_split import *
 
 import tensorflow as tf
 import tensorflow_text
@@ -177,9 +178,9 @@ def get_query_result_semantic(query, lang, match_top):
 
     return total_hits, result_list
 
-def portion_of_capital_letters(w):
-    upper_cases = ''.join([c for c in w if c.isupper()])
-    return len(upper_cases)/len(w)
+def portion_of_capital_letters(query):
+    upper_cases = ''.join([c for c in query if c.isupper()])
+    return len(upper_cases)/len(query)
 
 def detect_language(text):
     
@@ -199,10 +200,11 @@ def detect_spelling_mistake(query, lang):
 
 def detect_german_compoundword(query):
 
-    nouns_list = char_split.split_compound(query)
-    if len(nouns_list) == 1 and nouns_list[0][0] < 0:
-        return False
-    return True
+    if len(query) > 14 and char_split.split_compound(query)[0][0] > 0:
+        nouns_list = char_split.split_compound(query)
+        if len(nouns_list) > 1 and nouns_list[0][0] > 0:
+            return True
+    return False
 
 def get_optimum_search_strategy(es, query):
 
@@ -236,20 +238,19 @@ def get_optimum_search_strategy(es, query):
             updated_query = None
             comments = 'Abbreviation detected'
 
-        updated_query = detect_spelling_mistake(query, lang)
         if detect_german_compoundword(query):
             search_type = 'semantic_search'
             query_type = None
-            updated_query = updated_query
+            updated_query = None
             comments = 'German compound word detected'
         
         query_count_bm25 = handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False)
-
         if query_count_bm25 == 0:
+            updated_query = detect_spelling_mistake(query, lang)
             search_type = 'es_search'
             query_type = 'fuzzy_query'
             updated_query = updated_query
-            comments = 'Fuzzy match, zero BM-25 results'
+            comments = 'Fuzzy match, zero BM-25 results and correct spelling'
         else:
             search_type = 'es_search'
             query_type = None
