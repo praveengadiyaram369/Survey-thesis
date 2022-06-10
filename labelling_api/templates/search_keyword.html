@@ -139,14 +139,16 @@
                   <h5 class="card-title">{{data['title']}}</h5>
                </div>
                <div class="card-body">
-                  <p class="card-text">{{data['text']}}</p>
+                  <p>{{data['text']}} </p>
+                   <a href="javascript:void(0);" class="readmore-btn">Read more</a>
+                   <br>
+                   <br>
                   <a href="{{data['page_url']}}" class="btn btn-primary"  target="_blank">source</a>
                </div>
             </div>
             <br>
-            <br>
             {% endfor %}
-            {% for data in concept_list %}
+            <!-- {% for data in concept_list %}
             <div class="col-sm-3">
                <div class="card">
                   <div class="card-body">
@@ -154,8 +156,49 @@
                   </div>
                </div>
             </div>
-            {% endfor %}
+            {% endfor %} -->
          </div>
       </section>
+
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+      
+      <script> 
+      $(".readmore-btn").on('click', function(){
+         $(this).parent().toggleClass("showContent");
+         var replaceText = $(this).parent().hasClass("showContent") ? "Read less" : "Read more";
+         $(this).text(replaceText);
+      });
+
+      
+      </script>
+
    </body>
+
+<style>
+
+.card-body p{
+   font-size: 20px;
+   line-height: 30px;
+   height: 90px;
+   overflow: hidden;
+}
+
+.card-body a{
+   font-size: 20px;
+}
+
+.card-body.showContent p{
+   height: auto;
+}
+
+/* .card-body.showContent a.readmore-btn{
+   font-c: red;
+} */
+
+
+
+</style>
+
+
+
 </html>
