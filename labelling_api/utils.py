@@ -1,5 +1,6 @@
 from distutils.util import check_environ
 import json
+from operator import index
 import os
 import faiss
 import pandas as pd
@@ -36,8 +37,13 @@ tf_model = hub.load(basepath+ '/models/USE_model')
 fasttext_model = fasttext.load_model(basepath + '/models/lid.176.bin')
 fasttext.FastText.eprint = lambda x: None
 
-index = faiss.read_index(basepath+"/vector.index")
-doc_df = pd.read_pickle(basepath+'/final_dataframe.pkl')
+xlm_index = faiss.read_index(basepath+"/xlm_vector.index")
+en_index = faiss.read_index(basepath+"/en_vector.index")
+de_index = faiss.read_index(basepath+"/de_vector.index")
+
+xlm_df = pd.read_pickle(basepath+'/xlm_dataframe.pkl')
+en_df = pd.read_pickle(basepath+'/en_dataframe.pkl')
+de_df = pd.read_pickle(basepath+'/de_dataframe.pkl')
 
 english_checker = SpellChecker(language='en')
 german_checker = SpellChecker(language='de')
@@ -150,29 +156,31 @@ def get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept,
 
 def get_query_result_semantic(query, lang, match_top):
 
+    if lang == 1:
+        index = de_index
+        doc_df = de_df
+    elif lang == 2:
+        index = en_index
+        doc_df = en_df
+    elif lang == 3:
+        index = xlm_index
+        doc_df = xlm_df
+
     query_embedding = tf_model(query)['outputs'].numpy()[0].reshape(1, -1)
     result = index.search(np.float32(query_embedding), match_top)
 
     df = doc_df.iloc[result[1][0]]
 
-    if lang == 1:
-        language_code = 'de'
-    elif lang == 2:
-        language_code = 'en'
-    elif lang == 3:
-        language_code = 'xlm'
-
     result_list = []
     for idx, doc_data in df.iterrows():
         doc_dict = dict()
 
-        if language_code == doc_data['lang'] or language_code == 'xlm':
+        doc_dict['title'] = doc_data['title']
+        doc_dict['text'] = doc_data['text']
+        doc_dict['page_url'] = doc_data['url']
 
-            doc_dict['title'] = doc_data['title']
-            doc_dict['text'] = doc_data['text']
-            doc_dict['page_url'] = doc_data['url']
+        result_list.append(doc_dict)
 
-            result_list.append(doc_dict)
 
     total_hits = len(result_list)
 

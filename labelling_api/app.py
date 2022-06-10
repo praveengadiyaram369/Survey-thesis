@@ -125,6 +125,8 @@ async def load_search_homepage(request: Request):
 @app.post('/keyword_search')
 async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
+    query = query.strip()
+
     print(query)
     search_data = {
         'original_query':query,
@@ -168,7 +170,9 @@ async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(
         if phrase_query:
             search_data['search_strategy'] = 'Phrase match'
         elif fuzzy_query:
-            search_data['search_strategy'] = 'Fuzzy match'       
+            search_data['search_strategy'] = 'Fuzzy match' 
+    else:
+        semantic_query = True      
 
     if not semantic_query:
         total_hits, results = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
