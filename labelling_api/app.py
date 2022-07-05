@@ -15,7 +15,7 @@ hostname = 'elasticsearch'
 port = '9200'
 
 # time.sleep(5)
-es = Elasticsearch([f"http://{username}:{password}@{hostname}:{port}"])
+es = Elasticsearch([f"http://{username}:{password}@{hostname}:{port}"], timeout=300, max_retries=10, retry_on_timeout=True)
 
 if not es.ping():
     print("##################### Connection failed ######################\n")
@@ -118,11 +118,11 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
     print(third_page_id)
     write_data_to_file(third_class_docs_path, third_page_id)
 
-@app.get("/search_keyword")
+@app.get("/mda/search_keyword")
 async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.post('/keyword_search')
+@app.post('/mda/keyword_search')
 async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()
