@@ -15,8 +15,8 @@ import tensorflow_hub as hub
 from compound_split import char_split
 from spellchecker import SpellChecker
 
-# basepath = '/usr/src/web_app/data'
-basepath = 'C:/Users/sri.sai.praveen.gadi/Music/data_mount'
+basepath = '/usr/src/web_app/data'
+# basepath = 'C:/Users/sri.sai.praveen.gadi/Music/data_mount'
 
 technology_document_data_path = basepath + '/data/input/technologie_document_data.json'
 military_document_data_path =   basepath + '/data/input/military_document_data.json'
