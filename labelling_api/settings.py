@@ -7,8 +7,8 @@ import fasttext
 import spellchecker
 from spellchecker import SpellChecker
 
-# basepath = '/usr/src/web_app/data/'
-basepath = 'C:/Users/sri.sai.praveen.gadi/Music/data_mount/'
+basepath = '/usr/src/web_app/data/'
+# basepath = 'C:/Users/sri.sai.praveen.gadi/Music/data_mount/'
 
 technology_document_data_path = basepath + 'data/input/technologie_document_data.json'
 military_document_data_path =   basepath + 'data/input/military_document_data.json'
@@ -29,13 +29,13 @@ tf_model = hub.load(basepath+ 'models/USE_model')
 fasttext_model = fasttext.load_model(basepath + 'models/lid.176.bin')
 fasttext.FastText.eprint = lambda x: None
 
-xlm_index = faiss.read_index(basepath+"vector.index")
-en_index = faiss.read_index(basepath+"vector.index")
-de_index = faiss.read_index(basepath+"vector.index")
+xlm_index = faiss.read_index(basepath+"xlm_vector.index")
+en_index = faiss.read_index(basepath+"en_vector.index")
+de_index = faiss.read_index(basepath+"de_vector.index")
 
-xlm_df = pd.read_pickle(basepath+'final_dataframe.pkl')
-en_df = pd.read_pickle(basepath+'final_dataframe.pkl')
-de_df = pd.read_pickle(basepath+'final_dataframe.pkl')
+xlm_df = pd.read_pickle(basepath+'xlm_dataframe.pkl')
+en_df = pd.read_pickle(basepath+'en_dataframe.pkl')
+de_df = pd.read_pickle(basepath+'de_dataframe.pkl')
 
 LOG_FILE = basepath + f'mitera_webapp_log.log'
 logging.basicConfig(handlers=[logging.FileHandler(filename=LOG_FILE, 
