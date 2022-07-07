@@ -2,11 +2,17 @@ import time
 import uvicorn
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
+from fastapi.staticfiles import StaticFiles
 from elasticsearch import helpers, Elasticsearch
 from utils import *
+from db_utils import *
 
 app = FastAPI(debug=True, root_path="/mda")
 templates = Jinja2Templates(directory="templates/")
+
+app.mount('/static',
+        StaticFiles(directory='static/'),
+        name='static')
 
 username = 'elastic'
 password = 'mit22fkie!'
@@ -118,11 +124,40 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
     print(third_page_id)
     write_data_to_file(third_class_docs_path, third_page_id)
 
-@app.get("/search_keyword")
+@app.get("/mda/search_keyword")
 async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.post('/keyword_search')
+@app.post('/mda/get_cdd_pool')
+async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+
+    query = query.strip()
+
+    print(query)
+    search_data = {
+        'original_query': query,
+        'search_type': 'Elastic and semantic search',
+        'search_strategy':'Random mix',
+        'language': 'Multi-lingual',
+        'total_hits': 'NA',
+        'comments': 'Candidate label pool'
+    }
+
+    total_hits_semantic, results_semantic = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+    total_hits_es, results_es = get_query_result_semantic(query, lang, match_top)
+
+    results = get_merged_results(results_semantic, results_es)
+    search_data['total_hits'] = len(results)
+
+    return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': search_data['total_hits'], 'result_list': [], 'concept_list': results, 'query': query, 'search_data':search_data})
+
+@app.post("/mda/save_document_label")
+async def save_document_label(request: Request, doc_id: str=Form(1), query: str=Form(1), label: str=Form(1)):
+
+    insert_into_sqlite_db(doc_id, query, label)
+
+
+@app.post('/mda/keyword_search')
 async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()

@@ -3,6 +3,7 @@
    <head>
       <meta charset="utf-8" />
       <title>mitera</title>
+      <!-- <script src="{{url_for('static', path='scripts/popper.min.js')}}"></script> -->
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
    </head>
    <body>
@@ -19,7 +20,7 @@
                         <h3>Search Newsfeeds</h3>
                      </div>
                   </div>
-                  <form action="/mda/keyword_search" method="POST" id='formid'>
+                  <form action="/mda/get_cdd_pool" method="POST" id='formid'>
                   <div class="input-group mb-3">
                      <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">query</span>
@@ -32,24 +33,24 @@
                            <span class="input-group-text" id="inputGroup-sizing-default">Language</span>
                         </div>
                         <select class="form-select form-control" name="lang" id="select-doc" aria-label="Default select example">
-                           <option value="1" >Deutsch (de)</option>
-                           <option value="2">English (en)</option>
-                           <option value="3" selected>Multi-lingual (xlm)</option>
+                           <option value="1" >Deutsch</option>
+                           <option value="2">English</option>
+                           <option value="3" selected>Multi-lingual</option>
                         </select>
                      </div>
                      <div class="input-group mb-3">
                         <div class="input-group-prepend">
                            <span class="input-group-text" id="inputGroup-sizing-default">Retrieval count</span>
                         </div>
-                       <input type="number" min="1" value="20" class="form-control" id="match_top" name="match_top">
+                       <input type="number" min="1" value="15" class="form-control" id="match_top" name="match_top">
                      </div>
                   
                      <div class="m-2">
                         <div class="btn-group  btn-group-toggle">
-                            <input type="radio" class="btn-check" name="search_type" value="es_search" id="radio1" autocomplete="off" checked>
+                            <input type="radio" class="btn-check" name="search_type" value="es_search" id="radio1" autocomplete="off" >
                             <label class="btn btn-outline-primary" for="radio1">BM-25 search</label>
                         
-                            <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" >
+                            <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" checked>
                             <label class="btn btn-outline-primary" for="radio2">Semantic search</label>
 
                             <input type="radio" class="btn-check" name="search_type" value="optimistic_search" id="radio3" autocomplete="off" >
@@ -118,11 +119,12 @@
                       </tbody>
                   </table>
 
-                  <br>
+                  <input type="hidden" name="UserID"  id="original_query" value="{{search_data['original_query']}}"/>
+
                   <br>
                   <div class="row">
                      <div class="col-8 d-flex justify-content-center text-center">
-                        <h5>Search results</h5>
+                        <h5>Search results: {{search_data['total_hits']}}</h5>
                      </div>
                   </div>
                   <br>
@@ -134,11 +136,25 @@
                   <h5 class="card-title">{{data['title']}}</h5>
                </div>
                <div class="card-body">
+
                   <p  class="card-text">{{data['text']}} </p>
                    <a href="javascript:void(0);" class="readmore-btn">Read more</a>
                    <br>
                    <br>
-                  <a href="{{data['page_url']}}" class="btn btn-primary"  target="_blank">source</a>
+
+                  <!-- <a href="{{data['page_url']}}" class="btn btn-primary"  target="_blank">source</a> -->
+                 
+               </div>
+
+               <div class="card-footer">
+                     <label for="select" style="float: left; vertical-align: baseline;"><h5>Select document label:   </h5> </label>
+                     <select class="form-select" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;" id="select_{{data['id']}}" aria-label="Default select example">
+                        <option class="dropdown-item" type="button" value="1">Perfect (1)</option>
+                        <option class="dropdown-item" type="button" value="2">Partially relevant (2)</option>
+                        <option class="dropdown-item" type="button" value="3">Irrelevant (3)</option>
+                        <option class="dropdown-item" type="button" value="4">Wrong (4)</option>
+                     </select>
+                     <button type="button" class="btn btn-primary" style="float: right; vertical-align: baseline;" id="{{data['id']}}" onclick="save_document_label(this);">Confirm</button>
                </div>
             </div>
             <br>
@@ -164,6 +180,41 @@
          $(this).text(replaceText);
       });
 
+      async function save_document_label(e) {
+
+      try {
+            var select_dropdown = document.getElementById("select_"+e.id);
+            var original_query = document.getElementById("original_query");
+
+            console.log("select_"+e.id)
+            console.log(original_query.value)
+            console.log(select_dropdown.value)
+
+            var parent = e.parentElement.parentElement;
+            console.log(parent)
+            parent.parentElement.removeChild(parent);
+
+            var formData = new FormData();
+            formData.append('doc_id', e.id);
+            formData.append('query', original_query.value);
+            formData.append('label', select_dropdown.value);
+
+            var response = await fetch('/mda/save_document_label', {
+               method: 'POST',
+               body: formData
+            });
+            
+            
+         let data = await response.json();
+            data = JSON.parse(data)
+            console.log(data);
+            
+            
+         } catch (error) {
+            console.error(error);
+         }
+      }
+
       
       </script>
 
@@ -172,19 +223,22 @@
 <style>
 
 .card-body p{
-   font-size: 15px;
+   font-size: 17px;
    line-height: 30px;
    height: 90px;
    overflow: hidden;
 }
 
 .card-body a{
-   font-size: 15px;
+   font-size: 17px;
 }
 
 .card-body.showContent p{
    height: auto;
 }
+
+
+
 
 /* .card-body.showContent a.readmore-btn{
    font-c: red;
