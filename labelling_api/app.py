@@ -124,21 +124,23 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
     print(third_page_id)
     write_data_to_file(third_class_docs_path, third_page_id)
 
-@app.get("/mda/search_keyword")
+@app.get("/search_keyword")
 async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.post('/mda/get_cdd_pool')
+@app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()
+    lang = 3
+    match_top = 15
 
     print(query)
     search_data = {
         'original_query': query,
-        'search_type': 'Elastic and semantic search',
-        'search_strategy':'Random mix',
-        'language': 'Multi-lingual',
+        'search_type': 'BM-25 und Semantische Suche',
+        'search_strategy': 'NA',
+        'language': 'multilingual',
         'total_hits': 'NA',
         'comments': 'Candidate label pool'
     }
@@ -149,15 +151,15 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1)
     results = get_merged_results(results_semantic, results_es)
     search_data['total_hits'] = len(results)
 
-    return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': search_data['total_hits'], 'result_list': [], 'concept_list': results, 'query': query, 'search_data':search_data})
+    return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': search_data['total_hits'], 'result_list': results, 'concept_list': results, 'query': query, 'search_data':search_data})
 
-@app.post("/mda/save_document_label")
+@app.post("/save_document_label")
 async def save_document_label(request: Request, doc_id: str=Form(1), query: str=Form(1), label: str=Form(1)):
 
     insert_into_sqlite_db(doc_id, query, label)
 
 
-@app.post('/mda/keyword_search')
+@app.post('/keyword_search')
 async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()
@@ -173,7 +175,7 @@ async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(
     }
 
     if search_type != 'optimistic_search':
-        search_data['comments'] = 'Not optimistic, User specified search'
+        search_data['comments'] = 'Nicht optimistisch, Benutzerspezifische Suche'
 
     match_top = int(match_top)
     semantic_query = False

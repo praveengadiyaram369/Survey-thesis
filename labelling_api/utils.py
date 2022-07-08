@@ -213,11 +213,11 @@ def get_optimum_search_strategy(es, query):
         if portion_of_capital_letters(query) >= 0.75:
             search_type = 'es_search'
             query_type = None
-            comments = 'Abbreviation detected'
+            comments = 'Abkürzung entdeckt'
         elif detect_german_compoundword(query):
             search_type = 'semantic_search'
             query_type = None
-            comments = 'German compound word detected' 
+            comments = 'Deutsches Kompositum gefunden' 
         elif handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False) == 0 and detect_spelling_mistake(query, lang) != query.lower():
             search_type = 'es_search'
             query_type = 'fuzzy_query'
@@ -243,11 +243,11 @@ def get_search_type(search_type):
 def get_language(lang):
 
     if lang == 'de' or lang == 1:
-        return 'Deutsch'
+        return 'deutsch'
     elif lang == 'en' or lang == 2:
-        return 'English'
+        return 'englisch'
     elif lang == 'xlm' or lang == 3:
-        return 'Mulit-lingual'
+        return 'mulitlingual'
 
 def get_merged_results(results_semantic, results_es):
 
