@@ -44,3 +44,5 @@ logging.basicConfig(handlers=[logging.FileHandler(filename=LOG_FILE,
 
 english_checker = SpellChecker(language='en')
 german_checker = SpellChecker(language='de')
+
+sqlite_db_path = basepath+'retrieval_test_dataset.db'

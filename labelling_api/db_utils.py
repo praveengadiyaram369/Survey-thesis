@@ -36,7 +36,7 @@ def sqlite_common_query_seq(sql_query, sql_select=False, sql_insert_params=None)
     logging.info('running sqlite_common_query_seq')
 
     try:
-        conn = sqlite3.connect(basepath+'retrival_test_dataset.db')
+        conn = sqlite3.connect(sqlite_db_path)
 
         cursor = conn.cursor()
 
