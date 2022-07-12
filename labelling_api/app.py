@@ -129,12 +129,12 @@ async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
 @app.post('/get_cdd_pool')
-async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()
-    lang = 3
-    match_top = 15
-
+    lang = int(lang)
+    match_top = int(match_top)
+    
     print(query)
     search_data = {
         'original_query': query,
@@ -145,10 +145,15 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1)
         'comments': 'Candidate label pool'
     }
 
-    total_hits_semantic, results_semantic = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
-    total_hits_es, results_es = get_query_result_semantic(query, lang, match_top)
-
-    results = get_merged_results(results_semantic, results_es)
+    if search_type != 'es_search':
+        total_hits_es, results = get_query_result_semantic(query, lang, match_top)
+    elif search_type != 'semantic_search':
+        total_hits_semantic, results = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+    elif search_type != 'top_candidate_pool':
+        total_hits_es, results_es = get_query_result_semantic(query, lang, match_top)
+        total_hits_semantic, results_semantic = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+        results = get_merged_results(results_semantic, results_es)
+        
     search_data['total_hits'] = len(results)
 
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': search_data['total_hits'], 'result_list': results, 'concept_list': results, 'query': query, 'search_data':search_data})
