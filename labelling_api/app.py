@@ -134,7 +134,7 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1)
     query = query.strip()
     lang = int(lang)
     match_top = int(match_top)
-    
+
     print(query)
     search_data = {
         'original_query': query,
@@ -145,13 +145,27 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1)
         'comments': 'Candidate label pool'
     }
 
-    if search_type != 'es_search':
-        total_hits_es, results = get_query_result_semantic(query, lang, match_top)
-    elif search_type != 'semantic_search':
-        total_hits_semantic, results = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
-    elif search_type != 'top_candidate_pool':
-        total_hits_es, results_es = get_query_result_semantic(query, lang, match_top)
-        total_hits_semantic, results_semantic = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+    search_data['language'] = get_language(lang)
+    search_data['search_type'] = get_search_type(search_type)
+
+    is_german_compoundword = False
+    for word in query.split():
+        if detect_german_compoundword(word):
+            is_german_compoundword = True
+            break
+
+    if search_type == 'es_search':
+        if is_german_compoundword:
+            lang = 1
+        total_hits_es, results = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+    elif search_type == 'semantic_search':
+        total_hits_semantic, results = get_query_result_semantic(query, lang, match_top)
+    elif search_type == 'top_candidate_pool':
+        total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
+        if is_german_compoundword:
+            lang = 1
+        total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+
         results = get_merged_results(results_semantic, results_es)
         
     search_data['total_hits'] = len(results)

@@ -183,7 +183,7 @@ def detect_german_compoundword(query):
     print(nouns_list)
     if len(query) > 14:
 
-        if len(nouns_list) > 1 and nouns_list[0][0] > 0:
+        if len(nouns_list) > 1 and nouns_list[0][0] > -0.8:
             return True
     return False
 
@@ -239,6 +239,8 @@ def get_search_type(search_type):
         return 'Optimistic search'
     elif search_type == 'hybrid_search':
         return 'Hybrid search'
+    elif search_type == 'top_candidate_pool':
+        return 'Candidate label pool'
 
 def get_language(lang):
 
