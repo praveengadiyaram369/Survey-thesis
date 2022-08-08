@@ -46,3 +46,5 @@ english_checker = SpellChecker(language='en')
 german_checker = SpellChecker(language='de')
 
 sqlite_db_path = basepath+'retrieval_test_dataset.db'
+
+search_results_folder = basepath+'search_results_index/'

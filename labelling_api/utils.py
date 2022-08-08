@@ -118,11 +118,23 @@ def handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False):
 
     return results['count']
 
+def write_query_results(query, result_list, search_type):
+
+    filename = search_results_folder + f'{query}_{search_type}_result.json'
+
+    data_dict = dict()
+    for idx, result in enumerate(result_list):
+        data_dict[str(idx)] = result['id'] 
+
+    with open(filename, 'w') as f:
+        json.dump(data_dict, f)
 
 def get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top):
 
     if not search_concept:
-        return handle_search_queries(es, query, lang, phrase_query, fuzzy_query, match_top)
+        total_hits, result_list = handle_search_queries(es, query, lang, phrase_query, fuzzy_query, match_top)
+        write_query_results(query, result_list, 'bm25')
+        return total_hits, result_list
 
 def get_query_result_semantic(query, lang, match_top):
 
@@ -154,6 +166,7 @@ def get_query_result_semantic(query, lang, match_top):
 
 
     total_hits = len(result_list)
+    write_query_results(query, result_list, 'semantic')
 
     return total_hits, result_list
 
