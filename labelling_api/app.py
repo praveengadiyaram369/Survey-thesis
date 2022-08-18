@@ -129,13 +129,15 @@ async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
 @app.post('/get_cdd_pool')
-async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()
     lang = int(lang)
     match_top = int(match_top)
 
     print(query)
+    print(lang)
+
     search_data = {
         'original_query': query,
         'search_type': 'BM-25 und Semantische Suche',
@@ -167,7 +169,8 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(1)
         total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
 
         results = get_merged_results(results_semantic, results_es)
-        
+    
+    results = filter_results_from_sqlitedb(results)
     search_data['total_hits'] = len(results)
 
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': search_data['total_hits'], 'result_list': results, 'concept_list': results, 'query': query, 'search_data':search_data})

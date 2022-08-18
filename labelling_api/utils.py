@@ -16,6 +16,7 @@ import tensorflow_hub as hub
 from compound_split import char_split
 from spellchecker import SpellChecker
 from settings import *
+from db_utils import *
 
 def read_document_data(filepath):
 
@@ -120,7 +121,8 @@ def handle_count_queries(es, query, lang, phrase_query=True, fuzzy_query=False):
 
 def write_query_results(query, result_list, search_type):
 
-    filename = search_results_folder + f'{query}_{search_type}_result.json'
+    query_updated = query.lower().replace(' ', '_')
+    filename = search_results_folder + f'{query_updated}_{search_type}_result.json'
 
     data_dict = dict()
     for idx, result in enumerate(result_list):
@@ -280,5 +282,16 @@ def get_merged_results(results_semantic, results_es):
             final_results.append(doc)
 
     shuffle(final_results)
+
+    return final_results
+
+def filter_results_from_sqlitedb(results):
+
+    recorded_inputs = [val[0] for val in get_db_contents]
+
+    final_results = []
+    for doc in results:
+        if doc['id'] not in recorded_inputs:
+            final_results.append(doc) 
 
     return final_results

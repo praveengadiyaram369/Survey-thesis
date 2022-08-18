@@ -25,10 +25,12 @@ def create_table():
 
 def get_db_contents():
 
-    select_table_query = """SELECT * FROM retrieval_dataset"""
+    select_table_query = """SELECT doc_id FROM retrieval_dataset"""
     query_result = sqlite_common_query_seq(select_table_query, sql_select=True)   
     # logging.info(query_result)
     logging.info(f'Total records in the DB: {len(query_result)}')
+
+    return query_result
     
 
 def sqlite_common_query_seq(sql_query, sql_select=False, sql_insert_params=None):
