@@ -285,9 +285,9 @@ def get_merged_results(results_semantic, results_es):
 
     return final_results
 
-def filter_results_from_sqlitedb(results):
+def filter_results_from_sqlitedb(results, query):
 
-    recorded_inputs = [val[0] for val in get_db_contents]
+    recorded_inputs = [val[0] for val in get_db_contents_query(query)]
 
     final_results = []
     for doc in results:

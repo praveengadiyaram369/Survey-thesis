@@ -31,6 +31,15 @@ def get_db_contents():
     logging.info(f'Total records in the DB: {len(query_result)}')
 
     return query_result
+
+def get_db_contents_query(query):
+
+    select_table_query = """SELECT doc_id FROM retrieval_dataset where query='"""+query+"""'"""
+    query_result = sqlite_common_query_seq(select_table_query, sql_select=True)   
+    # logging.info(query_result)
+    logging.info(f'Total records in the DB: {len(query_result)}')
+
+    return query_result
     
 
 def sqlite_common_query_seq(sql_query, sql_select=False, sql_insert_params=None):

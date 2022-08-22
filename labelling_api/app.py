@@ -170,7 +170,7 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
 
         results = get_merged_results(results_semantic, results_es)
     
-    results = filter_results_from_sqlitedb(results)
+    results = filter_results_from_sqlitedb(results, query)
     search_data['total_hits'] = len(results)
 
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': search_data['total_hits'], 'result_list': results, 'concept_list': results, 'query': query, 'search_data':search_data})
