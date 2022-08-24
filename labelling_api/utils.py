@@ -106,6 +106,7 @@ def handle_search_queries(es, query, lang, phrase_query, fuzzy_query, match_top)
         doc_dict['title'] = doc_data['_source']['title']
         doc_dict['text'] = doc_data['_source']['contents']['default']
         doc_dict['page_url'] = doc_data['_source']['page_url']
+        doc_dict['pub_date'] = doc_data['_source']['published_date']
         doc_dict['id'] = doc_data['_source']['id']
 
         result_list.append(doc_dict)
@@ -163,6 +164,7 @@ def get_query_result_semantic(query, lang, match_top):
         doc_dict['title'] = doc_data['title']
         doc_dict['text'] = doc_data['text']
         doc_dict['page_url'] = doc_data['url']
+        doc_dict['pub_date'] = doc_data['pubDate']
 
         result_list.append(doc_dict)
 
