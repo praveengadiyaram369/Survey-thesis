@@ -21,6 +21,13 @@ fasttext = "*"
 rapidfuzz = "*"
 pyspellchecker = "*"
 compound-split = "*"
+fuzzywuzzy = "*"
+hdbscan = "*"
+texthero = "*"
+umap = "*"
+nltk = "*"
+msgpack-numpy = "*"
+redis = "*"
 
 [dev-packages]
 

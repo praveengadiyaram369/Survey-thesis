@@ -7,6 +7,24 @@ import fasttext
 import spellchecker
 from spellchecker import SpellChecker
 
+import msgpack
+import msgpack_numpy as m
+m.patch()
+
+import redis
+
+import texthero as hero
+from texthero import preprocessing
+
+from fuzzywuzzy import fuzz
+from fuzzywuzzy import process
+
+import umap
+
+import hdbscan
+import string
+from nltk.corpus import stopwords
+
 basepath = '/usr/src/web_app/data/'
 # basepath = 'C:/Users/sri.sai.praveen.gadi/Music/data_mount/'
 
@@ -48,3 +66,8 @@ german_checker = SpellChecker(language='de')
 sqlite_db_path = basepath+'retrieval_test_dataset.db'
 
 search_results_folder = basepath+'search_results_index/'
+
+rdb = redis.StrictRedis(
+    host='redis_cache',
+    port=6379,
+)

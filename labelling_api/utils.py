@@ -17,6 +17,7 @@ from compound_split import char_split
 from spellchecker import SpellChecker
 from settings import *
 from db_utils import *
+from subtopic_utils import *
 
 def read_document_data(filepath):
 
@@ -297,3 +298,55 @@ def filter_results_from_sqlitedb(results, query):
             final_results.append(doc) 
 
     return final_results
+
+def get_stopwords():
+
+    stopwords_de = stopwords.words('german')
+    stopwords_en = stopwords.words('english')
+
+    stopwords_full = []
+    stopwords_full.extend(stopwords_de)
+    stopwords_full.extend(stopwords_en)
+
+    stopwords_full = [word.lower() for word in stopwords_full]
+    stop_all = set(stopwords_full + list(string.punctuation))
+
+    return stop_all
+
+def get_subtopic(results, query):
+
+    rank_df = pd.DataFrame(results, columns=['id', 'title', 'text', 'page_url', 'pub_date'])
+    rank_df = rank_df[['id']]
+
+    final_df = pd.concat([rank_df.set_index('id'), xlm_df.set_index('id')], axis=1, join='inner').reset_index()
+
+    query_vec = tf_model(query)['outputs'].numpy()[0]
+
+    final_df['keywords_query'] = final_df.apply(lambda x:get_sent_transformers_keywords(x['keywords'], query_vec), axis=1)
+    final_df['candidate_pool'] = final_df.apply(lambda x:get_candidate_pool(x['keywords_query']), axis=1)
+
+    final_candidate_pool = []
+
+    for idx, row in final_df.iterrows():
+        final_candidate_pool.extend(row['candidate_pool'])
+
+    final_candidate_pool_vecs = [tf_model(nc)['outputs'].numpy()[0] for nc in final_candidate_pool]
+    df_data = []
+    for word, vec in zip(final_candidate_pool, final_candidate_pool_vecs):
+        df_data.append((word, vec))
+
+    cluster_df = pd.DataFrame(df_data, columns= ['candidate_words', 'candidate_vecs'])
+
+    cluster_df = get_clustering_analysis(cluster_df,final_candidate_pool_vecs, dimen_size=5, cluster_size=8)
+    cluster_data = []
+    for cluster_id in set(cluster_df.cluster_id.values):
+        
+        if cluster_id != -1:
+            df = cluster_df[cluster_df['cluster_id'] == cluster_id]
+            cluster_data.append((cluster_id, df.candidate_words.values, df.candidate_vecs.values))
+
+    cluster_data_df = pd.DataFrame(cluster_data, columns=['cluster_id', 'candidate_words', 'candidate_vecs'])
+    cluster_data_df['mean_vec'] = cluster_data_df.apply(lambda x:get_pool_vec(x['candidate_vecs'], 'mean'), axis=1)
+    cluster_data_df['topic'] = cluster_data_df.apply(lambda x:get_nearest_keyword(x['candidate_words'], x['candidate_vecs'], x['mean_vec']), axis=1)
+
+    return list(cluster_data_df.topic.values)
