@@ -259,6 +259,8 @@ def get_search_type(search_type):
         return 'Hybrid search'
     elif search_type == 'top_candidate_pool':
         return 'Candidate label pool'
+    elif search_type == 'sub_topic_search':
+        return 'Sub topic search'
 
 def get_language(lang):
 

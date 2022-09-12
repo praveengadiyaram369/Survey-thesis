@@ -1,11 +1,14 @@
+from re import sub
 import time
 import uvicorn
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from elasticsearch import helpers, Elasticsearch
+from fastapi.responses import UJSONResponse
 from utils import *
 from db_utils import *
+import json
 
 app = FastAPI(debug=True, root_path="/mda")
 templates = Jinja2Templates(directory="templates/")
@@ -34,6 +37,7 @@ document_data = None
 tech_relevant_document_data = None
 milt_relevant_document_data = None
 irrelevant_document_data = None
+sub_topics_dict = None
 
 @app.get("/")
 async def load_homepage(request: Request):
@@ -128,6 +132,43 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
 async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
+@app.get("/search_subtopic")
+async def search_subtopic(request: Request):
+    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
+
+@app.get("/get_sub_topics", response_class=UJSONResponse)
+async def get_sub_topics(request: Request, query: str=Form(...)):
+
+    query = query.strip()
+    lang = 3
+    match_top = 15
+
+    is_german_compoundword = False
+    for word in query.split():
+        if detect_german_compoundword(word):
+            is_german_compoundword = True
+            break
+
+    search_concept = False
+    fuzzy_query = False
+    phrase_query = False
+
+    total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
+
+    if is_german_compoundword:
+        lang = 1
+    total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+
+    results = get_merged_results(results_semantic, results_es)
+
+    global sub_topics_dict
+    sub_topics = get_subtopic(results, query)
+
+    for idx, topic in enumerate(sub_topics):
+        sub_topics_dict[idx] = topic
+
+    return sub_topics_dict
+    
 @app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
