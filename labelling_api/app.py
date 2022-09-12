@@ -136,7 +136,7 @@ async def load_search_homepage(request: Request):
 async def search_subtopic(request: Request):
     return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.get("/get_sub_topics", response_class=UJSONResponse)
+@app.post("/get_sub_topics", response_class=UJSONResponse)
 async def get_sub_topics(request: Request, query: str=Form(...)):
 
     query = query.strip()
@@ -168,6 +168,72 @@ async def get_sub_topics(request: Request, query: str=Form(...)):
         sub_topics_dict[idx] = topic
 
     return sub_topics_dict
+
+@app.post('/sub_topic_keywords_search')
+async def keyword_search(request: Request, query: str=Form(...), sub_topic_id: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+
+    query = query.strip()
+    sub_topic = sub_topics_dict[sub_topic_id]
+
+    print(query)
+    search_data = {
+        'original_query':query,
+        'search_type': 'NA',
+        'search_strategy':'NA',
+        'language': 'NA',
+        'total_hits': 'NA',
+        'comments': 'NA'
+    }
+
+    if search_type != 'optimistic_search':
+        search_data['comments'] = 'Nicht optimistisch, Benutzerspezifische Suche'
+
+    match_top = int(match_top)
+    semantic_query = False
+
+    if search_type == 'semantic_search':
+        semantic_query = True
+    elif search_type == 'es_search':
+        semantic_query = False
+    elif search_type == 'optimistic_search':
+        lang, search_type, query_type, comments = get_optimum_search_strategy(es, query)
+        search_data['language'] = get_language(lang)
+        search_data['search_type'] = get_search_type(search_type)
+        search_data['comments'] = comments
+
+        if query_type == 'phrase_query':
+            phrase_query = True
+            fuzzy_query = False
+        elif query_type == 'fuzzy_query':
+            phrase_query = False
+            fuzzy_query = True
+        else:
+            phrase_query = False
+            fuzzy_query = False   
+
+    search_data['language'] = get_language(lang)
+    search_data['search_type'] = get_search_type(search_type)
+
+    if search_type != 'semantic_search':
+        if phrase_query:
+            search_data['search_strategy'] = 'Phrase match'
+        elif fuzzy_query:
+            search_data['search_strategy'] = 'Fuzzy match' 
+    else:
+        semantic_query = True      
+
+    if not semantic_query:
+        total_hits, results = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+    else:
+        total_hits, results = get_query_result_semantic(query, lang, match_top)
+
+    search_data['total_hits'] = total_hits
+
+    if not search_concept:
+        return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data})
+    else:
+        return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': total_hits, 'result_list': [], 'concept_list': results, 'query': query, 'search_data':search_data})
+
     
 @app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):

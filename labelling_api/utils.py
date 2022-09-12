@@ -317,12 +317,12 @@ def get_stopwords():
 
 def get_subtopic(results, query):
 
+    query_vec = tf_model(query)['outputs'].numpy()[0]
+
     rank_df = pd.DataFrame(results, columns=['id', 'title', 'text', 'page_url', 'pub_date'])
     rank_df = rank_df[['id']]
 
-    final_df = pd.concat([rank_df.set_index('id'), xlm_df.set_index('id')], axis=1, join='inner').reset_index()
-
-    query_vec = tf_model(query)['outputs'].numpy()[0]
+    final_df = pd.concat([rank_df.set_index('id'), final_keywords_dataframe.set_index('id')], axis=1, join='inner').reset_index()
 
     final_df['keywords_query'] = final_df.apply(lambda x:get_sent_transformers_keywords(x['keywords'], query_vec), axis=1)
     final_df['candidate_pool'] = final_df.apply(lambda x:get_candidate_pool(x['keywords_query']), axis=1)
