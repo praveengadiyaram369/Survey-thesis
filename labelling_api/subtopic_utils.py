@@ -102,7 +102,6 @@ def get_sent_transformers_keywords(keywords, query_vec, max_keyword_cnt=30):
     
     candidate_embeddings_keywords = []
     keywords = list(dict(keywords).keys())
-    logging.info(keywords)
 
     for kw in keywords: 
         candidate_embeddings_keywords.append(m.unpackb(rdb.get(kw)))
@@ -110,7 +109,6 @@ def get_sent_transformers_keywords(keywords, query_vec, max_keyword_cnt=30):
     query_distances = cosine_similarity([query_vec], candidate_embeddings_keywords)
     subtopic_keywords_dict = dict()
     for index in query_distances.argsort()[0][-max_keyword_cnt:]: 
-        
         subtopic_keywords_dict[keywords[index]] = query_distances[0][index]
     
     subtopic_keywords_dict = sorted(subtopic_keywords_dict.items(), key=lambda x: x[1], reverse=True)

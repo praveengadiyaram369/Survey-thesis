@@ -19,7 +19,7 @@ from texthero import preprocessing
 from fuzzywuzzy import fuzz
 from fuzzywuzzy import process
 
-import umap
+import umap.umap_ as umap
 
 import hdbscan
 import string

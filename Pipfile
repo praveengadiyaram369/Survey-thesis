@@ -24,10 +24,10 @@ compound-split = "*"
 fuzzywuzzy = "*"
 hdbscan = "*"
 texthero = "*"
-umap = "*"
 nltk = "*"
 msgpack-numpy = "*"
 redis = "*"
+umap-learn = "*"
 
 [dev-packages]
 
