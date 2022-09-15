@@ -209,8 +209,9 @@
             
             
          let data = await response.json();
-            data = JSON.parse(data)
-            console.log(data);
+         console.log(data);
+         parsed_data = JSON.parse(data);
+         console.log(parsed_data);
             
             
          } catch (error) {

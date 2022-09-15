@@ -20,24 +20,22 @@
                         <h3>Search Newsfeeds</h3>
                      </div>
                   </div> -->
-                  <form action="/mda/get_cdd_pool" method="POST" id='formid'>
+                  <form action="/mda/sub_topic_keywords_search" method="POST" id='formid'>
                   <div class="input-group mb-3">
                      <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
                      </div>
                      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name='query' id='query' required>
                   </div>
-                  <button type="button" class="btn btn-primary" style="float: right; vertical-align: baseline;" id="sub_topic" onclick="get_sub_topics(this);">Sub-topics abrufen</button>
+                  <button type="button" class="btn btn-primary" style="margin:5px; " id="sub_topic" onclick="get_sub_topics(this);">Sub-topics abrufen</button>
 
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
                        <span class="input-group-text" id="inputGroup-sizing-default">Sub-topic</span>
                     </div>
-                    <select class="form-select form-control" name="lang" id="select-subtopic" aria-label="Default select example">
-                       
-                    {% for data in sub_topic_list %}
-                       <option value="{{data['title']}}">{{data['title']}}</option>
-                    {% endfor %}
+
+                    <select class="form-select form-control" name="sub_topic_selected" id="select-subtopic" aria-label="Default select example">
+
                     </select>
                  </div>
 
@@ -63,24 +61,24 @@
                             <input type="radio" class="btn-check" name="search_type" value="es_search" id="radio1" autocomplete="off" disabled>
                             <label class="btn btn-outline-primary" for="radio1">BM-25 Suche</label>
                         
-                            <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" disabled>
+                            <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" checked>
                             <label class="btn btn-outline-primary" for="radio2">Semantische Suche</label>
 
-                            <!-- <input type="radio" class="btn-check" name="search_type" value="optimistic_search" id="radio3" autocomplete="off" disabled>
-                            <label class="btn btn-outline-primary" for="radio3">Optimistische Suche</label> -->
+                            <input type="radio" class="btn-check" name="search_type" value="optimistic_search" id="radio3" autocomplete="off" disabled>
+                            <label class="btn btn-outline-primary" for="radio3">Optimistische Suche</label>
 
-                            <input type="radio" class="btn-check" name="search_type" value="top_candidate_pool" id="radio3" autocomplete="off" checked>
+                            <input type="radio" class="btn-check" name="search_type" value="top_candidate_pool" id="radio3" autocomplete="off" disabled>
                             <label class="btn btn-outline-primary" for="radio3">Top candidate pool</label>
 
                         </div>
                     </div>
                   
                   <div class="form-check">
-                     <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="phrase_query" disabled>
+                     <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="phrase_query" >
                      <label class="form-check-label" for="phrase_search">Phrasensuche</label>
                   </div>
                   <div class="form-check">
-                     <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="fuzzy_query" disabled>
+                     <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="fuzzy_query" >
                      <label class="form-check-label" for="fuzzy_search">Fuzzysuche</label>
                   </div>
                   <!-- <div class="form-check">
@@ -213,9 +211,15 @@
             
             
         let data = await response.json();
-            data = JSON.parse(data)
-            console.log(data);
+         console.log(typeof data);
+         // console.log(data);
+
+         parsed_data = JSON.parse(data);
+         // console.log(parsed_data);
             
+         $.each(parsed_data, function(i, option) {
+        $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
+      	});
             
         } catch (error) {
             console.error(error);

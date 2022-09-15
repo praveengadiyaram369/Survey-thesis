@@ -5,7 +5,8 @@ from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from elasticsearch import helpers, Elasticsearch
-from fastapi.responses import UJSONResponse
+from fastapi.encoders import jsonable_encoder
+from fastapi.responses import JSONResponse
 from utils import *
 from db_utils import *
 import json
@@ -37,7 +38,7 @@ document_data = None
 tech_relevant_document_data = None
 milt_relevant_document_data = None
 irrelevant_document_data = None
-sub_topics_dict = None
+sub_topics_dict = dict()
 
 @app.get("/")
 async def load_homepage(request: Request):
@@ -132,52 +133,69 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
 async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.get("/search_subtopic")
+@app.get("/mda/search_subtopic")
 async def search_subtopic(request: Request):
     return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.post("/get_sub_topics", response_class=UJSONResponse)
+@app.post("/mda/get_sub_topics")
 async def get_sub_topics(request: Request, query: str=Form(...)):
 
     query = query.strip()
     lang = 3
     match_top = 15
 
-    is_german_compoundword = False
-    for word in query.split():
-        if detect_german_compoundword(word):
-            is_german_compoundword = True
-            break
-
-    search_concept = False
-    fuzzy_query = False
-    phrase_query = False
-
-    total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
-
-    if is_german_compoundword:
-        lang = 1
-    total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
-
-    results = get_merged_results(results_semantic, results_es)
-
+    sub_topics = ['der Telekom', 'LTE-Betrieb', 'ein eigen virtuell Mobilfunknetz', 'the network', 'knapp 100.000 Patent', 'der iPhones', 'auch der  700-MHz-Band', 'Geschwindigkeit', 'Mobilfunk', 'Vodafone', 'Verizon']
     global sub_topics_dict
-    sub_topics = get_subtopic(results, query)
+    sub_topic_list = []
 
     for idx, topic in enumerate(sub_topics):
-        sub_topics_dict[idx] = topic
+        sub_topics_dict[str(idx+1)] = topic
+        sub_topic_list.append({'id':str(idx+1), 'name': topic})
 
-    logging.info(sub_topics_dict)
+    json_compatible_item_data = jsonable_encoder(json.dumps(sub_topic_list))
+    return JSONResponse(content=json_compatible_item_data)
 
-    return sub_topics_dict
+    # is_german_compoundword = False
+    # for word in query.split():
+    #     if detect_german_compoundword(word):
+    #         is_german_compoundword = True
+    #         break
 
-@app.post('/sub_topic_keywords_search')
-async def keyword_search(request: Request, query: str=Form(...), sub_topic_id: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+    # search_concept = False
+    # fuzzy_query = False
+    # phrase_query = False
+
+    # total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
+
+    # if is_german_compoundword:
+    #     lang = 1
+    # total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+
+    # results = get_merged_results(results_semantic, results_es)
+
+    # global sub_topics_dict
+    # sub_topics = get_subtopic(results, query)
+    # logging.info(sub_topics)
+
+    # for idx, topic in enumerate(sub_topics):
+    #     sub_topics_dict[str(idx+1)] = topic
+
+    # logging.info(sub_topics_dict)
+
+    # return sub_topics_dict
+
+@app.post('/mda/sub_topic_keywords_search')
+async def keyword_search(request: Request, query: str=Form(...), sub_topic_selected: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()
-    sub_topic = sub_topics_dict[sub_topic_id]
+    sub_topic = sub_topics_dict[str(sub_topic_selected)]
 
     print(query)
+    print(sub_topic)
+
+    query = query + ' and ' + sub_topic 
+    print(query)
+
     search_data = {
         'original_query':query,
         'search_type': 'NA',
