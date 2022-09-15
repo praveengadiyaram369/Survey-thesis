@@ -101,6 +101,9 @@ def get_filtered_nc(noun_chunks):
 def get_sent_transformers_keywords(keywords, query_vec, max_keyword_cnt=30):
     
     candidate_embeddings_keywords = []
+    keywords = list(dict(keywords).keys())
+    logging.info(keywords)
+
     for kw in keywords: 
         candidate_embeddings_keywords.append(m.unpackb(rdb.get(kw)))
                 

@@ -167,6 +167,8 @@ async def get_sub_topics(request: Request, query: str=Form(...)):
     for idx, topic in enumerate(sub_topics):
         sub_topics_dict[idx] = topic
 
+    logging.info(sub_topics_dict)
+
     return sub_topics_dict
 
 @app.post('/sub_topic_keywords_search')
