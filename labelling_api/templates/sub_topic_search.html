@@ -25,7 +25,7 @@
                      <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
                      </div>
-                     <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name='query' id='query' required>
+                     <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name='query' id='query' placeholder="{{query}}" required>
                   </div>
                   <button type="button" class="btn btn-primary" style="margin:5px; " id="sub_topic" onclick="get_sub_topics(this);">Sub-topics abrufen</button>
 
@@ -61,7 +61,7 @@
                             <input type="radio" class="btn-check" name="search_type" value="es_search" id="radio1" autocomplete="off" disabled>
                             <label class="btn btn-outline-primary" for="radio1">BM-25 Suche</label>
                         
-                            <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" checked>
+                            <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" disabled>
                             <label class="btn btn-outline-primary" for="radio2">Semantische Suche</label>
 
                             <input type="radio" class="btn-check" name="search_type" value="optimistic_search" id="radio3" autocomplete="off" disabled>
@@ -69,6 +69,9 @@
 
                             <input type="radio" class="btn-check" name="search_type" value="top_candidate_pool" id="radio3" autocomplete="off" disabled>
                             <label class="btn btn-outline-primary" for="radio3">Top candidate pool</label>
+
+                            <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" checked>
+                            <label class="btn btn-outline-primary" for="radio2">Sub-topic Suche</label>
 
                         </div>
                     </div>

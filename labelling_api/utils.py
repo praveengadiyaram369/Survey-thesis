@@ -361,7 +361,7 @@ def get_subtopic(results, query):
 
 def get_topic_documents_clustering(doc_id_list):
 
-    df = xlm_df.iloc[doc_id_list]
+    df = xlm_df[xlm_df['id'].isin(doc_id_list)]
 
     result_list = []
     for idx, doc_data in df.iterrows():
@@ -376,5 +376,5 @@ def get_topic_documents_clustering(doc_id_list):
         result_list.append(doc_dict)
 
     total_hits = len(result_list)
-    
+
     return total_hits, result_list

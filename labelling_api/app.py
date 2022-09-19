@@ -2,7 +2,7 @@ from re import sub
 import time
 from unittest import result
 import uvicorn
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, render_template
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from elasticsearch import helpers, Elasticsearch
@@ -137,7 +137,8 @@ async def load_search_homepage(request: Request):
 
 @app.get("/search_subtopic")
 async def search_subtopic(request: Request):
-    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
+    query = '5G'
+    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[]})
 
 @app.post("/get_sub_topics")
 async def get_sub_topics(request: Request, query: str=Form(...)):
@@ -200,8 +201,7 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
 
     total_hits, results = get_topic_documents_clustering(doc_id_list)
 
-    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data})
-
+    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':list(topic_dict.keys())})
     
 @app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
