@@ -190,10 +190,8 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
     print(query)
     print(sub_topic)
 
-    query = query + ' und ' + sub_topic 
-
     search_data = {
-        'original_query':query,
+        'original_query':f'{query} und {sub_topic}',
         'search_type': 'NA',
         'search_strategy':'Clustering based results',
         'language': 'NA',
