@@ -169,3 +169,20 @@ def get_nearest_keyword(keywords, keyword_vecs, mean_vec):
     
     subtopic_keywords_dict = sorted(subtopic_keywords_dict.items(), key=lambda x: x[1], reverse=True)
     return subtopic_keywords_dict[0][0]
+
+
+def get_topic_documents(topic_words, final_df):
+
+    doc_id_list = []
+    for idx, row in final_df.iterrows():
+
+        candidate_pool = row['candidate_pool']
+        doc_id = row['id']
+
+        for tw in topic_words:
+            if tw in candidate_pool:
+                doc_id_list.append(doc_id)
+
+    return doc_id_list
+
+

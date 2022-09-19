@@ -351,4 +351,30 @@ def get_subtopic(results, query):
     cluster_data_df['mean_vec'] = cluster_data_df.apply(lambda x:get_pool_vec(x['candidate_vecs'], 'mean'), axis=1)
     cluster_data_df['topic'] = cluster_data_df.apply(lambda x:get_nearest_keyword(x['candidate_words'], x['candidate_vecs'], x['mean_vec']), axis=1)
 
-    return list(cluster_data_df.topic.values)
+    cluster_data_df['page_id_list'] = cluster_data_df.apply(lambda x:get_topic_documents(x['candidate_words'], final_df), axis=1)
+
+    cluster_dict = dict()
+    for topic, doc_id_list in zip(cluster_data_df.topic.values, cluster_data_df.page_id_list.values):
+        cluster_dict[topic] = doc_id_list
+
+    return cluster_dict
+
+def get_topic_documents_clustering(doc_id_list):
+
+    df = xlm_df.iloc[doc_id_list]
+
+    result_list = []
+    for idx, doc_data in df.iterrows():
+        doc_dict = dict()
+
+        doc_dict['id'] = doc_data['id']
+        doc_dict['title'] = doc_data['title']
+        doc_dict['text'] = doc_data['text']
+        doc_dict['page_url'] = doc_data['url']
+        doc_dict['pub_date'] = doc_data['pubDate']
+
+        result_list.append(doc_dict)
+
+    total_hits = len(result_list)
+    
+    return total_hits, result_list

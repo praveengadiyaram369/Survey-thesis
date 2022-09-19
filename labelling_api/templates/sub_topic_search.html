@@ -216,7 +216,9 @@
 
          parsed_data = JSON.parse(data);
          // console.log(parsed_data);
-            
+
+         $('#select-subtopic').empty();
+         
          $.each(parsed_data, function(i, option) {
         $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
       	});

@@ -1,5 +1,6 @@
 from re import sub
 import time
+from unittest import result
 import uvicorn
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
@@ -39,6 +40,7 @@ tech_relevant_document_data = None
 milt_relevant_document_data = None
 irrelevant_document_data = None
 sub_topics_dict = dict()
+topic_dict = dict()
 
 @app.get("/")
 async def load_homepage(request: Request):
@@ -133,18 +135,38 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
 async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.get("/mda/search_subtopic")
+@app.get("/search_subtopic")
 async def search_subtopic(request: Request):
     return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.post("/mda/get_sub_topics")
+@app.post("/get_sub_topics")
 async def get_sub_topics(request: Request, query: str=Form(...)):
 
     query = query.strip()
     lang = 3
     match_top = 15
 
-    sub_topics = ['der Telekom', 'LTE-Betrieb', 'ein eigen virtuell Mobilfunknetz', 'the network', 'knapp 100.000 Patent', 'der iPhones', 'auch der  700-MHz-Band', 'Geschwindigkeit', 'Mobilfunk', 'Vodafone', 'Verizon']
+    is_german_compoundword = False
+    for word in query.split():
+        if detect_german_compoundword(word):
+            is_german_compoundword = True
+            break
+
+    search_concept = False
+    fuzzy_query = False
+    phrase_query = False
+
+    total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
+
+    if is_german_compoundword:
+        lang = 1
+    total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+
+    results = get_merged_results(results_semantic, results_es)
+
+    global topic_dict
+    topic_dict = get_subtopic(results, query)
+    sub_topics = list(topic_dict.keys())
     global sub_topics_dict
     sub_topic_list = []
 
@@ -155,104 +177,30 @@ async def get_sub_topics(request: Request, query: str=Form(...)):
     json_compatible_item_data = jsonable_encoder(json.dumps(sub_topic_list))
     return JSONResponse(content=json_compatible_item_data)
 
-    # is_german_compoundword = False
-    # for word in query.split():
-    #     if detect_german_compoundword(word):
-    #         is_german_compoundword = True
-    #         break
-
-    # search_concept = False
-    # fuzzy_query = False
-    # phrase_query = False
-
-    # total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
-
-    # if is_german_compoundword:
-    #     lang = 1
-    # total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
-
-    # results = get_merged_results(results_semantic, results_es)
-
-    # global sub_topics_dict
-    # sub_topics = get_subtopic(results, query)
-    # logging.info(sub_topics)
-
-    # for idx, topic in enumerate(sub_topics):
-    #     sub_topics_dict[str(idx+1)] = topic
-
-    # logging.info(sub_topics_dict)
-
-    # return sub_topics_dict
-
-@app.post('/mda/sub_topic_keywords_search')
+@app.post('/sub_topic_keywords_search')
 async def keyword_search(request: Request, query: str=Form(...), sub_topic_selected: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()
     sub_topic = sub_topics_dict[str(sub_topic_selected)]
+    doc_id_list = topic_dict[sub_topic]
 
     print(query)
     print(sub_topic)
 
-    query = query + ' and ' + sub_topic 
-    print(query)
+    query = query + ' und ' + sub_topic 
 
     search_data = {
         'original_query':query,
         'search_type': 'NA',
-        'search_strategy':'NA',
+        'search_strategy':'Clustering based results',
         'language': 'NA',
         'total_hits': 'NA',
-        'comments': 'NA'
+        'comments': 'Sub topic search'
     }
 
-    if search_type != 'optimistic_search':
-        search_data['comments'] = 'Nicht optimistisch, Benutzerspezifische Suche'
+    total_hits, results = get_topic_documents_clustering(doc_id_list)
 
-    match_top = int(match_top)
-    semantic_query = False
-
-    if search_type == 'semantic_search':
-        semantic_query = True
-    elif search_type == 'es_search':
-        semantic_query = False
-    elif search_type == 'optimistic_search':
-        lang, search_type, query_type, comments = get_optimum_search_strategy(es, query)
-        search_data['language'] = get_language(lang)
-        search_data['search_type'] = get_search_type(search_type)
-        search_data['comments'] = comments
-
-        if query_type == 'phrase_query':
-            phrase_query = True
-            fuzzy_query = False
-        elif query_type == 'fuzzy_query':
-            phrase_query = False
-            fuzzy_query = True
-        else:
-            phrase_query = False
-            fuzzy_query = False   
-
-    search_data['language'] = get_language(lang)
-    search_data['search_type'] = get_search_type(search_type)
-
-    if search_type != 'semantic_search':
-        if phrase_query:
-            search_data['search_strategy'] = 'Phrase match'
-        elif fuzzy_query:
-            search_data['search_strategy'] = 'Fuzzy match' 
-    else:
-        semantic_query = True      
-
-    if not semantic_query:
-        total_hits, results = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
-    else:
-        total_hits, results = get_query_result_semantic(query, lang, match_top)
-
-    search_data['total_hits'] = total_hits
-
-    if not search_concept:
-        return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data})
-    else:
-        return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': total_hits, 'result_list': [], 'concept_list': results, 'query': query, 'search_data':search_data})
+    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data})
 
     
 @app.post('/get_cdd_pool')
