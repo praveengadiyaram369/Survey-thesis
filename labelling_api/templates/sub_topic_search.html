@@ -35,6 +35,9 @@
                     </div>
 
                     <select class="form-select form-control" name="sub_topic_selected" id="select-subtopic" aria-label="Default select example">
+                     {% for sub_topic in sub_topic_list %}
+                     <option value= "{{sub_topic['id']}}" >{{sub_topic['name']}}</option>"
+                     {% endfor %}
 
                     </select>
                  </div>
