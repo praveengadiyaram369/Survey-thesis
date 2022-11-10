@@ -152,8 +152,8 @@ def get_query_result_semantic(query, lang, match_top):
         index = xlm_index
         doc_df = xlm_df
 
-    query_embedding = tf_model(query)['outputs'].numpy()[0].reshape(1, -1)
-    result = index.search(np.float32(query_embedding), match_top)
+    query_embedding = tf_model(query)['outputs'].numpy()[0]
+    result = index.search(np.float32(query_embedding.reshape(1, -1)), match_top)
 
     df = doc_df.iloc[result[1][0]]
 
@@ -161,14 +161,33 @@ def get_query_result_semantic(query, lang, match_top):
     for idx, doc_data in df.iterrows():
         doc_dict = dict()
 
-        doc_dict['id'] = doc_data['id']
-        doc_dict['title'] = doc_data['title']
-        doc_dict['text'] = doc_data['text']
-        doc_dict['page_url'] = doc_data['url']
-        doc_dict['pub_date'] = doc_data['pubDate']
+        sim = cosine_similarity(get_modified_vectors(query_embedding), doc_data['mean_nc_vec'])[0][0]
+        if sim > 0.27:
+            doc_dict['id'] = doc_data['id']
+            doc_dict['title'] = doc_data['title']
+            doc_dict['text'] = doc_data['text']
+            doc_dict['page_url'] = doc_data['url']
+            doc_dict['pub_date'] = doc_data['pubDate']
 
-        result_list.append(doc_dict)
+            result_list.append(doc_dict)
 
+    if len(result_list) < 10:
+        result_list = []
+        index = 0
+        for idx, doc_data in df.iterrows():
+            index += 1
+            doc_dict = dict()
+
+            doc_dict['id'] = doc_data['id']
+            doc_dict['title'] = doc_data['title']
+            doc_dict['text'] = doc_data['text']
+            doc_dict['page_url'] = doc_data['url']
+            doc_dict['pub_date'] = doc_data['pubDate']
+
+            result_list.append(doc_dict)
+
+            if index == 10:
+                break
 
     total_hits = len(result_list)
     write_query_results(query, result_list, 'semantic')
