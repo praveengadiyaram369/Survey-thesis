@@ -136,6 +136,10 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
 async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
+@app.get("/search_survey")
+async def load_search_homepage(request: Request):
+    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
+
 @app.get("/search_subtopic")
 async def search_subtopic(request: Request):
     query = '5G'
@@ -202,14 +206,37 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
     total_hits, results = get_topic_documents_clustering(doc_id_list)
 
     return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list})
-    
+
+
+@app.post('/sub_topic_search_survey')
+async def keyword_search(request: Request, query: str=Form(...), sub_topic_selected: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+
+    query = query.strip()
+    sub_topic = sub_topics_dict[str(sub_topic_selected)]
+    doc_id_list = topic_dict[sub_topic]
+
+    print(query)
+    print(sub_topic)
+
+    search_data = {
+        'original_query':f'{query} und {sub_topic}',
+        'search_type': 'NA',
+        'search_strategy':'Clustering based results',
+        'language': 'NA',
+        'total_hits': 'NA',
+        'comments': 'Sub topic search'
+    }
+
+    total_hits, results = get_topic_documents_clustering(doc_id_list)
+
+    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list})
+
 @app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query.strip()
     lang = int(lang)
-    # match_top = int(match_top)
-    match_top = 55
+    match_top = int(match_top)
 
     print(query)
     print(lang)
@@ -239,6 +266,12 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
     elif search_type == 'semantic_search':
         total_hits_semantic, results = get_query_result_semantic(query, lang, match_top)
     elif search_type == 'top_candidate_pool':
+
+        for cut_off in [0.9, 0.95, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5]:
+            total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off)
+
+        total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
+
         total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
         if is_german_compoundword:
             lang = 1

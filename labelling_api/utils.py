@@ -128,7 +128,7 @@ def write_query_results(query, result_list, search_type):
 
     data_dict = dict()
     for idx, result in enumerate(result_list):
-        data_dict[str(idx)] = result['id']ö 
+        data_dict[str(idx)] = result['id']
 
     with open(filename, 'w') as f:
         json.dump(data_dict, f)
@@ -153,7 +153,7 @@ def get_max_diff_index(doc_similarities):
 
     return sim_list[max_diff_index]
 
-def get_query_result_semantic(query, lang, match_top):
+def get_query_result_semantic(query, lang, match_top, cut_off = 0.64):
 
     match_top_org = match_top
     match_top += 10
@@ -184,14 +184,17 @@ def get_query_result_semantic(query, lang, match_top):
     max_sim = max(doc_similarity_list)
     min_sim = min(doc_similarity_list)
     max_diff_sim = get_max_diff_index(doc_similarities)
-    cut_off_sim = min(0.27, (0.64*max_sim), max_diff_sim)
+    # cut_off_sim = min(0.27, (0.64*max_sim), max_diff_sim)
+    cut_off_sim = (cut_off * max_sim)
 
     logging.info(f'\nQuery: {query}')
     logging.info(f'Max similarity: {max_sim}')
-    logging.info(f'Max*0.68 similarity: {0.64*max_sim}')
-    logging.info(f'Max diff similarity: {max_diff_sim}')
-    logging.info(f'Cut-off similarity: {cut_off_sim}\n')
     logging.info(f'Min similarity: {min_sim}')
+    logging.info(f'Cut-off similarity: {cut_off_sim}\n')
+
+    # logging.info(f'Max*0.68 similarity: {0.64*max_sim}')
+    # logging.info(f'Max diff similarity: {max_diff_sim}')
+    # logging.info(f'Cut-off similarity: {cut_off_sim}\n')
 
     result_list = []
     for idx, doc_data in df.iterrows():
@@ -209,25 +212,25 @@ def get_query_result_semantic(query, lang, match_top):
 
     logging.info(f'Semantic search original length: {len(result_list)}')
 
-    if len(result_list) < 10:
-        result_list = []
-        index = 0
-        for idx, doc_data in df.iterrows():
-            index += 1
-            doc_dict = dict()
+    # if len(result_list) < 10:
+    #     result_list = []
+    #     index = 0
+    #     for idx, doc_data in df.iterrows():
+    #         index += 1
+    #         doc_dict = dict()
 
-            doc_dict['id'] = doc_data['id']
-            doc_dict['title'] = doc_data['title']
-            doc_dict['text'] = doc_data['text']
-            doc_dict['page_url'] = doc_data['url']
-            doc_dict['pub_date'] = doc_data['pubDate']
+    #         doc_dict['id'] = doc_data['id']
+    #         doc_dict['title'] = doc_data['title']
+    #         doc_dict['text'] = doc_data['text']
+    #         doc_dict['page_url'] = doc_data['url']
+    #         doc_dict['pub_date'] = doc_data['pubDate']
 
-            result_list.append(doc_dict)
+    #         result_list.append(doc_dict)
 
-            if index == 10:
-                break
-    elif len(result_list) > match_top_org:
-        result_list = result_list[:match_top_org]
+    #         if index == 10:
+    #             break
+    # elif len(result_list) > match_top_org:
+    #     result_list = result_list[:match_top_org]
 
     total_hits = len(result_list)
     write_query_results(query, result_list, 'semantic')
@@ -380,7 +383,7 @@ def get_subtopic(results, query):
 
     rank_df = pd.DataFrame(results, columns=['id', 'title', 'text', 'page_url', 'pub_date'])
     rank_df = rank_df[['id']]
-
+    
     final_df = pd.concat([rank_df.set_index('id'), final_keywords_dataframe.set_index('id')], axis=1, join='inner').reset_index()
 
     final_df['keywords_query'] = final_df.apply(lambda x:get_sent_transformers_keywords(x['keywords'], query_vec), axis=1)
