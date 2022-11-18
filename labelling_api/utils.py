@@ -156,7 +156,7 @@ def get_max_diff_index(doc_similarities):
 def get_query_result_semantic(query, lang, match_top, cut_off = 0.64):
 
     match_top_org = match_top
-    match_top += 10
+    # match_top += 10
 
     if lang == 1:
         index = de_index
@@ -187,10 +187,11 @@ def get_query_result_semantic(query, lang, match_top, cut_off = 0.64):
     # cut_off_sim = min(0.27, (0.64*max_sim), max_diff_sim)
     cut_off_sim = (cut_off * max_sim)
 
-    logging.info(f'\nQuery: {query}')
-    logging.info(f'Max similarity: {max_sim}')
-    logging.info(f'Min similarity: {min_sim}')
-    logging.info(f'Cut-off similarity: {cut_off_sim}\n')
+    # logging.info(f'\nQuery: {query}')
+    # logging.info(f'Cut-off: {cut_off}')
+    # logging.info(f'Max similarity: {max_sim}')
+    # logging.info(f'Min similarity: {min_sim}')
+    # logging.info(f'Cut-off similarity: {cut_off_sim}')
 
     # logging.info(f'Max*0.68 similarity: {0.64*max_sim}')
     # logging.info(f'Max diff similarity: {max_diff_sim}')
@@ -210,7 +211,7 @@ def get_query_result_semantic(query, lang, match_top, cut_off = 0.64):
 
             result_list.append(doc_dict)
 
-    logging.info(f'Semantic search original length: {len(result_list)}')
+    logging.info(f'Semantic search original length: {len(result_list)}\n')
 
     # if len(result_list) < 10:
     #     result_list = []

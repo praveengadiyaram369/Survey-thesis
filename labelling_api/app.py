@@ -11,6 +11,7 @@ from fastapi.responses import JSONResponse
 from utils import *
 from db_utils import *
 import json
+from random import shuffle
 
 app = FastAPI(debug=True, root_path="/mda")
 templates = Jinja2Templates(directory="templates/")
@@ -137,7 +138,7 @@ async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
 @app.get("/search_survey")
-async def load_search_homepage(request: Request):
+async def search_survey(request: Request):
     return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
 @app.get("/search_subtopic")
@@ -219,7 +220,8 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
     print(sub_topic)
 
     search_data = {
-        'original_query':f'{query} und {sub_topic}',
+        'original_query':query,
+        'sub_topic': sub_topic,
         'search_type': 'NA',
         'search_strategy':'Clustering based results',
         'language': 'NA',
@@ -228,8 +230,10 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
     }
 
     total_hits, results = get_topic_documents_clustering(doc_id_list)
+    results_2 = results[:-1]
+    shuffle(results_2)
 
-    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list})
+    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': total_hits, 'result_list_1': results, 'result_list_2': results_2, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list})
 
 @app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
