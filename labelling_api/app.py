@@ -271,8 +271,8 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
         total_hits_semantic, results = get_query_result_semantic(query, lang, match_top)
     elif search_type == 'top_candidate_pool':
 
-        for cut_off in [0.9, 0.95, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5]:
-            total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off)
+        # for cut_off in [0.9, 0.95, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5]:
+        #     total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off)
 
         total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
 
