@@ -199,7 +199,7 @@ def get_query_result_semantic(query, lang, match_top, cut_off = 0.64):
     for idx, doc_data in df.iterrows():
         doc_dict = dict()
 
-        sim = cosine_similarity(get_modified_vectors(query_embedding), doc_data['nc_vec'])[0][0]
+        sim = doc_similarities[doc_data['id']]
         if sim > cut_off_sim:
             doc_dict['id'] = doc_data['id']
             doc_dict['title'] = doc_data['title']
@@ -233,6 +233,69 @@ def get_query_result_semantic(query, lang, match_top, cut_off = 0.64):
 
     total_hits = len(result_list)
     write_query_results(query, result_list, 'semantic')
+
+    return total_hits, result_list
+
+def get_query_result_semantic_analysis(query, lang, match_top, cut_off = 0.64):
+
+    match_top_org = match_top
+    # match_top += 10
+
+    if lang == 1:
+        index = de_index
+        doc_df = de_df
+    elif lang == 2:
+        index = en_index
+        doc_df = en_df
+    elif lang == 3:
+        index = xlm_index
+        doc_df = xlm_df
+
+    query_embedding = tf_model(query)['outputs'].numpy()[0]
+    result = index.search(np.float32(query_embedding.reshape(1, -1)), match_top)
+
+    df = doc_df.iloc[result[1][0]]
+
+    doc_similarities = {}
+    for idx, doc_data in df.iterrows():
+        sim = cosine_similarity(get_modified_vectors(query_embedding), doc_data['nc_vec'])[0][0]
+        doc_similarities[doc_data['id']] = sim
+
+    doc_similarities = dict(sorted(doc_similarities.items(), key=lambda item: item[1], reverse=True))
+    
+    doc_similarity_list = list(doc_similarities.values())
+    max_sim = max(doc_similarity_list)
+    min_sim = min(doc_similarity_list)
+    max_diff_sim = get_max_diff_index(doc_similarities)
+    # cut_off_sim = min(0.27, (0.64*max_sim), max_diff_sim)
+
+    cut_off_values = [round(val,2) for val in np.arange(0.5, 1.0, step=0.01)]
+    cut_off_dict = {'Query': query}
+
+    for cut_off in cut_off_values:
+        cut_off_sim = (cut_off * max_sim)
+
+        result_list = []
+        for idx, doc_data in df.iterrows():
+            doc_dict = dict()
+
+            sim = doc_similarities[doc_data['id']]
+            if sim > cut_off_sim:
+                doc_dict['id'] = doc_data['id']
+                doc_dict['title'] = doc_data['title']
+                doc_dict['text'] = doc_data['text']
+                doc_dict['page_url'] = doc_data['url']
+                doc_dict['pub_date'] = doc_data['pubDate']
+
+                result_list.append(doc_dict)
+
+        total_hits = len(result_list)
+        cut_off_dict[cut_off] = total_hits
+    # write_query_results(query, result_list, 'semantic')
+
+    query_updated = query.lower().replace(' ', '_')
+    filename = document_count_results_folder + f'{query_updated}_doc_cnt_result.json'
+    write_document_data(cut_off_dict, filepath=filename)
 
     return total_hits, result_list
 

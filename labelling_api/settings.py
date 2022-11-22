@@ -68,6 +68,7 @@ german_checker = SpellChecker(language='de')
 sqlite_db_path = basepath+'retrieval_test_dataset.db'
 
 search_results_folder = basepath+'search_results_index/'
+document_count_results_folder = basepath+'document_count_results_index/'
 
 rdb = redis.StrictRedis(
     host='redis_cache',
