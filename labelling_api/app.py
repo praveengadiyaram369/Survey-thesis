@@ -240,8 +240,8 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
 
     query = query.strip()
     lang = int(lang)
-    # match_top = int(match_top)
-    match_top = 100
+    match_top = int(match_top)
+    # match_top = 100
 
     print(query)
     print(lang)
@@ -268,8 +268,16 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
         if is_german_compoundword:
             lang = 1
         total_hits_es, results = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+        search_data['cdd_result_cnt'] = 0
+        search_data['es_result_cnt'] = len(results)
+        search_data['ss_result_cnt'] =  0
+
     elif search_type == 'semantic_search':
         total_hits_semantic, results = get_query_result_semantic(query, lang, match_top)
+        search_data['cdd_result_cnt'] = 0
+        search_data['es_result_cnt'] = 0
+        search_data['ss_result_cnt'] =  len(results)
+
     elif search_type == 'top_candidate_pool':
 
         # for cut_off in [0.9, 0.95, 0.85, 0.8, 0.75, 0.7, 0.65, 0.6, 0.55, 0.5]:
@@ -288,11 +296,12 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
         results = get_merged_results(results_semantic, results_es)
     
     # results = filter_results_from_sqlitedb(results, query)
-    search_data['total_hits'] = len(results)
+        
+        search_data['cdd_result_cnt'] = len(results)
+        search_data['es_result_cnt'] = len(results_es)
+        search_data['ss_result_cnt'] =  total_hits_semantic
 
-    search_data['cdd_result_cnt'] = len(results)
-    search_data['es_result_cnt'] = len(results_es)
-    search_data['ss_result_cnt'] =  total_hits_semantic
+    search_data['total_hits'] = len(results)
 
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': search_data['total_hits'], 'result_list': results, 'concept_list': results, 'query': query, 'search_data':search_data})
 
