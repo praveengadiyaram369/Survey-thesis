@@ -74,3 +74,5 @@ rdb = redis.StrictRedis(
     host='redis_cache',
     port=6379,
 )
+
+MIN_THRESHOLD_SEMANTIC = 0.27

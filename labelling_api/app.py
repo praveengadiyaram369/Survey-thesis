@@ -240,8 +240,8 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
 
     query = query.strip()
     lang = int(lang)
-    match_top = int(match_top)
-    # match_top = 100
+    # match_top = int(match_top)
+    match_top = 55
 
     print(query)
     print(lang)
@@ -288,7 +288,7 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
         # for query in query_list:
         #     total_hits_semantic, results_semantic = get_query_result_semantic_analysis(query, lang, match_top)
 
-        total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
+        total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off=0.75)
         if is_german_compoundword:
             lang = 1
         total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
