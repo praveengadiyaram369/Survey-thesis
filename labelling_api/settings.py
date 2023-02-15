@@ -55,7 +55,8 @@ xlm_df = pd.read_pickle(basepath+'xlm_dataframe.pkl')
 en_df = pd.read_pickle(basepath+'en_dataframe.pkl')
 de_df = pd.read_pickle(basepath+'de_dataframe.pkl')
 
-final_keywords_dataframe = pd.read_pickle(basepath+'final_keywords_dataframe.pkl')
+# final_keywords_dataframe = pd.read_pickle(basepath+'final_keywords_dataframe.pkl')
+final_keywords_dataframe = pd.read_pickle(basepath+'final_keywords_dataframe_cdd.pkl')
 
 LOG_FILE = basepath + f'mitera_webapp_log.log'
 logging.basicConfig(handlers=[logging.FileHandler(filename=LOG_FILE, 
@@ -76,3 +77,7 @@ rdb = redis.StrictRedis(
 )
 
 MIN_THRESHOLD_SEMANTIC = 0.27
+CP_THRESHOLD = 0.5
+UMAP_DIM = 5
+MIN_CLUSTER_SIZE = 20 
+MIN_SAMPLES = 7

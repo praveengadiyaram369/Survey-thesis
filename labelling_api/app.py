@@ -150,8 +150,8 @@ async def search_subtopic(request: Request):
 async def get_sub_topics(request: Request, query: str=Form(...)):
 
     query = query.strip()
-    lang = 3
-    match_top = 15
+    lang = int(lang)
+    match_top = 55
 
     is_german_compoundword = False
     for word in query.split():
@@ -163,7 +163,7 @@ async def get_sub_topics(request: Request, query: str=Form(...)):
     fuzzy_query = False
     phrase_query = False
 
-    total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top)
+    total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off=0.75)
 
     if is_german_compoundword:
         lang = 1

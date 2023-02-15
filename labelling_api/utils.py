@@ -449,7 +449,7 @@ def get_subtopic(results, query):
     final_df = pd.concat([rank_df.set_index('id'), final_keywords_dataframe.set_index('id')], axis=1, join='inner').reset_index()
 
     final_df['keywords_query'] = final_df.apply(lambda x:get_sent_transformers_keywords(x['keywords'], query_vec), axis=1)
-    final_df['candidate_pool'] = final_df.apply(lambda x:get_candidate_pool(x['keywords_query']), axis=1)
+    final_df['candidate_pool'] = final_df.apply(lambda x:get_candidate_pool(x['keywords_query'], lower_limit = 0.0, upper_limit = CP_THRESHOLD), axis=1)
 
     final_candidate_pool = []
 

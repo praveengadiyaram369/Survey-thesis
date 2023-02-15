@@ -115,16 +115,12 @@ def get_sent_transformers_keywords(keywords, query_vec, max_keyword_cnt=30):
 
     return subtopic_keywords_dict
 
-def get_candidate_pool(subtopic_keywords_list):
+def get_candidate_pool(subtopic_keywords_list, lower_limit = 0.2, upper_limit = 0.4):
     
     candidate_pool = []
-    
-    lower_limit = 0.2
-    upper_limit = 0.4
-    
     for key, value in subtopic_keywords_list:
         
-        if value > 0.2 and value < 0.4:
+        if value > lower_limit and value < upper_limit:
             candidate_pool.append(key)
             
     return candidate_pool
@@ -132,7 +128,7 @@ def get_candidate_pool(subtopic_keywords_list):
 def get_umap_output(vec_array, dim_size=5):
     
     umap_obj = umap.UMAP(n_neighbors=40, 
-                        n_components=dim_size, 
+                        n_components=UMAP_DIM, 
                         min_dist=0.01,
                         metric='cosine',
                         random_state=123).fit(vec_array) 
@@ -143,10 +139,10 @@ def get_umap_output(vec_array, dim_size=5):
 def get_hdbscan_output(data_points, cluster_size=7):
     
     hdbscan_output = hdbscan.HDBSCAN(
-        #min_cluster_size=cluster_size,
-#                                       min_samples=2,
-                                      metric='euclidean',
-                                     cluster_selection_method='eom').fit(data_points)
+                                    min_cluster_size=MIN_CLUSTER_SIZE,
+                                    min_samples=MIN_SAMPLES,
+                                    metric='euclidean',
+                                    cluster_selection_method='eom').fit(data_points)
     return hdbscan_output
 
 def get_clustering_analysis(cluster_df, final_candidate_pool_vecs, dimen_size=5, cluster_size=7):
