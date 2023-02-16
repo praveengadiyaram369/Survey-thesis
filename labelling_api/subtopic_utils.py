@@ -178,7 +178,8 @@ def get_topic_documents(topic_words, final_df):
         for tw in topic_words:
             if tw in candidate_pool:
                 doc_id_list.append(doc_id)
+                break
 
-    return doc_id_list
+    return list(set(doc_id_list))
 
 
