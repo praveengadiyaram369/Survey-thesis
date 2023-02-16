@@ -136,19 +136,19 @@ def get_umap_output(vec_array, dim_size=5):
     umap_output = umap_obj.transform(vec_array) 
     return umap_output, umap_obj
 
-def get_hdbscan_output(data_points, cluster_size=7):
+def get_hdbscan_output(data_points, min_clust_size, min_samples):
     
     hdbscan_output = hdbscan.HDBSCAN(
-                                    min_cluster_size=MIN_CLUSTER_SIZE,
-                                    min_samples=MIN_SAMPLES,
+                                    min_cluster_size=min_clust_size,
+                                    min_samples=min_samples,
                                     metric='euclidean',
                                     cluster_selection_method='eom').fit(data_points)
     return hdbscan_output
 
-def get_clustering_analysis(cluster_df, final_candidate_pool_vecs, dimen_size=5, cluster_size=7):
+def get_clustering_analysis(cluster_df, final_candidate_pool_vecs, min_clust_size, min_samples):
     
-    umap_output_5, umap_5 = get_umap_output(final_candidate_pool_vecs, dim_size=dimen_size)
-    hdbscan_output = get_hdbscan_output(umap_output_5, cluster_size=cluster_size)
+    umap_output_5, umap_5 = get_umap_output(final_candidate_pool_vecs)
+    hdbscan_output = get_hdbscan_output(umap_output_5, min_clust_size, min_samples)
     
     cluster_df['cluster_id'] = hdbscan_output.labels_
     cluster_df.cluster_id.hist(bins=150)

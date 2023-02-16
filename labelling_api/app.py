@@ -152,11 +152,8 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
 
     query = query.strip()
 
-    global MIN_CLUSTER_SIZE
-    global MIN_SAMPLES
-
-    MIN_CLUSTER_SIZE = int(min_clust_size)
-    MIN_SAMPLES = int(min_samples)
+    min_clust_size = int(min_clust_size)
+    min_samples = int(min_samples)
 
     lang = 3
     match_top = 55
@@ -180,7 +177,7 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
     results = get_merged_results(results_semantic, results_es)
 
     global topic_dict
-    topic_dict = get_subtopic(results, query)
+    topic_dict = get_subtopic(results, query, min_clust_size, min_samples)
     sub_topics = list(topic_dict.keys())
     global sub_topics_dict, sub_topic_list
     sub_topics_dict = dict()

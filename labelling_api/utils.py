@@ -439,7 +439,7 @@ def get_stopwords():
 
     return stop_all
 
-def get_subtopic(results, query):
+def get_subtopic(results, query, min_clust_size, min_samples):
 
     query_vec = tf_model(query)['outputs'].numpy()[0]
 
@@ -463,7 +463,7 @@ def get_subtopic(results, query):
 
     cluster_df = pd.DataFrame(df_data, columns= ['candidate_words', 'candidate_vecs'])
 
-    cluster_df = get_clustering_analysis(cluster_df,final_candidate_pool_vecs, dimen_size=5, cluster_size=8)
+    cluster_df = get_clustering_analysis(cluster_df,final_candidate_pool_vecs, min_clust_size, min_samples)
     cluster_data = []
     for cluster_id in set(cluster_df.cluster_id.values):
         
