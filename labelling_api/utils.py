@@ -474,8 +474,12 @@ def get_subtopic(results, query):
     cluster_data_df = pd.DataFrame(cluster_data, columns=['cluster_id', 'candidate_words', 'candidate_vecs'])
     cluster_data_df['mean_vec'] = cluster_data_df.apply(lambda x:get_pool_vec(x['candidate_vecs'], 'mean'), axis=1)
     cluster_data_df['topic'] = cluster_data_df.apply(lambda x:get_nearest_keyword(x['candidate_words'], x['candidate_vecs'], x['mean_vec']), axis=1)
+    cluster_data_df['topic_sim'] = cluster_data_df.apply(lambda x:cosine_similarity(get_modified_vectors(x['mean_vec']), get_modified_vectors(query_vec))[0][0], axis=1)
 
     cluster_data_df['page_id_list'] = cluster_data_df.apply(lambda x:get_topic_documents(x['candidate_words'], final_df), axis=1)
+
+    cluster_data_df = cluster_data_df.sort_values(by=['topic_sim'], ascending=False)
+    cluster_data_df = cluster_data_df.reset_index(drop=True)
 
     cluster_dict = dict()
     for topic, doc_id_list in zip(cluster_data_df.topic.values, cluster_data_df.page_id_list.values):

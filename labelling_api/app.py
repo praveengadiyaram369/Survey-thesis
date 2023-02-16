@@ -9,6 +9,7 @@ from elasticsearch import helpers, Elasticsearch
 from fastapi.encoders import jsonable_encoder
 from fastapi.responses import JSONResponse
 from utils import *
+from settings import *
 from db_utils import *
 import json
 from random import shuffle
@@ -147,10 +148,17 @@ async def search_subtopic(request: Request):
     return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[]})
 
 @app.post("/get_sub_topics")
-async def get_sub_topics(request: Request, query: str=Form(...)):
+async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size: str=Form(...), min_samples: str=Form(...)):
 
     query = query.strip()
-    lang = int(lang)
+
+    global MIN_CLUSTER_SIZE
+    global MIN_SAMPLES
+
+    MIN_CLUSTER_SIZE = int(min_clust_size)
+    MIN_SAMPLES = int(min_samples)
+
+    lang = 3
     match_top = 55
 
     is_german_compoundword = False

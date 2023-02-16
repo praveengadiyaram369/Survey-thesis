@@ -27,6 +27,20 @@
                      </div>
                      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name='query' id='query' value="{{query}}" required>
                   </div>
+                  <div class="input-group mb-3">
+                     <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Minimum cluster size(Hdbscan)</span>
+                     </div>
+                    <input type="number" min="1" value="20" class="form-control" id="min_clust_size" name="min_clust_size">
+                  </div>
+
+                  <div class="input-group mb-3">
+                     <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Minimum samples(Hdbscan)</span>
+                     </div>
+                    <input type="number" min="1" value="10" class="form-control" id="min_samples" name="min_samples">
+                  </div>
+
                   <button type="button" class="btn btn-primary" style="margin:5px; " id="sub_topic" onclick="get_sub_topics(this);">Sub-topics abrufen</button>
 
                   <div class="input-group mb-3">
@@ -204,11 +218,16 @@
 
         try {
             var query = document.getElementById("query");
+            var min_clust_size = document.getElementById("min_clust_size");
+            var min_samples = document.getElementById("min_samples");
 
             console.log(query.value)
 
             var formData = new FormData();
             formData.append('query', query.value);
+            formData.append('min_clust_size', min_clust_size.value);
+            formData.append('min_samples', min_samples.value);
+
 
             var response = await fetch('/mda/get_sub_topics', {
                 method: 'POST',
