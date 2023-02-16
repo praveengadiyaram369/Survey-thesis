@@ -6,7 +6,7 @@
       <!-- <script src="{{url_for('static', path='scripts/popper.min.js')}}"></script> -->
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
    </head>
-   <body>
+   <body  onload="loadFunction()">
       <section>
          <div class="container">
             <div class="alert alert-primary text-center my-4">
@@ -29,23 +29,26 @@
                   </div>
                   <div class="input-group mb-3">
                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Minimum cluster size(Hdbscan)</span>
+                        <span class="input-group-text" id="inputGroup-sizing-default">Minimum cluster size (Hdbscan)</span>
                      </div>
                     <input type="number" min="1" value="20" class="form-control" id="min_clust_size" name="min_clust_size">
                   </div>
 
                   <div class="input-group mb-3">
                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Minimum samples(Hdbscan)</span>
+                        <span class="input-group-text" id="inputGroup-sizing-default">Minimum samples (Hdbscan)</span>
                      </div>
                     <input type="number" min="1" value="10" class="form-control" id="min_samples" name="min_samples">
                   </div>
 
-                  <button type="button" class="btn btn-primary" style="margin:5px; " id="sub_topic" onclick="get_sub_topics(this);">Sub-topics abrufen</button>
+                  <button type="button" class="btn btn-primary" style="margin:5px; " id="sub_topic" onclick="get_sub_topics(this);">
+                     <span class="spinner-border spinner-border-sm" id="loader"></span>
+                     Sub-topics abrufen
+                  </button>
 
                   <div class="input-group mb-3">
                     <div class="input-group-prepend">
-                       <span class="input-group-text" id="inputGroup-sizing-default">Sub-topic</span>
+                       <span class="input-group-text" id="inputGroup-sizing-default">Sub-topic (Terms|Documents)</span>
                     </div>
 
                     <select class="form-select form-control" name="sub_topic_selected" id="select-subtopic" aria-label="Default select example">
@@ -72,7 +75,7 @@
                         </div>
                        <input type="number" min="1" value="15" class="form-control" id="match_top" name="match_top">
                      </div>
-                  
+
                      <div class="m-2">
                         <div class="btn-group  btn-group-toggle">
                             <input type="radio" class="btn-check" name="search_type" value="es_search" id="radio1" autocomplete="off" disabled>
@@ -214,7 +217,12 @@
          $(this).text(replaceText);
       });
 
+      function myFunction() {
+         document.getElementById("loader").style.display = "none";
+      }
+
       async function get_sub_topics(e) {
+         document.getElementById("loader").style.display = "True";
 
         try {
             var query = document.getElementById("query");
@@ -247,6 +255,8 @@
          $.each(parsed_data, function(i, option) {
         $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
       	});
+
+         document.getElementById("loader").style.display = "none";
             
         } catch (error) {
             console.error(error);
