@@ -127,7 +127,7 @@ def get_candidate_pool(subtopic_keywords_list, lower_limit = 0.2, upper_limit = 
 
 def get_umap_output(vec_array, dim_size=5):
     
-    umap_obj = umap.UMAP(n_neighbors=40, 
+    umap_obj = umap.UMAP(n_neighbors=30, 
                         n_components=UMAP_DIM, 
                         min_dist=0.01,
                         metric='cosine',

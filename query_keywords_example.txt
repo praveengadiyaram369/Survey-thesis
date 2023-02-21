@@ -1,0 +1,82 @@
+Schutz von unbemannten Systemen
+Schwachstellenanalyse eigene Waffen-Systeme
+Waffen Systeme
+Defense
+Cyberinformationsraum
+Multi Range Cyberinformationsraum
+militärische Entscheidungsfindung
+unbemannte Wirksysteme
+Data Centric Warfare
+Combat Cloud
+Cyber-Verteidigung
+Militärische Kommunikation
+Unbemannte Landsysteme
+Multifunktionale Radarsysteme
+Main Ground Combat System (MGCS)
+Schutz gegen Navigation Warfare
+GeoInfo spezifisch
+Soziale Medien
+DesInformationskampagnen
+Cyber Attack
+Künstliche Intelligenz
+AI
+Kryptologie
+Postquantum
+Quantentechnologie
+Public Key Infrastructure
+Predictive Analysis
+5G
+Zellenbasierter Mobilfunk
+Optische Kommunikation
+Wellenformentwicklung
+Satellitenkommunikation
+taktisches Routing
+Resiliente Kommunikationsverbünde
+Datenlinks
+Taktische Datenlinks
+Mensch-Maschine Schnittstellen
+Big Data, KI für Analyse
+Multirobotereinsatz
+IT-Standards
+Interoperabilität
+taktische Entnetzung
+Edge computing
+3D-Modelle
+Mixed Reality
+Geoinformationen
+Befahrbarkeitsmodellierung
+Wetterdatenfusion
+Sensordatenfusion
+Change Detektion
+Architekturanalyse
+Datenermittlung und -analyse
+Cloud Computing
+Digitalfunk
+FPGA
+IT-Bedrohungsanalyse
+Technologie-Screening
+IT-Sicherheit bei embedded IT
+IT-Sicherheitsvorgaben
+IT-Technologien
+Kommunikationsnetze
+Kommunikations-Services
+Kommunikationstechnologien
+Kryptographie
+LTE
+Methode Architektur
+Mobile Computing
+Mobile Kommunikation
+Prozessunterstützung
+Radar
+Robotik
+Satellitenkommunikation
+Semantische Technologien
+Software Defined Networking
+Softwareentwicklung
+Taktische Datenlinks
+Taktisches Routing
+vernetzte Systeme
+Virtualisierung
+Visualisierung
+Wellenformen und -ausbreitung
+Zeichenorientierter InfoAustausch

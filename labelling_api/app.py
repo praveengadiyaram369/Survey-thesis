@@ -11,8 +11,10 @@ from fastapi.responses import JSONResponse
 from utils import *
 from settings import *
 from db_utils import *
+from survey_db_utils import *
 import json
 from random import shuffle
+import uuid
 
 app = FastAPI(debug=True, root_path="/mda")
 templates = Jinja2Templates(directory="templates/")
@@ -44,6 +46,9 @@ irrelevant_document_data = None
 sub_topics_dict = dict()
 sub_topic_list = []
 topic_dict = dict()
+
+query_keywords_dict = dict()
+session_id = None
 
 @app.get("/")
 async def load_homepage(request: Request):
@@ -144,8 +149,15 @@ async def search_survey(request: Request):
 
 @app.get("/search_subtopic")
 async def search_subtopic(request: Request):
-    query = '5G'
-    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[]})
+    query = 'Quantentechnologie'
+    
+    global query_keywords_dict
+    query_keyword_list, query_keywords_dict = get_keyword_query_data()
+
+    global session_id
+    session_id = uuid.uuid4()  
+
+    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[], 'query_keyword_list': query_keyword_list})
 
 @app.post("/get_sub_topics")
 async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size: str=Form(...), min_samples: str=Form(...)):
@@ -191,9 +203,9 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
     return JSONResponse(content=json_compatible_item_data)
 
 @app.post('/sub_topic_keywords_search')
-async def keyword_search(request: Request, query: str=Form(...), sub_topic_selected: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+async def keyword_search(request: Request, query: int=Form(1), sub_topic_selected: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
-    query = query.strip()
+    query = query_keywords_dict[str(query)]
     sub_topic = sub_topics_dict[str(sub_topic_selected)]
     doc_id_list = topic_dict[sub_topic]
 
@@ -217,12 +229,14 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
 @app.post('/sub_topic_search_survey')
 async def keyword_search(request: Request, query: str=Form(...), sub_topic_selected: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
-    query = query.strip()
+    query = sub_topics_dict[str(sub_topic_selected)]
     sub_topic = sub_topics_dict[str(sub_topic_selected)]
     doc_id_list = topic_dict[sub_topic]
 
     print(query)
     print(sub_topic)
+
+    query_updated = f'Innovation in {query} und {sub_topic}'
 
     search_data = {
         'original_query':query,
@@ -234,11 +248,14 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
         'comments': 'Sub topic search'
     }
 
-    total_hits, results = get_topic_documents_clustering(doc_id_list)
-    results_2 = results[:-1]
-    shuffle(results_2)
+    total_hits, system_a_results = get_topic_documents_clustering(query_updated, doc_id_list)
 
-    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': total_hits, 'result_list_1': results, 'result_list_2': results_2, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list})
+    lang = 3
+    match_top = len(system_a_results)
+
+    total_hits_semantic, system_b_results = get_query_result_semantic_survey(query_updated, match_top, cut_off=0.75)
+
+    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': total_hits, 'result_list_1': system_a_results, 'result_list_2': system_b_results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list})
 
 @app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
@@ -314,6 +331,16 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
 async def save_document_label(request: Request, doc_id: str=Form(1), query: str=Form(1), label: str=Form(1)):
 
     insert_into_sqlite_db(doc_id, query, label)
+
+@app.post("/submit_survey_question_1")
+async def submit_survey_question_1(request: Request, query: str=Form(1), label: str=Form(1)):
+
+    insert_clustering_output_label(session_id, query, label)
+
+@app.post("/submit_survey_question_2")
+async def submit_survey_question_2(request: Request, query: str=Form(1), sub_topic: str=Form(1), label: str=Form(1)):
+
+    insert_system_comparision_label(session_id, query, sub_topic, label)
 
 
 @app.post('/keyword_search')

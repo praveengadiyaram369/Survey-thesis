@@ -236,6 +236,53 @@ def get_query_result_semantic(query, lang, match_top, cut_off = 0.64):
 
     return total_hits, result_list
 
+def get_query_result_semantic_survey(query, match_top, cut_off = 0.64):
+
+    index = xlm_index
+    doc_df = xlm_df
+
+    query_embedding = tf_model(query)['outputs'].numpy()[0]
+    result = index.search(np.float32(query_embedding.reshape(1, -1)), match_top)
+
+    df = doc_df.iloc[result[1][0]]
+
+    doc_similarities = {}
+    for idx, doc_data in df.iterrows():
+        sim = cosine_similarity(get_modified_vectors(query_embedding), doc_data['nc_vec'])[0][0]
+        doc_similarities[doc_data['id']] = sim
+
+    doc_similarities = dict(sorted(doc_similarities.items(), key=lambda item: item[1], reverse=True))
+    
+    doc_similarity_list = list(doc_similarities.values())
+    max_sim = max(doc_similarity_list)
+    # min_sim = min(doc_similarity_list)
+    max_diff_sim = get_max_diff_index(doc_similarities)
+    cut_off_sim = min(MIN_THRESHOLD_SEMANTIC, (cut_off*max_sim), max_diff_sim)
+    # cut_off_sim = (cut_off * max_sim)
+
+    logging.info(f'\nQuery: {query}')
+
+    result_list = []
+    for idx, doc_data in df.iterrows():
+        doc_dict = dict()
+
+        sim = doc_similarities[doc_data['id']]
+        if sim > cut_off_sim:
+            doc_dict['id'] = doc_data['id']
+            doc_dict['title'] = doc_data['title']
+            doc_dict['text'] = doc_data['text']
+            doc_dict['page_url'] = doc_data['url']
+            doc_dict['pub_date'] = doc_data['pubDate']
+
+            result_list.append(doc_dict)
+
+    logging.info(f'Semantic search original length: {len(result_list)}')
+
+    total_hits = len(result_list)
+    write_query_results(query, result_list, 'semantic')
+
+    return total_hits, result_list
+
 def get_query_result_semantic_analysis(query, lang, match_top, cut_off = 0.64):
 
     match_top_org = match_top
@@ -474,13 +521,14 @@ def get_subtopic(results, query, min_clust_size, min_samples):
     cluster_data_df = pd.DataFrame(cluster_data, columns=['cluster_id', 'candidate_words', 'candidate_vecs'])
     cluster_data_df['mean_vec'] = cluster_data_df.apply(lambda x:get_pool_vec(x['candidate_vecs'], 'mean'), axis=1)
     cluster_data_df['topic'] = cluster_data_df.apply(lambda x:get_nearest_keyword(x['candidate_words'], x['candidate_vecs'], x['mean_vec']), axis=1)
-    cluster_data_df['topic_sim'] = cluster_data_df.apply(lambda x:cosine_similarity(get_modified_vectors(x['mean_vec']), get_modified_vectors(query_vec))[0][0], axis=1)
+    # cluster_data_df['topic_sim'] = cluster_data_df.apply(lambda x:cosine_similarity(get_modified_vectors(x['mean_vec']), get_modified_vectors(query_vec))[0][0], axis=1)
+    cluster_data_df['cluster_size'] = cluster_data_df.apply(lambda x:len(x['candidate_words']), axis=1)
 
     cluster_data_df['page_id_list'] = cluster_data_df.apply(lambda x:get_topic_documents(x['candidate_words'], final_df), axis=1)
 
     cluster_data_df['topic_name'] = cluster_data_df.apply(lambda x:x['topic']+' ('+str(len(x['candidate_words']))+' | '+str(len(x['page_id_list']))+')', axis=1)
 
-    cluster_data_df = cluster_data_df.sort_values(by=['topic_sim'], ascending=False)
+    cluster_data_df = cluster_data_df.sort_values(by=['cluster_size'], ascending=False)
     cluster_data_df = cluster_data_df.reset_index(drop=True)
 
     cluster_dict = dict()
@@ -489,13 +537,24 @@ def get_subtopic(results, query, min_clust_size, min_samples):
 
     return cluster_dict
 
-def get_topic_documents_clustering(doc_id_list):
+def get_topic_documents_clustering(query, doc_id_list):
 
     df = xlm_df[xlm_df['id'].isin(doc_id_list)]
+    query_embedding = tf_model(query)['outputs'].numpy()[0]
+
+    doc_similarities = {}
+    for idx, doc_data in df.iterrows():
+        sim = cosine_similarity(get_modified_vectors(query_embedding), doc_data['nc_vec'])[0][0]
+        doc_similarities[doc_data['id']] = sim
+
+    doc_similarities = dict(sorted(doc_similarities.items(), key=lambda item: item[1], reverse=True))
 
     result_list = []
-    for idx, doc_data in df.iterrows():
+    for doc_id, sim in doc_similarities.items():
         doc_dict = dict()
+
+        doc_data = df.loc[df['id'] == doc_id]
+        doc_data = doc_data.reset_index().to_dict("records")[0]
 
         doc_dict['id'] = doc_data['id']
         doc_dict['title'] = doc_data['title']
@@ -505,6 +564,28 @@ def get_topic_documents_clustering(doc_id_list):
 
         result_list.append(doc_dict)
 
+        if len(result_list) == 10:
+            break
+
     total_hits = len(result_list)
 
     return total_hits, result_list
+
+def get_keyword_query_data():
+
+    query_keyword_list = []
+    with open(os.getcwd()+'/../query_keywords_example.txt', 'r') as f:
+        query_keyword_list = f.readlines()
+    
+    shuffle(query_keyword_list)
+
+    query_keyword_dict = dict()
+    keywords_list = []
+
+    for idx, query_keyword in enumerate(query_keyword_list):
+        keywords_list.append({'id': str(idx+1),
+        'name': query_keyword})
+
+        query_keyword_dict[str(idx+1)] = query_keyword
+
+    return keywords_list, query_keyword_dict

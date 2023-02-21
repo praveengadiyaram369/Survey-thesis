@@ -6,7 +6,7 @@
       <!-- <script src="{{url_for('static', path='scripts/popper.min.js')}}"></script> -->
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
    </head>
-   <body>
+   <body  onload="loadFunction()">
       <section>
          <div class="container">
             <div class="alert alert-primary text-center my-4">
@@ -21,22 +21,39 @@
                       </div>
                    </div> -->
                    <form action="/mda/sub_topic_search_survey" method="POST" id='formid'>
-                   <div class="input-group mb-3">
+
+                     <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
+                        </div>
+    
+                        <select class="form-select form-control" name="query" id="select-subtopic" aria-label="Default select example" required>
+                         {% for keyword in query_keyword_list %}
+                         <option value= "{{keyword['id']}}" >{{keyword['name']}}</option>"
+                         {% endfor %}
+    
+                        </select>
+                     </div>
+
+
+                   <!-- <div class="input-group mb-3">
                       <div class="input-group-prepend">
                          <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
                       </div>
                       <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name='query' id='query' value="{{query}}" required>
-                   </div>
+                   </div> -->
 
                    <div class="container">
                      <div class="col-md-12 text-center">
-                        <button type="button" class="btn btn-primary mb-3" id="sub_topic" onclick="get_sub_topics(this);">Sub-topics abrufen</button>
+                        <button type="button" class="btn btn-primary mb-3" id="sub_topic" onclick="get_sub_topics(this);">
+                           <span class="spinner-border spinner-border-sm" id="loader"></span>
+                           Sub-topics abrufen</button>
                      </div>
                  </div>
  
                    <div class="input-group mb-3">
                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Sub-topic</span>
+                        <span class="input-group-text" id="inputGroup-sizing-default">Sub-topic (Terms | Documents)</span>
                      </div>
  
                      <select class="form-select form-control" name="sub_topic_selected" id="select-subtopic" aria-label="Default select example">
@@ -53,11 +70,11 @@
                      </div>
                      <div class="card-body">
                         <label for="select" style="float: left; vertical-align: baseline;"><h5>How good is the sub-topic clustering output?:   </h5> </label>
-                        <select class="form-select" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
+                        <select class="form-select" id="survey_1_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
                            <option class="dropdown-item" type="button" value="1">Distinctive and well-labeled (1)</option>
                            <option class="dropdown-item" type="button" value="2">Distinctive and not well-labeled (2)</option>
-                           <option class="dropdown-item" type="button" value="2">Not distinctive and well-labeled (3)</option>
-                           <option class="dropdown-item" type="button" value="3">Not distinctive and not well-labeled (4)</option>
+                           <option class="dropdown-item" type="button" value="3">Not distinctive and well-labeled (3)</option>
+                           <option class="dropdown-item" type="button" value="4">Not distinctive and not well-labeled (4)</option>
                         </select>                
                      </div>
             
@@ -65,14 +82,14 @@
 
                      <div class="container">
                         <div class="col-md-12 text-center">
-                           <button type="submit" class="btn btn-primary mt-2">Submit</button>
+                           <button type="button" class="btn btn-primary mt-2" id="submit_survey_question_1" onclick="submit_survey_question_1(this);">Submit Question 1</button>
                
                         </div>
                     </div>
             
                    <br>
  
-                      <div class="input-group mb-3">
+                      <!-- <div class="input-group mb-3">
                          <div class="input-group-prepend">
                             <span class="input-group-text" id="inputGroup-sizing-default">Sprache</span>
                          </div>
@@ -116,7 +133,7 @@
                    <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="fuzzy_query" >
                       <label class="form-check-label" for="fuzzy_search">Fuzzysuche</label>
-                   </div>
+                   </div> -->
                    <!-- <div class="form-check">
                       <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="search_concept" disabled>
                       <label class="form-check-label" for="concept_search">Search Concept</label>
@@ -135,7 +152,7 @@
                    <br>
                    <br>
  
-                   <table class="table table-striped table-hover border table-sm">
+                   <!-- <table class="table table-striped table-hover border table-sm">
                       <thead>
                          <tr>
                            <th scope="col">S No.</th>
@@ -185,7 +202,7 @@
                              <td>{{search_data['cdd_result_cnt']}}</td>
                            </tr>
                        </tbody>
-                   </table>
+                   </table> -->
  
                    <input type="hidden" name="UserID"  id="original_query" value="{{search_data['original_query']}}"/>
  
@@ -288,8 +305,8 @@
              <h5 class="card-title">Question 2</h5>
          </div>
          <div class="card-body">
-            <label for="select" style="float: left; vertical-align: baseline;"><h5>Which system results are more relevant wrt to the given query and the sub-topic?:   </h5> </label>
-            <select class="form-select" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
+            <label for="select" style="float: left; vertical-align: baseline;"><h5>Which system results represents more relevant news articles wrt to the given query and the sub-topic?:   </h5> </label>
+            <select class="form-select" id="survey_2_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
                <option class="dropdown-item" type="button" value="1">System A(1)</option>
                <option class="dropdown-item" type="button" value="2">System B(2)</option>
                <option class="dropdown-item" type="button" value="3">Neither System A nor System B(3)</option>
@@ -301,7 +318,7 @@
        <br>
        <div class="container">
          <div class="col-md-12 text-center">
-            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+            <button type="button" class="btn btn-primary mt-2" onclick="submit_survey_question_2(this);">Submit Question 2</button>
 
          </div>
      </div>
@@ -374,9 +391,14 @@
            var replaceText = $(this).parent().hasClass("showContent") ? "Weniger lesen" : "Mehr lesen";
            $(this).text(replaceText);
         });
+
+        function loadFunction() {
+         document.getElementById("loader").style.visibility = "hidden";
+      }
   
         async function get_sub_topics(e) {
-  
+         document.getElementById("loader").style.visibility = "visible";
+
           try {
               var query = document.getElementById("query");
   
@@ -407,29 +429,57 @@
           } catch (error) {
               console.error(error);
           }
+          document.getElementById("loader").style.visibility = "hidden";
+
           }
+
+          async function submit_survey_question_1(e) {
+  
+  try {
+        var original_query = document.getElementById("original_query").value;
+        var label = document.getElementById("survey_1_label").value;
+
+        console.log(original_query)
+        console.log(sub_topic)
+        console.log(label)
+
+        var formData = new FormData();
+        formData.append('query', original_query);
+        formData.append('label', label);
+
+        var response = await fetch('/mda/save_survey_label_1', {
+           method: 'POST',
+           body: formData
+        });
+        
+        
+     let data = await response.json();
+        data = JSON.parse(data)
+        console.log(data);
+        
+     } catch (error) {
+        console.error(error);
+     }
+  }
   
   
-        async function save_document_label(e) {
+        async function submit_survey_question_2(e) {
   
         try {
-              var select_dropdown = document.getElementById("select_"+e.id);
-              var original_query = document.getElementById("original_query");
-  
-              console.log("select_"+e.id)
-              console.log(original_query.value)
-              console.log(select_dropdown.value)
-  
-              var parent = e.parentElement.parentElement;
-              console.log(parent)
-              parent.parentElement.removeChild(parent);
+              var original_query = document.getElementById("original_query").value;
+              var sub_topic = document.getElementById("elect-subtopic").value;
+              var label = document.getElementById("survey_2_label").value;
+
+              console.log(original_query)
+              console.log(sub_topic)
+              console.log(label)
   
               var formData = new FormData();
-              formData.append('doc_id', e.id);
-              formData.append('query', original_query.value);
-              formData.append('label', select_dropdown.value);
+              formData.append('query', original_query);
+              formData.append('sub_topic', sub_topic);
+              formData.append('label', label);
   
-              var response = await fetch('/mda/save_document_label', {
+              var response = await fetch('/mda/save_survey_label_2', {
                  method: 'POST',
                  body: formData
               });
@@ -438,7 +488,6 @@
            let data = await response.json();
               data = JSON.parse(data)
               console.log(data);
-              
               
            } catch (error) {
               console.error(error);

@@ -81,3 +81,5 @@ CP_THRESHOLD = 0.5
 UMAP_DIM = 5
 MIN_CLUSTER_SIZE = 20 
 MIN_SAMPLES = 10
+
+survey_sqlite_db_path = basepath+'survey_results_dataset.db'
