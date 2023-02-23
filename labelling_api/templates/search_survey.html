@@ -27,9 +27,9 @@
                            <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
                         </div>
     
-                        <select class="form-select form-control" name="query" id="select-subtopic" aria-label="Default select example" required>
+                        <select class="form-select form-control" name="query" id="select_query" aria-label="Default select example" required>
                          {% for keyword in query_keyword_list %}
-                         <option value= "{{keyword['id']}}" >{{keyword['name']}}</option>"
+                         <option value= "{{keyword['id']}}" >{{keyword['name']}}</option>
                          {% endfor %}
     
                         </select>
@@ -149,8 +149,7 @@
                      </div>
                  </div>
                    <br>
-                   <br>
-                   <br>
+               
  
                    <!-- <table class="table table-striped table-hover border table-sm">
                       <thead>
@@ -206,13 +205,13 @@
  
                    <input type="hidden" name="UserID"  id="original_query" value="{{search_data['original_query']}}"/>
  
-                   <br>
+                   <!-- <br>
                    <div class="row">
                       <div class="col-8 d-flex justify-content-center text-center">
                          <h5>Anzahl der gefundenen Top-Dokumente: {{total_hits}}</h5>
                       </div>
                    </div>
-                   <br>
+                   <br> -->
                 </div>
              </div>
 
@@ -400,12 +399,14 @@
          document.getElementById("loader").style.visibility = "visible";
 
           try {
-              var query = document.getElementById("query");
+              var query = document.getElementById("select_query").value;
   
-              console.log(query.value)
+              console.log(query)
   
               var formData = new FormData();
-              formData.append('query', query.value);
+              formData.append('query', query);
+              formData.append('min_clust_size', 0);
+               formData.append('min_samples', 0);
   
               var response = await fetch('/mda/get_sub_topics', {
                   method: 'POST',
@@ -436,7 +437,7 @@
           async function submit_survey_question_1(e) {
   
   try {
-        var original_query = document.getElementById("original_query").value;
+        var original_query = document.getElementById("select_query").value;
         var label = document.getElementById("survey_1_label").value;
 
         console.log(original_query)
@@ -466,8 +467,8 @@
         async function submit_survey_question_2(e) {
   
         try {
-              var original_query = document.getElementById("original_query").value;
-              var sub_topic = document.getElementById("elect-subtopic").value;
+              var original_query = document.getElementById("select_query").value;
+              var sub_topic = document.getElementById("select-subtopic").value;
               var label = document.getElementById("survey_2_label").value;
 
               console.log(original_query)

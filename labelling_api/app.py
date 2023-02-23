@@ -145,18 +145,18 @@ async def load_search_homepage(request: Request):
 
 @app.get("/search_survey")
 async def search_survey(request: Request):
-    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.get("/search_subtopic")
-async def search_subtopic(request: Request):
-    query = 'Quantentechnologie'
-    
     global query_keywords_dict
     query_keyword_list, query_keywords_dict = get_keyword_query_data()
 
     global session_id
-    session_id = uuid.uuid4()  
+    session_id = uuid.uuid4() 
 
+    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[], 'query_keyword_list': query_keyword_list})
+
+@app.get("/search_subtopic")
+async def search_subtopic(request: Request):
+    query = 'Quantentechnologie'
     return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[], 'query_keyword_list': query_keyword_list})
 
 @app.post("/get_sub_topics")
@@ -164,8 +164,19 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
 
     query = query.strip()
 
+    if query.isnumeric():
+        query = query_keywords_dict[str(query)]
+
+    logging.info(f'Query selected: {query}')
+
     min_clust_size = int(min_clust_size)
     min_samples = int(min_samples)
+
+    if min_clust_size == 0:
+        min_clust_size = 20
+    
+    if min_samples == 0:
+        min_samples = 10
 
     lang = 3
     match_top = 55
@@ -209,8 +220,8 @@ async def keyword_search(request: Request, query: int=Form(1), sub_topic_selecte
     sub_topic = sub_topics_dict[str(sub_topic_selected)]
     doc_id_list = topic_dict[sub_topic]
 
-    print(query)
-    print(sub_topic)
+    logging.info(f'Query selected: {query}')
+    logging.info(f'sub_topic selected: {sub_topic}')
 
     search_data = {
         'original_query':f'{query} und {sub_topic}',
@@ -227,7 +238,7 @@ async def keyword_search(request: Request, query: int=Form(1), sub_topic_selecte
 
 
 @app.post('/sub_topic_search_survey')
-async def keyword_search(request: Request, query: str=Form(...), sub_topic_selected: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+async def keyword_search(request: Request, query: str=Form(...), sub_topic_selected: int=Form(1)):
 
     query = sub_topics_dict[str(sub_topic_selected)]
     sub_topic = sub_topics_dict[str(sub_topic_selected)]
