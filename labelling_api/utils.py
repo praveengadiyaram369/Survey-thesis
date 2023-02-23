@@ -564,7 +564,7 @@ def get_topic_documents_clustering(query, doc_id_list):
 
         result_list.append(doc_dict)
 
-        if len(result_list) == 10:
+        if len(result_list) == 5:
             break
 
     total_hits = len(result_list)
