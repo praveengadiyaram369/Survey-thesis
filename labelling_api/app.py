@@ -47,10 +47,10 @@ sub_topics_dict = dict()
 sub_topic_list = []
 topic_dict = dict()
 
-
 query_keywords_dict = dict()
 query_keyword_list = []
 session_id = None
+current_query = None
 
 @app.get("/")
 async def load_homepage(request: Request):
@@ -166,10 +166,14 @@ async def search_subtopic(request: Request):
 @app.post("/get_sub_topics")
 async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size: str=Form(...), min_samples: str=Form(...)):
 
+    global current_query
+
     query = query.strip()
 
     if query.isnumeric():
         query = query_keywords_dict[str(query)]
+
+    current_query = query
 
     logging.info(f'Query selected: {query}')
 
@@ -283,9 +287,6 @@ async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3)
     # match_top = int(match_top)
     match_top = 55
 
-    print(query)
-    print(lang)
-
     search_data = {
         'original_query': query,
         'search_type': 'BM-25 und Semantische Suche',
@@ -351,9 +352,9 @@ async def save_document_label(request: Request, doc_id: str=Form(1), query: str=
     insert_into_sqlite_db(doc_id, query, label)
 
 @app.post("/submit_survey_question_1")
-async def submit_survey_question_1(request: Request, query: str=Form(1), label: str=Form(1)):
-
-    insert_clustering_output_label(session_id, query, label)
+async def submit_survey_question_1(request: Request, label: str=Form(1)):
+    if current_query is not None:
+        insert_clustering_output_label(session_id, current_query, label)
 
 @app.post("/submit_survey_question_2")
 async def submit_survey_question_2(request: Request, query: str=Form(1), sub_topic: str=Form(1), label: str=Form(1)):

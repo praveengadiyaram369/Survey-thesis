@@ -9,7 +9,7 @@ def insert_clustering_output_label(session_id, query, survey_label_chosen):
     insert_table_query = '''INSERT INTO clustering_output_survey_data VALUES (?, ?, ?, ?);'''
     sqlite_common_query_seq(insert_table_query, sql_select=False, sql_insert_params=(session_id, query, int(survey_label_chosen), datetime.now()))
 
-    select_table_query = """SELECT doc_id FROM clustering_output_survey_data"""
+    select_table_query = """SELECT session_id FROM clustering_output_survey_data"""
     get_db_contents(select_table_query)
 
     logging.info(f'finished inserting into the table: query: {query}, label:{survey_label_chosen}')
@@ -21,7 +21,7 @@ def insert_system_comparision_label(session_id, query, sub_topic, survey_label_c
     insert_table_query = '''INSERT INTO system_comparision_survey_data VALUES (?, ?, ?, ?, ?);'''
     sqlite_common_query_seq(insert_table_query, sql_select=False, sql_insert_params=(session_id, query, sub_topic, int(survey_label_chosen), datetime.now()))
     
-    select_table_query = """SELECT doc_id FROM system_comparision_survey_data"""
+    select_table_query = """SELECT session_id FROM system_comparision_survey_data"""
     get_db_contents(select_table_query)
 
     logging.info(f'finished inserting into the table: query: {query}, label:{survey_label_chosen}')
@@ -30,7 +30,7 @@ def insert_system_comparision_label(session_id, query, sub_topic, survey_label_c
 def create_table():
 
     create_table_query_1 = """CREATE TABLE IF NOT EXISTS clustering_output_survey_data (
-        user_id text NOT NULL,
+        session_id text NOT NULL,
         query text NOT NULL,
         survey_label_chosen integer NOT NULL, 
         date_modified timestamp,
@@ -39,7 +39,7 @@ def create_table():
     sqlite_common_query_seq(create_table_query_1)
 
     create_table_query_2 = """CREATE TABLE IF NOT EXISTS system_comparision_survey_data (
-        user_id text NOT NULL,
+        session_id text NOT NULL,
         query text NOT NULL,
         sub_topic text NOT NULL,
         survey_label_chosen integer NOT NULL, 
@@ -53,19 +53,10 @@ def get_db_contents(select_table_query):
     logging.info(select_table_query)
     query_result = sqlite_common_query_seq(select_table_query, sql_select=True)   
     # logging.info(query_result)
-    logging.info(f'Total records in the DB: {len(query_result)}')
+    if query_result is not None and len(query_result) > 0:
+        logging.info(f'Total records in the DB: {len(query_result)}')
 
-    return query_result
-
-def get_db_contents_query(query):
-
-    select_table_query = """SELECT doc_id FROM retrieval_dataset where query='"""+query+"""'"""
-    query_result = sqlite_common_query_seq(select_table_query, sql_select=True)   
-    # logging.info(query_result)
-    logging.info(f'Total records in the DB: {len(query_result)}')
-
-    return query_result
-    
+    return query_result    
 
 def sqlite_common_query_seq(sql_query, sql_select=False, sql_insert_params=None):
 
