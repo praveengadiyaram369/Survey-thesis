@@ -24,7 +24,7 @@ def insert_system_comparision_label(session_id, query, sub_topic, survey_label_c
     select_table_query = """SELECT session_id FROM system_comparision_survey_data"""
     get_db_contents(select_table_query)
 
-    logging.info(f'finished inserting into the table: query: {query}, label:{survey_label_chosen}')
+    logging.info(f'finished inserting into the table: query: {query}, sub_topic: {sub_topic}, label:{survey_label_chosen}')
 
 
 def create_table():

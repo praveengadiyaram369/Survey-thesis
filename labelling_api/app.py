@@ -468,4 +468,7 @@ async def load_subclass_details(request: Request, subclass: str=Form(1)):
     return templates.TemplateResponse('document_validation.html', context={'request': request, 'total_doc_cnt': total_doc_cnt, 'sub_class_list': sub_class_list, 'subclass': sub_class, 'result_list': result_list})
 
 if __name__ == '__main__':
+    if not os.path.isfile(survey_sqlite_db_path):
+        logging.info('DB does not exist, creating db and tables')
+        create_table()
     uvicorn.run(app, host='127.0.0.1', port=80)
