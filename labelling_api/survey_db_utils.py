@@ -29,6 +29,7 @@ def insert_system_comparision_label(session_id, query, sub_topic, survey_label_c
 
 def create_table():
 
+    logging.info('starting create table ........... ')
     create_table_query_1 = """CREATE TABLE IF NOT EXISTS clustering_output_survey_data (
         session_id text NOT NULL,
         query text NOT NULL,
@@ -47,6 +48,8 @@ def create_table():
         PRIMARY KEY (query, sub_topic, user_id)
     );"""
     sqlite_common_query_seq(create_table_query_2)
+    logging.info('finished create table ........... ')
+
 
 def get_db_contents(select_table_query):
 
@@ -86,6 +89,5 @@ def sqlite_common_query_seq(sql_query, sql_select=False, sql_insert_params=None)
         logging.error(e)
 
 
-create_table()
-# if __name__ == '__main__':
-#     get_db_contents()
+if __name__ == '__main__':
+    create_table()

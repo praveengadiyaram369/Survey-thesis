@@ -25,4 +25,5 @@ RUN mkdir -p ${PROJECT_DIR}/data
 EXPOSE 8080
 
 WORKDIR ${PROJECT_DIR}/labelling_api
-CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
+# CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8080"]
+CMD ["python","-u", "survey_db_utils.py.py"]
