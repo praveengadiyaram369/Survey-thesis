@@ -252,13 +252,6 @@ def get_query_result_semantic_survey(query, match_top, cut_off = 0.64):
         doc_similarities[doc_data['id']] = sim
 
     doc_similarities = dict(sorted(doc_similarities.items(), key=lambda item: item[1], reverse=True))
-    
-    doc_similarity_list = list(doc_similarities.values())
-    max_sim = max(doc_similarity_list)
-    # min_sim = min(doc_similarity_list)
-    max_diff_sim = get_max_diff_index(doc_similarities)
-    cut_off_sim = min(MIN_THRESHOLD_SEMANTIC, (cut_off*max_sim), max_diff_sim)
-    # cut_off_sim = (cut_off * max_sim)
 
     logging.info(f'\nQuery: {query}')
 
@@ -267,15 +260,14 @@ def get_query_result_semantic_survey(query, match_top, cut_off = 0.64):
         doc_dict = dict()
 
         sim = doc_similarities[doc_data['id']]
-        if sim > cut_off_sim:
-            doc_dict['id'] = doc_data['id']
-            doc_dict['title'] = doc_data['title']
-            doc_dict['text'] = doc_data['text']
-            doc_dict['page_url'] = doc_data['url']
-            doc_dict['pub_date'] = doc_data['pubDate']
+        doc_dict['id'] = doc_data['id']
+        doc_dict['title'] = doc_data['title']
+        doc_dict['text'] = doc_data['text']
+        doc_dict['page_url'] = doc_data['url']
+        doc_dict['pub_date'] = doc_data['pubDate']
 
-            result_list.append(doc_dict)
-
+        result_list.append(doc_dict)
+        
     logging.info(f'Semantic search original length: {len(result_list)}')
 
     total_hits = len(result_list)
