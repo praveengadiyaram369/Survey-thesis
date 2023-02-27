@@ -156,9 +156,9 @@ async def search_survey(request: Request):
     query_keyword_list, query_keywords_dict = get_keyword_query_data()
 
     global session_id
-    session_id = uuid.uuid4() 
+    session_id = str(uuid.uuid4().hex)
 
-    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[], 'query_keyword_list': query_keyword_list})
+    return templates.TemplateResponse('search_survey.html', context={'request': request,'session_id': session_id,  'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[], 'query_keyword_list': query_keyword_list})
 
 @app.get("/search_subtopic")
 async def search_subtopic(request: Request):
@@ -244,7 +244,7 @@ async def keyword_search(request: Request, query: int=Form(1), sub_topic_selecte
 
     total_hits, results = get_topic_documents_clustering(doc_id_list)
 
-    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list})
+    return templates.TemplateResponse('sub_topic_search.html', context={'request': request,'session_id': session_id, 'total_hits': total_hits, 'result_list': results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list})
 
 
 @app.post('/sub_topic_search_survey')
@@ -279,7 +279,7 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
 
     total_hits_semantic, system_b_results = get_query_result_semantic_survey(query_updated, match_top, cut_off=0.75)
 
-    return templates.TemplateResponse('search_survey.html', context={'request': request, 'total_hits': total_hits, 'result_list_1': system_a_results, 'result_list_2': system_b_results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list, 'query_keyword_list': query_keyword_list})
+    return templates.TemplateResponse('search_survey.html', context={'request': request,'session_id': session_id, 'total_hits': total_hits, 'result_list_1': system_a_results, 'result_list_2': system_b_results, 'concept_list': [], 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list, 'query_keyword_list': query_keyword_list})
 
 @app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
