@@ -14,17 +14,17 @@ def insert_clustering_output_label(session_id, query, survey_label_chosen):
 
     logging.info(f'finished inserting into the table: query: {query}, label:{survey_label_chosen}')
 
-def insert_system_comparision_label(session_id, query, sub_topic, survey_label_chosen):
+def insert_system_comparision_label(session_id, query, sub_topic, survey_label_2, survey_label_3, survey_label_4):
 
     logging.info('before inserting into the table')
 
-    insert_table_query = '''INSERT INTO system_comparision_survey_data VALUES (?, ?, ?, ?, ?);'''
-    sqlite_common_query_seq(insert_table_query, sql_select=False, sql_insert_params=(session_id, query, sub_topic, int(survey_label_chosen), datetime.now()))
+    insert_table_query = '''INSERT INTO system_comparision_survey_data VALUES (?, ?, ?, ?, ?, ?, ?);'''
+    sqlite_common_query_seq(insert_table_query, sql_select=False, sql_insert_params=(session_id, query, sub_topic, int(survey_label_2), float(survey_label_3), float(survey_label_4), datetime.now()))
     
     select_table_query = """SELECT session_id, query, sub_topic, survey_label_chosen FROM system_comparision_survey_data where session_id= ? and query= ? and sub_topic= ?"""
     get_db_contents(select_table_query, [session_id, query, sub_topic])
 
-    logging.info(f'finished inserting into the table: query: {query}, sub_topic: {sub_topic}, label:{survey_label_chosen}')
+    logging.info(f'finished inserting into the table: query: {query}, sub_topic: {sub_topic}, label_2:{survey_label_2}, label_3:{survey_label_3}, label_4:{survey_label_4}')
 
 
 def create_survey_tables():
@@ -33,7 +33,7 @@ def create_survey_tables():
     create_table_query_1 = """CREATE TABLE IF NOT EXISTS clustering_output_survey_data (
         session_id text NOT NULL,
         query text NOT NULL,
-        survey_label_chosen integer NOT NULL, 
+        survey_label_1 integer NOT NULL, 
         date_modified timestamp,
         PRIMARY KEY (query, session_id)
     );"""
@@ -43,7 +43,9 @@ def create_survey_tables():
         session_id text NOT NULL,
         query text NOT NULL,
         sub_topic text NOT NULL,
-        survey_label_chosen integer NOT NULL, 
+        survey_label_2 integer NOT NULL, 
+        survey_label_3 real NOT NULL, 
+        survey_label_4 real NOT NULL, 
         date_modified text,
         PRIMARY KEY (query, sub_topic, session_id)
     );"""

@@ -69,7 +69,7 @@
                          <h5 class="card-title">Question 1</h5>
                      </div>
                      <div class="card-body">
-                        <label for="select" style="float: left; vertical-align: baseline;"><h5>How good is the sub-topic clustering output?:   </h5> </label>
+                        <label for="select" style="float: left; vertical-align: baseline;"><h5>Regarding the cluster labels: Is the sub-topic clustering output distinctive and well-labeled?   </h5> </label>
                         <select class="form-select" id="survey_1_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
                            <option class="dropdown-item" type="button" value="1">Distinctive and well-labeled (1)</option>
                            <option class="dropdown-item" type="button" value="2">Distinctive and not well-labeled (2)</option>
@@ -84,7 +84,7 @@
                      <div class="container">
                         <div class="col-md-12 text-center">
                            <button type="button" class="btn btn-primary mb-3" id="submit_survey_1" onclick="submit_survey_question_1(this);">
-                              Submit Question 1</button>
+                              Submit</button>
                         </div>
                     </div>
                     <hr />
@@ -145,7 +145,7 @@
                    </div> -->
                    <div class="container">
                      <div class="col-md-12 text-center">
-                        <button type="submit" class="btn btn-primary mt-2">Suchen</button>
+                        <button type="submit" class="btn btn-primary mt-2">Query + Sub-topic search</button>
             
                      </div>
                  </div>
@@ -285,7 +285,7 @@
                 <br>
             <div class="text-center">
                <p>
-               <strong><h5> Fill out the survey based on the retrieved search results: </h5></strong>
+               <strong><h5> Fill out the survey based on the above retrieved results: </h5></strong>
                </p>
                <p>
                Search query: 
@@ -316,10 +316,34 @@
 
          </div>
 
+         <div class="card">
+            <div class="card-header">
+                <h5 class="card-title">Question 3</h5>
+            </div>
+            <div class="card-body">
+               <label for="select" style="float: left; vertical-align: baseline;"><h5>Rate the retrieval system A results for the given query and sub-topic:   </h5> </label>
+               <input type="range" class="form-range" min="0" max="10" step="0.1" id="survey_3_label" oninput="this.form.survey_3_label.value=this.value">           
+            </div>
+   
+            </div>
+
+            <div class="card">
+               <div class="card-header">
+                   <h5 class="card-title">Question 4</h5>
+               </div>
+               <div class="card-body">
+                  <label for="select" style="float: left; vertical-align: baseline;"><h5>Rate the retrieval system B results for the given query and sub-topic:  </h5> </label>
+                  <input type="range" class="form-range" min="0" max="10" step="0.1" id="survey_4_label" oninput="this.form.survey_3_label.value=this.value">           
+           
+               </div>
+      
+               </div>
+
+
        <br>
        <div class="container">
          <div class="col-md-12 text-center">
-            <button type="button" class="btn btn-primary mt-2" id="submit_survey_2" onclick="submit_survey_question_2(this);">Submit Question 2</button>
+            <button type="button" class="btn btn-primary mt-2" id="submit_survey_2" onclick="submit_survey_question_2(this);">Submit</button>
 
          </div>
      </div>
@@ -468,16 +492,22 @@
         try {
               var original_query = document.getElementById("query").value;
               var sub_topic = document.getElementById("sub_topic").value;
-              var label = document.getElementById("survey_2_label").value;
+              var label_2 = document.getElementById("survey_2_label").value;
+              var label_3 = document.getElementById("survey_3_label").value;
+              var label_4 = document.getElementById("survey_4_label").value;
 
-              console.log(original_query)
-              console.log(sub_topic)
-              console.log(label)
+            //   console.log(original_query)
+            //   console.log(sub_topic)
+            //   console.log(label)
+              console.log(label_3)
+              console.log(label_4)
   
               var formData = new FormData();
               formData.append('query', original_query);
               formData.append('sub_topic', sub_topic);
-              formData.append('label', label);
+              formData.append('label_2', label_2);
+              formData.append('label_3', label_3);
+              formData.append('label_4', label_4);
   
               var response = await fetch('/mda/submit_survey_question_2', {
                  method: 'POST',

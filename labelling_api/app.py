@@ -359,9 +359,9 @@ async def submit_survey_question_1(request: Request, label: str=Form(1)):
         insert_clustering_output_label(session_id, current_query, label)
 
 @app.post("/submit_survey_question_2")
-async def submit_survey_question_2(request: Request, query: str=Form(1), sub_topic: str=Form(1), label: str=Form(1)):
+async def submit_survey_question_2(request: Request, query: str=Form(1), sub_topic: str=Form(1), label_2: str=Form(1), label_3: str=Form(1), label_4: str=Form(1)):
 
-    insert_system_comparision_label(session_id, query, sub_topic, label)
+    insert_system_comparision_label(session_id, query, sub_topic, label_2, label_3, label_4)
 
 
 @app.post('/keyword_search')
