@@ -478,6 +478,14 @@ def get_stopwords():
 
     return stop_all
 
+def get_diff_sim(subtopic_keywords_list):
+
+    sim_list = []
+    for key, value in subtopic_keywords_list:
+        sim_list.append(value)
+
+    return round(max(sim_list)-min(sim_list), 3)
+
 def get_subtopic(results, query, min_clust_size, min_samples):
 
     query_vec = tf_model(query)['outputs'].numpy()[0]
@@ -488,7 +496,8 @@ def get_subtopic(results, query, min_clust_size, min_samples):
     final_df = pd.concat([rank_df.set_index('id'), final_keywords_dataframe.set_index('id')], axis=1, join='inner').reset_index()
 
     final_df['keywords_query'] = final_df.apply(lambda x:get_sent_transformers_keywords(x['keywords'], query_vec), axis=1)
-    final_df['candidate_pool'] = final_df.apply(lambda x:get_candidate_pool(x['keywords_query'], lower_limit = 0.0, upper_limit = CP_THRESHOLD), axis=1)
+    final_df['diff_sim'] = final_df.apply(lambda x:get_diff_sim(x['keywords_query']), axis=1)
+    final_df['candidate_pool'] = final_df.apply(lambda x:get_candidate_pool(x['keywords_query'], x['diff_sim'], upper_limit = CP_THRESHOLD), axis=1)
 
     final_candidate_pool = []
 
@@ -558,7 +567,7 @@ def get_topic_documents_clustering(query, doc_id_list):
 
         result_list.append(doc_dict)
 
-        if len(result_list) == 5:
+        if len(result_list) == MAX_SURVEY_COUNT:
             break
 
     total_hits = len(result_list)

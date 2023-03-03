@@ -77,9 +77,10 @@ rdb = redis.StrictRedis(
 )
 
 MIN_THRESHOLD_SEMANTIC = 0.27
-CP_THRESHOLD = 0.5
+CP_THRESHOLD = 0.8
 UMAP_DIM = 5
 MIN_CLUSTER_SIZE = 20 
 MIN_SAMPLES = 10
 
+MAX_SURVEY_COUNT = 10
 survey_sqlite_db_path = basepath+'survey_results_dataset.db'

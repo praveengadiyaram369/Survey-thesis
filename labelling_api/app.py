@@ -183,10 +183,10 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
     min_samples = int(min_samples)
 
     if min_clust_size == 0:
-        min_clust_size = 20
+        min_clust_size = MIN_CLUSTER_SIZE
     
     if min_samples == 0:
-        min_samples = 10
+        min_samples = MIN_SAMPLES
 
     lang = 3
     match_top = 55
