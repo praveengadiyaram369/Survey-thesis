@@ -534,6 +534,8 @@ def get_subtopic(results, query, min_clust_size, min_samples):
     cluster_data_df = cluster_data_df.sort_values(by=['cluster_size'], ascending=False)
     cluster_data_df = cluster_data_df.reset_index(drop=True)
 
+    cluster_data_df = cluster_data_df[1:]
+
     cluster_dict = dict()
     for topic, doc_id_list in zip(cluster_data_df.topic_name.values, cluster_data_df.page_id_list.values):
         cluster_dict[topic] = doc_id_list

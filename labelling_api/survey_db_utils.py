@@ -2,17 +2,17 @@ import sqlite3
 from datetime import datetime
 from settings import *
 
-def insert_clustering_output_label(session_id, query, survey_label_chosen):
+def insert_clustering_output_label(session_id, query, survey_label_1):
 
     logging.info('before inserting into the table')
 
     insert_table_query = '''INSERT INTO clustering_output_survey_data VALUES (?, ?, ?, ?);'''
-    sqlite_common_query_seq(insert_table_query, sql_select=False, sql_insert_params=(session_id, query, int(survey_label_chosen), datetime.now()))
+    sqlite_common_query_seq(insert_table_query, sql_select=False, sql_insert_params=(session_id, query, int(survey_label_1), datetime.now()))
 
-    select_table_query = """SELECT session_id, query, survey_label_chosen  FROM clustering_output_survey_data where session_id= ? and query= ?"""
+    select_table_query = """SELECT session_id, query, survey_label_1  FROM clustering_output_survey_data where session_id= ? and query= ?"""
     get_db_contents(select_table_query, [session_id, query])
 
-    logging.info(f'finished inserting into the table: query: {query}, label:{survey_label_chosen}')
+    logging.info(f'finished inserting into the table: query: {query}, label:{survey_label_1}')
 
 def insert_system_comparision_label(session_id, query, sub_topic, survey_label_2, survey_label_3, survey_label_4):
 
@@ -21,7 +21,7 @@ def insert_system_comparision_label(session_id, query, sub_topic, survey_label_2
     insert_table_query = '''INSERT INTO system_comparision_survey_data VALUES (?, ?, ?, ?, ?, ?, ?);'''
     sqlite_common_query_seq(insert_table_query, sql_select=False, sql_insert_params=(session_id, query, sub_topic, int(survey_label_2), float(survey_label_3), float(survey_label_4), datetime.now()))
     
-    select_table_query = """SELECT session_id, query, sub_topic, survey_label_chosen FROM system_comparision_survey_data where session_id= ? and query= ? and sub_topic= ?"""
+    select_table_query = """SELECT session_id, query, sub_topic, survey_label_2, survey_label_3, survey_label_4 FROM system_comparision_survey_data where session_id= ? and query= ? and sub_topic= ?"""
     get_db_contents(select_table_query, [session_id, query, sub_topic])
 
     logging.info(f'finished inserting into the table: query: {query}, sub_topic: {sub_topic}, label_2:{survey_label_2}, label_3:{survey_label_3}, label_4:{survey_label_4}')

@@ -15,11 +15,7 @@
             </div>
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 col-lg-8 col-xl-6">
-                   <!-- <div class="row">
-                      <div class="col text-center">
-                         <h5>Unique session id: {{session_id}}</h5>
-                      </div>
-                   </div> -->
+
                    <form action="/mda/sub_topic_search_survey" method="POST" id='formid'>
 
                      <div class="input-group mb-3">
@@ -27,7 +23,7 @@
                            <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
                         </div>
     
-                        <select class="form-select form-control" name="query" id="select_query" aria-label="Default select example" required>
+                        <select class="form-select form-control" name="query" id="select_query" aria-label="Default select example"  onchange="get_sub_topics(this);" required>
                          {% for keyword in query_keyword_list %}
                          <option value= "{{keyword['id']}}" >{{keyword['name']}}</option>
                          {% endfor %}
@@ -50,6 +46,12 @@
                            Sub-topics abrufen</button>
                      </div>
                  </div>
+
+                   <div class="row">
+                      <div class="col text-center">
+                         <h6 id="selected_query">Anfrage ausgewählt: {{query}} </h6>
+                      </div>
+                   </div> 
  
                    <div class="input-group mb-3">
                      <div class="input-group-prepend">
@@ -69,12 +71,12 @@
                          <h5 class="card-title">Question 1</h5>
                      </div>
                      <div class="card-body">
-                        <label for="select" style="float: left; vertical-align: baseline;"><h5>Is the above sub-topic clustering output distinctive and well-labeled?   </h5> </label>
+                        <label for="select" style="float: left; vertical-align: baseline;"><h6>Is the above sub-topic clustering output distinctive and well-labeled?   </h6> </label>
                         <select class="form-select" id="survey_1_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
-                           <option class="dropdown-item" type="button" value="1">Distinctive and well-labeled (1)</option>
-                           <option class="dropdown-item" type="button" value="2">Distinctive and not well-labeled (2)</option>
-                           <option class="dropdown-item" type="button" value="3">Not distinctive and well-labeled (3)</option>
-                           <option class="dropdown-item" type="button" value="4">Not distinctive and not well-labeled (4)</option>
+                           <option class="dropdown-item" type="button" value="1">Distinctive and well-labeled</option>
+                           <option class="dropdown-item" type="button" value="2">Distinctive and not well-labeled</option>
+                           <option class="dropdown-item" type="button" value="3">Not distinctive and well-labeled</option>
+                           <option class="dropdown-item" type="button" value="4">Not distinctive and not well-labeled</option>
                         </select>                
                      </div>
             
@@ -306,35 +308,34 @@
              <h5 class="card-title">Question 2</h5>
          </div>
          <div class="card-body">
-            <label for="select" style="float: left; vertical-align: baseline;"><h5>Which system results represents more relevant news articles wrt to the given query and the sub-topic?:   </h5> </label>
+            <label for="select" style="float: left; vertical-align: baseline;"><h5>Which system results better represent MiTeRa relevant news articles according to the given query and sub-topic?    </h5> </label>
             <select class="form-select" id="survey_2_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
-               <option class="dropdown-item" type="button" value="1">System A(1)</option>
-               <option class="dropdown-item" type="button" value="2">System B(2)</option>
-               <option class="dropdown-item" type="button" value="3">Neither System A nor System B(3)</option>
+               <option class="dropdown-item" type="button" value="1">System A</option>
+               <option class="dropdown-item" type="button" value="2">System B</option>
+               <option class="dropdown-item" type="button" value="3">Neither System A nor System B</option>
             </select>             
          </div>
 
          </div>
-
+         <br>
          <div class="card">
             <div class="card-header">
                 <h5 class="card-title">Question 3</h5>
             </div>
             <div class="card-body">
-               <label for="select" style="float: left; vertical-align: baseline;"><h5>Rate the retrieval system A results for the given query and sub-topic:   </h5> </label>
-               <input type="range" class="form-range" min="0" max="10" step="0.1" value="1" id="survey_3_label" oninput="this.survey_3_label.value=this.value">           
+               <label for="select" style="float: left; vertical-align: baseline;"><h5>Rate the retrieval system A results for the given query and sub-topic (0-10):   </h5> </label>               <output style="font-weight:bold;text-align: center; margin-left: 10px;" id="output_label_3">0</output>
+               <input type="range" class="form-range" min="0" max="10" step="0.1" value="0" id="survey_3_label" oninput="output_label_3.value=survey_3_label.value">           
             </div>
    
             </div>
-
+            <br>
             <div class="card">
                <div class="card-header">
                    <h5 class="card-title">Question 4</h5>
                </div>
                <div class="card-body">
-                  <label for="select" style="float: left; vertical-align: baseline;"><h5>Rate the retrieval system B results for the given query and sub-topic:  </h5> </label>
-                  <input type="range" class="form-range" min="0" max="10" step="0.1" value="1" id="survey_4_label" oninput="this.survey_4_label.value=this.value">           
-           
+                  <label for="select" style="float: left; vertical-align: baseline;"><h5>Rate the retrieval system B results for the given query and sub-topic (0-10):  </h5> </label>                   <output style="font-weight:bold;text-align: center; margin-left: 10px;"  id="output_label_4">0</output>
+                  <input type="range" class="form-range" min="0" max="10" step="0.1" value="0" id="survey_4_label" oninput="output_label_4.value=survey_4_label.value">           
                </div>
       
                </div>
@@ -426,8 +427,11 @@
 
           try {
               var query = document.getElementById("select_query").value;
+              var sel = document.getElementById("select_query");
+              var text= sel.options[sel.selectedIndex].text;
   
               console.log(query)
+              console.log(text)
   
               var formData = new FormData();
               formData.append('query', query);
@@ -452,6 +456,9 @@
            $.each(parsed_data, function(i, option) {
           $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
             });
+
+            document.getElementById('selected_query').innerHTML = 'Anfrage ausgewählt: ' + text;
+
               
           } catch (error) {
               console.error(error);
@@ -513,7 +520,7 @@
                  method: 'POST',
                  body: formData
               });
-              alert('Inputs for the survey question 2, 3, 4 is submitted !');
+              alert('Inputs for the survey question 2, 3, 4 are submitted !');
               
            let data = await response.json();
               data = JSON.parse(data)
