@@ -438,6 +438,7 @@
               formData.append('query', query);
               formData.append('min_clust_size', 0);
                formData.append('min_samples', 0);
+               formData.append('cand_sel_par', 0);
   
               var response = await fetch('/mda/get_sub_topics', {
                   method: 'POST',

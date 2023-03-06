@@ -29,6 +29,12 @@
                   </div>
                   <div class="input-group mb-3">
                      <div class="input-group-prepend">
+                        <span class="input-group-text" id="inputGroup-sizing-default">Candidate selection parameter</span>
+                     </div>
+                    <input type="number" min="1" value="50" class="form-control" id="cand_sel_par" name="cand_sel_par">
+                  </div>
+                  <div class="input-group mb-3">
+                     <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Minimum cluster size (Hdbscan)</span>
                      </div>
                     <input type="number" min="1" value="20" class="form-control" id="min_clust_size" name="min_clust_size">
@@ -228,6 +234,7 @@
             var query = document.getElementById("query");
             var min_clust_size = document.getElementById("min_clust_size");
             var min_samples = document.getElementById("min_samples");
+            var cand_sel_par = document.getElementById("cand_sel_par");
 
             console.log(query.value)
 
@@ -235,6 +242,7 @@
             formData.append('query', query.value);
             formData.append('min_clust_size', min_clust_size.value);
             formData.append('min_samples', min_samples.value);
+            formData.append('cand_sel_par', cand_sel_par.value);
 
             var response = await fetch('/mda/get_sub_topics', {
                 method: 'POST',

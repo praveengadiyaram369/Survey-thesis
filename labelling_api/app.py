@@ -166,7 +166,7 @@ async def search_subtopic(request: Request):
     return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[]})
 
 @app.post("/get_sub_topics")
-async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size: str=Form(...), min_samples: str=Form(...)):
+async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size: str=Form(...), min_samples: str=Form(...), cand_sel_par: str=Form(...)):
 
     global current_query
 
@@ -181,12 +181,16 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
 
     min_clust_size = int(min_clust_size)
     min_samples = int(min_samples)
+    cand_sel_par = int(cand_sel_par)
 
     if min_clust_size == 0:
         min_clust_size = MIN_CLUSTER_SIZE
     
     if min_samples == 0:
         min_samples = MIN_SAMPLES
+
+    if cand_sel_par == 0:
+        cand_sel_par = CP_THRESHOLD
 
     lang = 3
     match_top = 55

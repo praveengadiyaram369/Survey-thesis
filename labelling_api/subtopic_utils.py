@@ -124,10 +124,14 @@ def get_candidate_pool(subtopic_keywords_list, cp_threshold = 0.4):
     upper_limit = round(np.percentile(sim_values, cp_threshold), 3)
     candidate_pool = []
 
+    logging.info(f'upper_limit: {upper_limit}')
+
     for key, value in subtopic_keywords_list:
         
-        if value < upper_limit:
+        if value <= upper_limit:
             candidate_pool.append(key)
+    
+    logging.info(f'length of the candidate pool: {len(candidate_pool)}')
             
     return candidate_pool
 
