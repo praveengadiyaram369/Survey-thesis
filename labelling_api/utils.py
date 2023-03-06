@@ -486,7 +486,7 @@ def get_diff_sim(subtopic_keywords_list):
 
     return round(max(sim_list)-min(sim_list), 3)
 
-def get_subtopic(results, query, min_clust_size, min_samples):
+def get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par):
 
     query_vec = tf_model(query)['outputs'].numpy()[0]
 
@@ -496,7 +496,7 @@ def get_subtopic(results, query, min_clust_size, min_samples):
     final_df = pd.concat([rank_df.set_index('id'), final_keywords_dataframe.set_index('id')], axis=1, join='inner').reset_index()
 
     final_df['keywords_query'] = final_df.apply(lambda x:get_sent_transformers_keywords(x['keywords'], query_vec), axis=1)
-    final_df['candidate_pool'] = final_df.apply(lambda x:get_candidate_pool(x['keywords_query'], cp_threshold = CP_THRESHOLD), axis=1)
+    final_df['candidate_pool'] = final_df.apply(lambda x:get_candidate_pool(x['keywords_query'], cp_threshold = cand_sel_par), axis=1)
 
     final_candidate_pool = []
 
@@ -523,8 +523,6 @@ def get_subtopic(results, query, min_clust_size, min_samples):
     cluster_data_df['topic'] = cluster_data_df.apply(lambda x:get_nearest_keyword(x['candidate_words'], x['candidate_vecs'], x['mean_vec']), axis=1)
     cluster_data_df['topic'] = cluster_data_df.apply(lambda x:x['topic'][0].upper()+x['topic'][1:], axis=1)
 
-    logging.info(f'No. of clusters: {len(cluster_data_df.index)}')
-
     # cluster_data_df['topic_sim'] = cluster_data_df.apply(lambda x:cosine_similarity(get_modified_vectors(x['mean_vec']), get_modified_vectors(query_vec))[0][0], axis=1)
     cluster_data_df['cluster_size'] = cluster_data_df.apply(lambda x:len(x['candidate_words']), axis=1)
 
@@ -541,6 +539,9 @@ def get_subtopic(results, query, min_clust_size, min_samples):
 
         cluster_data_df = cluster_data_df[1:]
         logging.info(f'Removed cluster sub-topic: {top_cluster_name}')
+
+    logging.info(f'No. of clusters: {len(cluster_data_df.index)}')
+    logging.info(f'Sub-topics: {cluster_data_df.topic_name.values}')
 
 
     cluster_dict = dict()

@@ -145,9 +145,8 @@ async def add_document_thirdclass(request: Request, third_page_id: str=Form(1)):
 async def load_search_homepage(request: Request):
     return templates.TemplateResponse('search_keyword.html', context={'request': request, 'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict()})
 
-@app.get("/search_survey")
-async def search_survey(request: Request):
-
+def on_loading_ui():
+    
     create_survey_tables()
 
     global query_keywords_dict
@@ -158,12 +157,22 @@ async def search_survey(request: Request):
     global session_id
     session_id = str(uuid.uuid4().hex)
 
+    return query_keyword_list, query_keywords_dict, session_id 
+
+@app.get("/search_survey")
+async def search_survey(request: Request):
+
+    query_keyword_list, query_keywords_dict, session_id = on_loading_ui()
+
     return templates.TemplateResponse('search_survey.html', context={'request': request,'session_id': session_id,  'total_hits': 0, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[], 'query_keyword_list': query_keyword_list})
 
 @app.get("/search_subtopic")
 async def search_subtopic(request: Request):
     query = 'Quantentechnologie'
-    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[]})
+
+    query_keyword_list, query_keywords_dict, session_id = on_loading_ui()
+
+    return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'session_id': session_id, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[], 'query_keyword_list': query_keyword_list})
 
 @app.post("/get_sub_topics")
 async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size: str=Form(...), min_samples: str=Form(...), cand_sel_par: str=Form(...)):
@@ -214,7 +223,7 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
     results = get_merged_results(results_semantic, results_es)
 
     global topic_dict
-    topic_dict = get_subtopic(results, query, min_clust_size, min_samples)
+    topic_dict = get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par)
     sub_topics = list(topic_dict.keys())
     global sub_topics_dict, sub_topic_list
     sub_topics_dict = dict()

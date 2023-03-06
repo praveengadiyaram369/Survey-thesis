@@ -21,12 +21,18 @@
                      </div>
                   </div> -->
                   <form action="/mda/sub_topic_keywords_search" method="POST" id='formid'>
-                  <div class="input-group mb-3">
-                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
+                     <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
+                        </div>
+    
+                        <select class="form-select form-control" name="query" id="select_query" aria-label="Default select example"  onchange="get_sub_topics(this);" required>
+                         {% for keyword in query_keyword_list %}
+                         <option value= "{{keyword['id']}}" >{{keyword['name']}}</option>
+                         {% endfor %}
+    
+                        </select>
                      </div>
-                     <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name='query' id='query' value="{{query}}" required>
-                  </div>
                   <div class="input-group mb-3">
                      <div class="input-group-prepend">
                         <span class="input-group-text" id="inputGroup-sizing-default">Candidate selection parameter</span>
