@@ -115,13 +115,17 @@ def get_sent_transformers_keywords(keywords, query_vec, max_keyword_cnt=30):
 
     return subtopic_keywords_dict
 
-def get_candidate_pool(subtopic_keywords_list, query_diff_sim, upper_limit = 0.4):
+def get_candidate_pool(subtopic_keywords_list, cp_threshold = 0.4):
     
+    sim_values = []
+    for key, value in subtopic_keywords_list:
+        sim_values.append(value)
+            
+    upper_limit = round(np.percentile(sim_values, cp_threshold), 3)
     candidate_pool = []
+
     for key, value in subtopic_keywords_list:
         
-        value *= query_diff_sim
-
         if value < upper_limit:
             candidate_pool.append(key)
             
