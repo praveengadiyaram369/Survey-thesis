@@ -533,7 +533,7 @@ def get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par):
     cluster_data_df = cluster_data_df.sort_values(by=['cluster_size'], ascending=False)
     cluster_data_df = cluster_data_df.reset_index(drop=True)
 
-    top_cluster_name = cluster_data_df.topic_name.values[0].split(' (')[0]
+    top_cluster_name = cluster_data_df.topic.values[0]
 
     if portion_of_capital_letters(top_cluster_name) >= 0.75:
 
@@ -541,7 +541,7 @@ def get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par):
         logging.info(f'Removed cluster sub-topic: {top_cluster_name}')
 
     logging.info(f'No. of clusters: {len(cluster_data_df.index)}')
-    logging.info(f'Sub-topics: {cluster_data_df.topic_name.values}')
+    logging.info(f'Sub-topics: {cluster_data_df.topic.values}')
 
 
     cluster_dict = dict()

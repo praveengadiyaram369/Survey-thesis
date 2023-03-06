@@ -236,45 +236,48 @@
       async function get_sub_topics(e) {
          document.getElementById("loader").style.visibility = "visible";
 
-        try {
-            var query = document.getElementById("query");
-            var min_clust_size = document.getElementById("min_clust_size");
-            var min_samples = document.getElementById("min_samples");
-            var cand_sel_par = document.getElementById("cand_sel_par");
-
-            console.log(query.value)
-
-            var formData = new FormData();
-            formData.append('query', query.value);
-            formData.append('min_clust_size', min_clust_size.value);
-            formData.append('min_samples', min_samples.value);
-            formData.append('cand_sel_par', cand_sel_par.value);
-
-            var response = await fetch('/mda/get_sub_topics', {
-                method: 'POST',
-                body: formData
+          try {
+              var query = document.getElementById("select_query").value;
+              var sel = document.getElementById("select_query");
+              var text= sel.options[sel.selectedIndex].text;
+  
+              console.log(query)
+              console.log(text)
+  
+              var formData = new FormData();
+              formData.append('query', query);
+              formData.append('min_clust_size', 0);
+               formData.append('min_samples', 0);
+               formData.append('cand_sel_par', 0);
+  
+              var response = await fetch('/mda/get_sub_topics', {
+                  method: 'POST',
+                  body: formData
+              });
+              
+              
+          let data = await response.json();
+           console.log(typeof data);
+           // console.log(data);
+  
+           parsed_data = JSON.parse(data);
+           // console.log(parsed_data);
+  
+           $('#select-subtopic').empty();
+           
+           $.each(parsed_data, function(i, option) {
+          $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
             });
-            
-            
-        let data = await response.json();
-         console.log(typeof data);
-         // console.log(data);
 
-         parsed_data = JSON.parse(data);
-         // console.log(parsed_data);
+            document.getElementById('selected_query').innerHTML = 'Anfrage ausgewählt: ' + text;
 
-         $('#select-subtopic').empty();
-         
-         $.each(parsed_data, function(i, option) {
-        $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
-      	});
+              
+          } catch (error) {
+              console.error(error);
+          }
+          document.getElementById("loader").style.visibility = "hidden";
 
-         document.getElementById("loader").style.visibility = "hidden";
-            
-        } catch (error) {
-            console.error(error);
-        }
-        }
+          }
 
 
       async function save_document_label(e) {
