@@ -20,7 +20,7 @@
                         <h3>Search Newsfeeds</h3>
                      </div>
                   </div> -->
-                  <form action="/mda/sub_topic_keywords_search" method="POST" id='formid'>
+                  <form action="/mda/sub_topic_keywords_search" method="POST" id='formid' onkeydown="return event.key != 'Enter';">
                      <div class="input-group mb-3">
                         <div class="input-group-prepend">
                            <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
@@ -240,15 +240,19 @@
               var query = document.getElementById("select_query").value;
               var sel = document.getElementById("select_query");
               var text= sel.options[sel.selectedIndex].text;
-  
+
+              var min_clust_size = document.getElementById("min_clust_size").value;
+              var min_samples = document.getElementById("min_samples").value;
+              var cand_sel_par = document.getElementById("cand_sel_par").value;
+
               console.log(query)
               console.log(text)
   
               var formData = new FormData();
               formData.append('query', query);
-              formData.append('min_clust_size', 0);
-               formData.append('min_samples', 0);
-               formData.append('cand_sel_par', 0);
+              formData.append('min_clust_size', min_clust_size);
+               formData.append('min_samples', min_samples);
+               formData.append('cand_sel_par', cand_sel_par);
   
               var response = await fetch('/mda/get_sub_topics', {
                   method: 'POST',

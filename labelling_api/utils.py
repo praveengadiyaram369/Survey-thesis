@@ -540,6 +540,7 @@ def get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par):
         cluster_data_df = cluster_data_df[1:]
         logging.info(f'Removed cluster sub-topic: {top_cluster_name}')
 
+    logging.info(f'Candidate selection percentile: {cand_sel_par}')
     logging.info(f'No. of clusters: {len(cluster_data_df.index)}')
     logging.info(f'Sub-topics: {cluster_data_df.topic.values}')
 
