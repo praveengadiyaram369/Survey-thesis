@@ -376,6 +376,11 @@ async def submit_survey_question_2(request: Request, query: str=Form(1), sub_top
 
     insert_system_comparision_label(session_id, query, sub_topic, label_2, label_3, label_4)
 
+@app.post("/submit_survey_question_3")
+async def submit_survey_question_3(request: Request, query: str=Form(1), label_5: str=Form(1)):
+
+    insert_survey_output_label(session_id, query, label_5)
+
 
 @app.post('/keyword_search')
 async def keyword_search(request: Request, query: str=Form(...), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):

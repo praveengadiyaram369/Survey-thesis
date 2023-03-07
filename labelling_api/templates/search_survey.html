@@ -10,11 +10,83 @@
       <section>
          <div class="container">
             <div class="alert alert-primary text-center my-4">
-               <h5>MiTeRa, Militärtechnik-Radar, mehr Details: </h5>
-               <a href="https://taris.fkie.fraunhofer.de:8443/sri.sai.praveen.gadiyaram/technology_scouting_from_newsfeeds.git" target="_blank">Quellcode</a>
+               <h5>MiTeRa (Militärtechnik-Radar) </h5>
+               <h6><b>
+               Innovation  |
+               Future products  |
+               Applied research or implementations | 
+               New ways of sourcing  |
+               Technological advances | 
+               Big Data/AI patterns</b>
+               </h6>
             </div>
+            <div class="text-left my-4">
+               <h6><b>Instructions for taking part in the survey:</b> </h6>
+            </div>
+
+            <div class="row" style="margin: 10px;">
+               <div class="col-2">
+                 <div class="list-group" id="myList" role="tablist">
+                   <a class="list-group-item list-group-item-action text-center active" id="list-step1-list" data-toggle="list" href="#list-step1" role="tab" aria-controls="home"><b>Step 1</b></a>
+                   <a class="list-group-item list-group-item-action text-center" id="list-step2-list" data-toggle="list" href="#list-step2" role="tab" aria-controls="profile"><b>Step 2</b></a>
+                   <a class="list-group-item list-group-item-action text-center" id="list-step3-list" data-toggle="list" href="#list-step3" role="tab" aria-controls="messages"><b>Step 3</b></a>
+                   <a class="list-group-item list-group-item-action text-center" id="list-step4-list" data-toggle="list" href="#list-step4" role="tab" aria-controls="settings"><b>Step 4</b></a>
+                   <a class="list-group-item list-group-item-action text-center" id="list-step5-list" data-toggle="list" href="#list-step5" role="tab" aria-controls="settings"><b>Step 5</b></a>
+                   <a class="list-group-item list-group-item-action text-center" id="list-step6-list" data-toggle="list" href="#list-step6" role="tab" aria-controls="settings"><b>Step 6</b></a>
+
+                 </div>
+               </div>
+               <div class="col-9">
+                 <div class="tab-content" id="nav-tabContent">
+                   <div class="tab-pane fade show active" id="list-step1" role="tabpanel" aria-labelledby="list-step1-list">Select a search phrase from the drop-down menu <b>"Suchanfrage"</b>, to which you would like to view search results. </div>
+                   <div class="tab-pane fade" id="list-step2" role="tabpanel" aria-labelledby="list-step2-list">Click on <b>"Sub-Topics abrufen"</b>. The website will then generate a list of sub-topics, which can be viewed as a drop-down list in the <b>"Sub-topic (Terms | Documents)"</b>.</div>
+                   <div class="tab-pane fade" id="list-step3" role="tabpanel" aria-labelledby="list-step3-list">
+                     <ul>
+                        <li>Read all the sub-topic names and please answer the <b>Question 1</b> about the list of generated subtopics. </li>
+
+                           <li>Note: <b>"Distinctive"</b> asks if the listed sub-topics are easily distinguishable from each other and <b>"Well Labeled"</b> asks if the listed sub-topics have titles that are well understood. </li>
+                     
+                              <li>Click on <b>"Submit question 1"</b> to give your rating of the SubTopc list.</li>
+                  </ul> </div>
+                   <div class="tab-pane fade" id="list-step4" role="tabpanel" aria-labelledby="list-step4-list">
+                     <ul>
+                        <li>Select a sub-topic from the drop-down menu <b>"Sub-topic (Terms | Documents)"</b> which you are familiar with and click on <b>"Query + Subtopic Search"</b> to have the corresponding news documents compiled by retrieval systems A and B. </li>
+
+                           <li>Read through the articles compiled by both systems A and B.  </li>
+                  </ul>
+                   </div>
+                   <div class="tab-pane fade" id="list-step5" role="tabpanel" aria-labelledby="list-step5-list">
+                     <ul>
+                        <li>At the bottom of the page, use <b>Question 2</b> to answer which of the two systems you think has generated the better results for the given search term and the selected subtopic. </li>
+
+                           <li> With <b>Question 3</b> and <b>Question 4</b>, you can indicate how well you liked the results of System A and System B overall. The higher the score, the better your impression. </li>
+
+                           <li> After answering the questions 2, 3 and 4, Click on <b>"Submit questions 2, 3, 4"</b> to give your rating of the SubTopc list. </li>
+
+                     </ul>
+                   </div>
+                   <div class="tab-pane fade" id="list-step6" role="tabpanel" aria-labelledby="list-step6-list">
+                     <ul>
+                        <li>Repeat the <b>Steps 4 & 5</b> multiple times by selecting a different sub-topic everytime.   </li>
+
+                           <li> Optional: After providing the survey inputs for multiple sub-topics. Answer the one last question <b>"Question 5"</b> and click on <b>"Finish Survey"</b>  </li>
+
+                           <li> You can repeat this survey again on a different keyword starting from <b>"Step 1"</b>.</li>
+
+                     </ul>
+                   </div>
+                 </div>
+               </div>
+             </div>
+             <hr />
+
+
             <div class="row justify-content-center">
                 <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+
+                  <div class="alert alert-primary text-center my-4">
+                     <h5><b>Survey</b> </h5>
+                  </div>
 
                    <form action="/mda/sub_topic_search_survey" method="POST" id='formid' onkeydown="return event.key != 'Enter';">
 
@@ -87,7 +159,7 @@
                      <div class="container">
                         <div class="col-md-12 text-center">
                            <button type="button" class="btn btn-primary mb-3" id="submit_survey_1" onclick="submit_survey_question_1(this);">
-                              Submit</button>
+                              Submit question 1</button>
                         </div>
                     </div>
                     <hr />
@@ -345,16 +417,33 @@
        <br>
        <div class="container">
          <div class="col-md-12 text-center">
-            <button type="button" class="btn btn-primary mt-2" id="submit_survey_2" onclick="submit_survey_question_2(this);">Submit</button>
+            <button type="button" class="btn btn-primary mt-2" id="submit_survey_2" onclick="submit_survey_question_2(this);">Submit questions 2, 3, 4</button>
 
          </div>
      </div>
 
 
+     <hr />
+     <div class="card">
+      <div class="card-header">
+          <h5 class="card-title">Question 5 (optional)</h5>
+      </div>
+      <div class="card-body">
+         <label for="select" style="float: left; vertical-align: baseline;"><h5>If you have inspected and labeled more than one sub-topic for the chosen query: Were the subtopics helpful for you to find the relevant documents related to MiTeRa?   </h5> </label>
+         <select class="form-select" id="survey_5_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
+            <option class="dropdown-item" type="button" value="1">Yes</option>
+            <option class="dropdown-item" type="button" value="2">No</option>
+         </select>             
+      </div>
+
+       </div>     
        <br>
+       <div class="container">
+         <div class="col-md-12 text-center">
+            <button type="button" class="btn btn-primary mt-2" id="submit_survey_3" onclick="submit_survey_question_3(this);">Submit question 5</button>
 
-
-       </div>           
+         </div>
+     </div>      
 
            <!-- <p class="text-center"><strong>Any comments?</strong></p> -->
 
@@ -410,9 +499,15 @@
       <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
       
       <script> 
+
+$('#myList a').on('click', function (e) {
+  e.preventDefault()
+  $(this).tab('show')
+})
+
         $(".readmore-btn").on('click', function(){
            $(this).parent().toggleClass("showContent");
            var replaceText = $(this).parent().hasClass("showContent") ? "Weniger lesen" : "Mehr lesen";
@@ -532,6 +627,35 @@
               console.error(error);
            }
         }
+
+        async function submit_survey_question_3(e) {
+  
+  try {
+        var original_query = document.getElementById("query").value;
+        var label_5 = document.getElementById("survey_5_label").value;
+
+      //   console.log(original_query)
+      //   console.log(sub_topic)
+      //   console.log(label)
+
+        var formData = new FormData();
+        formData.append('query', original_query);
+        formData.append('label_5', label_5);
+
+        var response = await fetch('/mda/submit_survey_question_3', {
+           method: 'POST',
+           body: formData
+        });
+        alert('Inputs for the survey question 5 is submitted !');
+        
+     let data = await response.json();
+        data = JSON.parse(data)
+        console.log(data);
+        
+     } catch (error) {
+        console.error(error);
+     }
+  }
   
         
         </script>
