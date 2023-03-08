@@ -84,3 +84,4 @@ MIN_SAMPLES = 10
 
 MAX_SURVEY_COUNT = 10
 survey_sqlite_db_path = basepath+'survey_results_dataset.db'
+session_data = basepath+'mitera_session_data/'

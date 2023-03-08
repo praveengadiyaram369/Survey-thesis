@@ -88,6 +88,9 @@
                      <h5><b>Survey</b> </h5>
                   </div>
 
+                  <input type="hidden" name="session_id"  id="session_id" value="{{session_id}}"/>
+
+
                    <form action="/mda/sub_topic_search_survey" method="POST" id='formid' onkeydown="return event.key != 'Enter';">
 
                      <div class="input-group mb-3">
@@ -239,12 +242,12 @@
                          <tr>
                             <th scope="row">1</th>
                             <td>Original-Abfrage</td>
-                            <td>{{search_data['original_query']}}</td>
+                            <td id="table_search_query">{{search_data['original_query']}}</td>
                           </tr>
                          <tr>
                            <th scope="row">2</th>
                            <td>Sub-topic</td>
-                           <td>{{search_data['sub_topic']}}</td>
+                           <td id="table_sub_topic">{{search_data['sub_topic']}}</td>
                          </tr>
                          <!-- <tr>
                            <th scope="row">3</th>
@@ -309,7 +312,7 @@
 
                <div class="container">
                   <div class="row">
-                    <div class="col-6">
+                    <div class="col-6" id="system_a_results">
                      {% for data in result_list_1 %}
                          <div class="justify-content-center text-center">
          
@@ -331,7 +334,7 @@
                      <br>
                      {% endfor %}
                     </div>
-                    <div class="col-6">
+                    <div class="col-6" id="system_b_results">
                      {% for data in result_list_2 %}
                          <div class="justify-content-center text-center">
          
@@ -362,13 +365,13 @@
                <p>
                <strong><h5> Fill out the survey based on the above retrieved results: </h5></strong>
                </p>
-               <p>
+               <p id="query_sub_topic_data">
                Search query: 
                <strong>{{search_data['original_query']}}</strong>
                   <br>
                   Sub-topic: 
                   <strong>{{search_data['sub_topic']}}</strong>
-                  </p>
+               </p>
            </div>
            <br>
  
@@ -440,7 +443,7 @@
        <br>
        <div class="container">
          <div class="col-md-12 text-center">
-            <button type="button" class="btn btn-primary mt-2" id="submit_survey_3" onclick="submit_survey_question_3(this);">Submit question 5</button>
+            <button type="button" class="btn btn-primary mt-2" id="submit_survey_3" onclick="submit_survey_question_5(this);">Submit question 5</button>
 
          </div>
      </div>      
@@ -528,18 +531,19 @@ $('#myList a').on('click', function (e) {
          document.getElementById("loader").style.visibility = "visible";
 
           try {
-              var query = document.getElementById("select_query").value;
+            //   var query = document.getElementById("select_query").value;
               var sel = document.getElementById("select_query");
-              var text= sel.options[sel.selectedIndex].text;
+              var query= sel.options[sel.selectedIndex].text;
+
+              var session_id = document.getElementById("session_id").value;
   
-              console.log(query)
-              console.log(text)
   
               var formData = new FormData();
               formData.append('query', query);
               formData.append('min_clust_size', 0);
                formData.append('min_samples', 0);
                formData.append('cand_sel_par', 0);
+               formData.append('session_id', session_id);
   
               var response = await fetch('/mda/get_sub_topics', {
                   method: 'POST',
@@ -573,12 +577,21 @@ $('#myList a').on('click', function (e) {
           async function submit_survey_question_1(e) {
   
             try {
+               var sel = document.getElementById("select_query");
+              var query= sel.options[sel.selectedIndex].text;
+
+
                   var label = document.getElementById("survey_1_label").value;
 
                   console.log(label)
 
                   var formData = new FormData();
+                  formData.append('query', query);
                   formData.append('label', label);
+
+                  var session_id = document.getElementById("session_id").value;
+                  formData.append('session_id', session_id);
+
 
                   var response = await fetch('/mda/submit_survey_question_1', {
                      method: 'POST',
@@ -600,24 +613,24 @@ $('#myList a').on('click', function (e) {
         async function submit_survey_question_2(e) {
   
         try {
-              var original_query = document.getElementById("query").value;
-              var sub_topic = document.getElementById("sub_topic").value;
-              var label_2 = document.getElementById("survey_2_label").value;
+         var sel = document.getElementById("select_query");
+              var query= sel.options[sel.selectedIndex].text;
+              var sel2 = document.getElementById("select-subtopic");
+               var sub_topic= sel2.options[sel.selectedIndex].text;
+               var label_2 = document.getElementById("survey_2_label").value;
               var label_3 = document.getElementById("survey_3_label").value;
               var label_4 = document.getElementById("survey_4_label").value;
 
-            //   console.log(original_query)
-            //   console.log(sub_topic)
-            //   console.log(label)
-              console.log(label_3)
-              console.log(label_4)
   
               var formData = new FormData();
-              formData.append('query', original_query);
+              formData.append('query', query);
               formData.append('sub_topic', sub_topic);
               formData.append('label_2', label_2);
               formData.append('label_3', label_3);
               formData.append('label_4', label_4);
+
+              var session_id = document.getElementById("session_id").value;
+                  formData.append('session_id', session_id);
   
               var response = await fetch('/mda/submit_survey_question_2', {
                  method: 'POST',
@@ -634,18 +647,24 @@ $('#myList a').on('click', function (e) {
            }
         }
 
-        async function submit_survey_question_3(e) {
+        async function submit_survey_question_5(e) {
   
   try {
-        var original_query = document.getElementById("query").value;
-        var label_5 = document.getElementById("survey_5_label").value;
+         var sel = document.getElementById("select_query");
+              var query= sel.options[sel.selectedIndex].text;
+              
+              
+         var label_5 = document.getElementById("survey_5_label").value;
 
 
         var formData = new FormData();
-        formData.append('query', original_query);
+        formData.append('query', query);
         formData.append('label_5', label_5);
 
-        var response = await fetch('/mda/submit_survey_question_3', {
+        var session_id = document.getElementById("session_id").value;
+                  formData.append('session_id', session_id);
+
+        var response = await fetch('/mda/submit_survey_question_5', {
            method: 'POST',
            body: formData
         });
@@ -663,26 +682,78 @@ $('#myList a').on('click', function (e) {
   async function load_retrieval_results() {
   
   try {
-      var sub_topic = document.getElementById("sub_topic").value;
+   var sel = document.getElementById("select_query");
+   var query= sel.options[sel.selectedIndex].text;
+
+   var sel2 = document.getElementById("select-subtopic");
+   var sub_topic= sel2.options[sel.selectedIndex].text;
 
         var formData = new FormData();
-        formData.append('sub_topic_selected', sub_topic);
+        formData.append('query', query);
+        formData.append('sub_topic', sub_topic);
+
+        var session_id = document.getElementById("session_id").value;
+                  formData.append('session_id', session_id);
 
         var response = await fetch('/mda/sub_topic_search_ajax', {
            method: 'POST',
            body: formData
         });
-        alert('Inputs for the survey question 5 is submitted !');
         
      let data = await response.json();
         data = JSON.parse(data)
         console.log(data);
+
+        table_data = data['search_data']
+        system_a_results = data['system_a_results']
+        system_b_results = data['system_b_results']
   
-         //   $('#select-subtopic').empty();
+        document.getElementById("table_search_query").innerHTML = table_data['original_query']
+        document.getElementById("table_sub_topic").innerHTML = table_data['sub_topic']
+
+         $('#system_a_results').empty();
+         $('#system_b_results').empty();
+         $('#query_sub_topic_data').empty();
+
+         $("p#query_sub_topic_data").text("Search query: "+
+      "<strong>"+table_data['original_query']+"</strong>"+
+       "  <br>"+
+        " Sub-topic: "+
+         "<strong>"+ table_data['sub_topic'] +"</strong>");
            
-         //   $.each(parsed_data, function(i, option) {
-         //  $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
-         //    });
+         $.each(system_a_results, function(i, item) {
+    $('#system_a_results').append(    "<div class='justify-content-center text-center'>"+
+        "<div class='card'>"+
+            "<div class='card-header'>"+
+                "<h6 class='card-title'>" + item.title + "</h6>"+
+                "</div>"+
+                "<div class='card-body'>"+
+                    "<p  class='card-text'>" + item.text + "</p>"+
+                    "<a href='javascript:void(0);' class='readmore-btn'>Mehr lesen</a>"+
+              "<br>"+
+              "<br>"+
+           "</div>"+
+        "</div>"+
+     "</div>"+
+     "<br>");
+      });
+
+      $.each(system_b_results, function(i, item) {
+    $('#system_b_results').append(    "<div class='justify-content-center text-center'>"+
+        "<div class='card'>"+
+            "<div class='card-header'>"+
+                "<h6 class='card-title'>" + item.title + "</h6>"+
+                "</div>"+
+                "<div class='card-body'>"+
+                    "<p  class='card-text'>" + item.text + "</p>"+
+                    "<a href='javascript:void(0);' class='readmore-btn'>Mehr lesen</a>"+
+              "<br>"+
+              "<br>"+
+           "</div>"+
+        "</div>"+
+     "</div>"+
+     "<br>");
+      });
         
      } catch (error) {
         console.error(error);

@@ -263,8 +263,8 @@ def get_query_result_semantic_survey(query, match_top, cut_off = 0.64):
         doc_dict['id'] = doc_data['id']
         doc_dict['title'] = doc_data['title']
         doc_dict['text'] = doc_data['text']
-        doc_dict['page_url'] = doc_data['url']
-        doc_dict['pub_date'] = doc_data['pubDate']
+        # doc_dict['page_url'] = doc_data['url']
+        # doc_dict['pub_date'] = doc_data['pubDate']
 
         result_list.append(doc_dict)
         
@@ -573,8 +573,6 @@ def get_topic_documents_clustering(query, doc_id_list):
         doc_dict['id'] = doc_data['id']
         doc_dict['title'] = doc_data['title']
         doc_dict['text'] = doc_data['text']
-        doc_dict['page_url'] = doc_data['url']
-        doc_dict['pub_date'] = doc_data['pubDate']
 
         result_list.append(doc_dict)
 

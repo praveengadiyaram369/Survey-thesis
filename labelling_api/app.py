@@ -43,14 +43,9 @@ document_data = None
 tech_relevant_document_data = None
 milt_relevant_document_data = None
 irrelevant_document_data = None
-sub_topics_dict = dict()
-sub_topic_list = []
-topic_dict = dict()
 
 query_keywords_dict = dict()
 query_keyword_list = []
-session_id = None
-current_query = None
 
 @app.get("/")
 async def load_homepage(request: Request):
@@ -175,16 +170,12 @@ async def search_subtopic(request: Request):
     return templates.TemplateResponse('sub_topic_search.html', context={'request': request, 'session_id': session_id, 'total_hits': 0, 'query': query, 'result_list': [], 'concept_list': [], 'search_data': dict(), 'sub_topic_list':[], 'query_keyword_list': query_keyword_list})
 
 @app.post("/get_sub_topics")
-async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size: str=Form(...), min_samples: str=Form(...), cand_sel_par: str=Form(...)):
-
-    global current_query
+async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size: str=Form(...), min_samples: str=Form(...), cand_sel_par: str=Form(...), session_id: str=Form(...)):
 
     query = query.strip()
 
     if query.isnumeric():
         query = query_keywords_dict[str(query)]
-
-    current_query = query
 
     logging.info(f'Query selected: {query}')
 
@@ -222,10 +213,10 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
 
     results = get_merged_results(results_semantic, results_es)
 
-    global topic_dict
     topic_dict = get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par)
+    write_document_data(topic_dict, session_data+session_id+'.json')
+
     sub_topics = list(topic_dict.keys())
-    global sub_topics_dict, sub_topic_list
     sub_topics_dict = dict()
     sub_topic_list = []
 
@@ -237,11 +228,12 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
     return JSONResponse(content=json_compatible_item_data)
 
 @app.post('/sub_topic_keywords_search')
-async def keyword_search(request: Request, query: int=Form(1), sub_topic_selected: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
+async def keyword_search(request: Request, query: int=Form(1), sub_topic: int=Form(1), lang: int=Form(1), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: str=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
 
     query = query_keywords_dict[str(query)]
-    sub_topic = sub_topics_dict[str(sub_topic_selected)]
-    doc_id_list = topic_dict[sub_topic]
+    # sub_topic = sub_topics_dict[str(sub_topic_selected)]
+    # doc_id_list = topic_dict[sub_topic]
+    doc_id_list = None
 
     logging.info(f'Query selected: {query}')
     logging.info(f'sub_topic selected: {sub_topic}')
@@ -261,11 +253,11 @@ async def keyword_search(request: Request, query: int=Form(1), sub_topic_selecte
 
 
 @app.post('/sub_topic_search_survey')
-async def keyword_search(request: Request, query: str=Form(...), sub_topic_selected: int=Form(1)):
+async def keyword_search(request: Request, query: str=Form(...), sub_topic: int=Form(1)):
 
-    query = current_query
-    sub_topic = sub_topics_dict[str(sub_topic_selected)]
-    doc_id_list = topic_dict[sub_topic]
+    # sub_topic = sub_topics_dict[str(sub_topic_selected)]
+    # doc_id_list = topic_dict[sub_topic]
+    doc_id_list = None
 
     sub_topic = sub_topic.split(' (')[0]
     sub_topic = sub_topic.strip()
@@ -290,10 +282,12 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
     return templates.TemplateResponse('search_survey.html', context={'request': request,'session_id': session_id, 'total_hits': total_hits, 'result_list_1': system_a_results, 'result_list_2': system_b_results, 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list, 'query_keyword_list': query_keyword_list})
 
 @app.post('/sub_topic_search_ajax')
-async def keyword_search(request: Request, sub_topic_selected: int=Form(1)):
+async def keyword_search(request: Request, query: str=Form(1), sub_topic: str=Form(1), session_id: str=Form(1)):
 
-    query = current_query
-    sub_topic = sub_topics_dict[str(sub_topic_selected)]
+    query = query.strip()
+    sub_topic = sub_topic.strip()
+
+    topic_dict = read_document_data(topic_dict, session_data+session_id+'.json')
     doc_id_list = topic_dict[sub_topic]
 
     sub_topic = sub_topic.split(' (')[0]
@@ -319,11 +313,11 @@ async def keyword_search(request: Request, sub_topic_selected: int=Form(1)):
     retrieval_data ={'search_data': search_data,
                     'system_a_results': system_a_results,
                     'system_b_results': system_b_results}
-                    
+
     json_compatible_item_data = jsonable_encoder(json.dumps(retrieval_data))
     return JSONResponse(content=json_compatible_item_data)
 
-    return templates.TemplateResponse('search_survey.html', context={'request': request,'session_id': session_id, 'total_hits': total_hits, 'result_list_1': system_a_results, 'result_list_2': system_b_results, 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list, 'query_keyword_list': query_keyword_list})
+    # return templates.TemplateResponse('search_survey.html', context={'request': request,'session_id': session_id, 'total_hits': total_hits, 'result_list_1': system_a_results, 'result_list_2': system_b_results, 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list, 'query_keyword_list': query_keyword_list})
 
 
 @app.post('/get_cdd_pool')
@@ -399,19 +393,19 @@ async def save_document_label(request: Request, doc_id: str=Form(1), query: str=
     insert_into_sqlite_db(doc_id, query, label)
 
 @app.post("/submit_survey_question_1")
-async def submit_survey_question_1(request: Request, label: str=Form(1)):
-    if current_query is not None:
-        insert_clustering_output_label(session_id, current_query, label)
+async def submit_survey_question_1(request: Request, query: str=Form(1), label: str=Form(1), session_id: str=Form(1)):
+    if query is not None:
+        insert_clustering_output_label(session_id, query, label)
 
 @app.post("/submit_survey_question_2")
-async def submit_survey_question_2(request: Request, query: str=Form(1), sub_topic: str=Form(1), label_2: str=Form(1), label_3: str=Form(1), label_4: str=Form(1)):
+async def submit_survey_question_2(request: Request, query: str=Form(1), sub_topic: str=Form(1), label_2: str=Form(1), label_3: str=Form(1), label_4: str=Form(1), session_id: str=Form(1)):
+    if query is not None:
+        insert_system_comparision_label(session_id, query, sub_topic, label_2, label_3, label_4)
 
-    insert_system_comparision_label(session_id, query, sub_topic, label_2, label_3, label_4)
-
-@app.post("/submit_survey_question_3")
-async def submit_survey_question_3(request: Request, query: str=Form(1), label_5: str=Form(1)):
-
-    insert_survey_output_label(session_id, query, label_5)
+@app.post("/submit_survey_question_5")
+async def submit_survey_question_5(request: Request, query: str=Form(1), label_5: str=Form(1), session_id: str=Form(1)):
+    if query is not None:
+        insert_survey_output_label(session_id, query, label_5)
 
 
 @app.post('/keyword_search')
