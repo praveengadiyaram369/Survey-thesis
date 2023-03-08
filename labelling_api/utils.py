@@ -591,7 +591,7 @@ def get_keyword_query_data():
     with open(os.getcwd()+'/../query_keywords_example.txt', 'r') as f:
         query_keyword_list = f.read().splitlines()
     
-    shuffle(query_keyword_list)
+    # shuffle(query_keyword_list)
 
     query_keyword_dict = dict()
     keywords_list = []

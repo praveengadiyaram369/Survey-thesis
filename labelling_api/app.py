@@ -278,11 +278,6 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
     search_data = {
         'original_query':query,
         'sub_topic': sub_topic,
-        'search_type': 'NA',
-        'search_strategy':'Clustering based results',
-        'language': 'NA',
-        'total_hits': 'NA',
-        'comments': 'Sub topic search'
     }
 
     total_hits, system_a_results = get_topic_documents_clustering(query_updated, doc_id_list)
@@ -293,6 +288,43 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic_selec
     total_hits_semantic, system_b_results = get_query_result_semantic_survey(query_updated, match_top, cut_off=0.75)
 
     return templates.TemplateResponse('search_survey.html', context={'request': request,'session_id': session_id, 'total_hits': total_hits, 'result_list_1': system_a_results, 'result_list_2': system_b_results, 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list, 'query_keyword_list': query_keyword_list})
+
+@app.post('/sub_topic_search_ajax')
+async def keyword_search(request: Request, sub_topic_selected: int=Form(1)):
+
+    query = current_query
+    sub_topic = sub_topics_dict[str(sub_topic_selected)]
+    doc_id_list = topic_dict[sub_topic]
+
+    sub_topic = sub_topic.split(' (')[0]
+    sub_topic = sub_topic.strip()
+
+    logging.info(f'Query selected: {query}')
+    logging.info(f'sub_topic selected: {sub_topic}')
+
+    query_updated = f'Innovation in {query} und {sub_topic}'
+
+    search_data = {
+        'original_query':query,
+        'sub_topic': sub_topic,
+    }
+
+    total_hits, system_a_results = get_topic_documents_clustering(query_updated, doc_id_list)
+
+    lang = 3
+    match_top = len(system_a_results)
+
+    total_hits_semantic, system_b_results = get_query_result_semantic_survey(query_updated, match_top, cut_off=0.75)
+
+    retrieval_data ={'search_data': search_data,
+                    'system_a_results': system_a_results,
+                    'system_b_results': system_b_results}
+                    
+    json_compatible_item_data = jsonable_encoder(json.dumps(retrieval_data))
+    return JSONResponse(content=json_compatible_item_data)
+
+    return templates.TemplateResponse('search_survey.html', context={'request': request,'session_id': session_id, 'total_hits': total_hits, 'result_list_1': system_a_results, 'result_list_2': system_b_results, 'query': query, 'search_data':search_data, 'sub_topic_list':sub_topic_list, 'query_keyword_list': query_keyword_list})
+
 
 @app.post('/get_cdd_pool')
 async def get_cdd_pool(request: Request, query: str=Form(...), lang: int=Form(3), phrase_query: bool=Form(False), search_concept: bool=Form(False), match_top: int=Form(...), fuzzy_query: str=Form(False), search_type: str=Form(...)):
