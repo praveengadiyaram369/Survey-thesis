@@ -234,6 +234,7 @@ async def keyword_search(request: Request, query: int=Form(1), sub_topic: int=Fo
     # sub_topic = sub_topics_dict[str(sub_topic_selected)]
     # doc_id_list = topic_dict[sub_topic]
     doc_id_list = None
+    sub_topic_list = None
 
     logging.info(f'Query selected: {query}')
     logging.info(f'sub_topic selected: {sub_topic}')
@@ -258,6 +259,7 @@ async def keyword_search(request: Request, query: str=Form(...), sub_topic: int=
     # sub_topic = sub_topics_dict[str(sub_topic_selected)]
     # doc_id_list = topic_dict[sub_topic]
     doc_id_list = None
+    sub_topic_list = None
 
     sub_topic = sub_topic.split(' (')[0]
     sub_topic = sub_topic.strip()
@@ -287,7 +289,7 @@ async def keyword_search(request: Request, query: str=Form(1), sub_topic: str=Fo
     query = query.strip()
     sub_topic = sub_topic.strip()
 
-    topic_dict = read_document_data(topic_dict, session_data+session_id+'.json')
+    topic_dict = read_document_data(session_data+session_id+'.json')
     doc_id_list = topic_dict[sub_topic]
 
     sub_topic = sub_topic.split(' (')[0]
@@ -399,7 +401,9 @@ async def submit_survey_question_1(request: Request, query: str=Form(1), label: 
 
 @app.post("/submit_survey_question_2")
 async def submit_survey_question_2(request: Request, query: str=Form(1), sub_topic: str=Form(1), label_2: str=Form(1), label_3: str=Form(1), label_4: str=Form(1), session_id: str=Form(1)):
-    if query is not None:
+    if query is not None and sub_topic is not None:
+        sub_topic = sub_topic.split(' (')[0]
+        sub_topic = sub_topic.strip()
         insert_system_comparision_label(session_id, query, sub_topic, label_2, label_3, label_4)
 
 @app.post("/submit_survey_question_5")

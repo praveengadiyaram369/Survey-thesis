@@ -38,14 +38,22 @@
                </div>
                <div class="col-9">
                  <div class="tab-content" id="nav-tabContent">
-                   <div class="tab-pane fade show active" id="list-step1" role="tabpanel" aria-labelledby="list-step1-list">Select a search phrase from the drop-down menu <b>"Suchanfrage"</b>, to which you would like to view search results. </div>
+                   <div class="tab-pane fade show active" id="list-step1" role="tabpanel" aria-labelledby="list-step1-list">Select a search phrase from the drop-down menu <b>"Query"</b>, to which you would like to view search results. </div>
                    <div class="tab-pane fade" id="list-step2" role="tabpanel" aria-labelledby="list-step2-list">Click on <b>"Sub-Topics abrufen"</b>. The website will then generate a list of sub-topics, which can be viewed as a drop-down list in the <b>"Sub-topic (Terms | Documents)"</b>.</div>
                    <div class="tab-pane fade" id="list-step3" role="tabpanel" aria-labelledby="list-step3-list">
                      <ul>
                         <li>Read all the sub-topic names and please answer the <b>Question 1</b> about the list of generated sub-topics. </li>
 
                            <li>Note: <b>"Distinctive"</b> asks if the listed sub-topics are easily distinguishable from each other and <b>"Well Labeled"</b> asks if the listed sub-topics have titles that are well understood. </li>
-                     
+                           <ul>
+                              <li><b>Distinctive</b> -- Telekom, IoT, Smart cities, Militär, Communications,... </li>
+
+                                 <li>  <b>Not Distinctive</b> -- 4G, Telekom, Vodafone, Samsung, Apple, Internet, IoT,... </li>
+                                 
+                                    <li> <b> Well-labeled</b> -- Telekom, Militär, Robotik, Information systems, .. </li>
+                                 
+                                       <li>  <b>Not well-labeled</b> -- Fritzi KöhlerGeib, Phones phone, z.B. Terrain, ...</li>
+                              </ul> 
                               <li>Click on <b>"Submit question 1"</b> to give your rating of the SubTopc list.</li>
                   </ul> </div>
                    <div class="tab-pane fade" id="list-step4" role="tabpanel" aria-labelledby="list-step4-list">
@@ -95,7 +103,7 @@
 
                      <div class="input-group mb-3">
                         <div class="input-group-prepend">
-                           <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
+                           <span class="input-group-text" id="inputGroup-sizing-default">Query</span>
                         </div>
     
                         <select class="form-select form-control" name="query" id="select_query" aria-label="Default select example"  onchange="get_sub_topics(this);" required>
@@ -123,11 +131,11 @@
                  </div>
                  <hr />
 
-                   <div class="row">
+                   <!-- <div class="row">
                       <div class="col text-center">
                          <h6 id="selected_query">Anfrage ausgewählt: {{query}} </h6>
                       </div>
-                   </div> 
+                   </div>  -->
  
                    <div class="input-group mb-3">
                      <div class="input-group-prepend">
@@ -241,7 +249,7 @@
                        <tbody>
                          <tr>
                             <th scope="row">1</th>
-                            <td>Original-Abfrage</td>
+                            <td>Query</td>
                             <td id="table_search_query">{{search_data['original_query']}}</td>
                           </tr>
                          <tr>
@@ -365,12 +373,12 @@
                <p>
                <strong><h5> Fill out the survey based on the above retrieved results: </h5></strong>
                </p>
-               <p id="query_sub_topic_data">
+               <p>
                Search query: 
-               <strong>{{search_data['original_query']}}</strong>
+               <h6 id="query_data">{{search_data['original_query']}}</h6>
                   <br>
                   Sub-topic: 
-                  <strong>{{search_data['sub_topic']}}</strong>
+                  <h6 id="sub_topic_data">{{search_data['sub_topic']}}</h6>
                </p>
            </div>
            <br>
@@ -517,6 +525,12 @@ $('#myList a').on('click', function (e) {
   $(this).tab('show')
 })
 
+$(document).on('click', ".readmore-btn", function(){
+           $(this).parent().toggleClass("showContent");
+           var replaceText = $(this).parent().hasClass("showContent") ? "Weniger lesen" : "Mehr lesen";
+           $(this).text(replaceText);
+        });
+
         $(".readmore-btn").on('click', function(){
            $(this).parent().toggleClass("showContent");
            var replaceText = $(this).parent().hasClass("showContent") ? "Weniger lesen" : "Mehr lesen";
@@ -616,7 +630,7 @@ $('#myList a').on('click', function (e) {
          var sel = document.getElementById("select_query");
               var query= sel.options[sel.selectedIndex].text;
               var sel2 = document.getElementById("select-subtopic");
-               var sub_topic= sel2.options[sel.selectedIndex].text;
+               var sub_topic= sel2.options[sel2.selectedIndex].text;
                var label_2 = document.getElementById("survey_2_label").value;
               var label_3 = document.getElementById("survey_3_label").value;
               var label_4 = document.getElementById("survey_4_label").value;
@@ -686,7 +700,7 @@ $('#myList a').on('click', function (e) {
    var query= sel.options[sel.selectedIndex].text;
 
    var sel2 = document.getElementById("select-subtopic");
-   var sub_topic= sel2.options[sel.selectedIndex].text;
+   var sub_topic= sel2.options[sel2.selectedIndex].text;
 
         var formData = new FormData();
         formData.append('query', query);
@@ -713,13 +727,9 @@ $('#myList a').on('click', function (e) {
 
          $('#system_a_results').empty();
          $('#system_b_results').empty();
-         $('#query_sub_topic_data').empty();
 
-         $("p#query_sub_topic_data").text("Search query: "+
-      "<strong>"+table_data['original_query']+"</strong>"+
-       "  <br>"+
-        " Sub-topic: "+
-         "<strong>"+ table_data['sub_topic'] +"</strong>");
+         $("#query_data").text(table_data['original_query']);
+         $("#sub_topic_data").text(table_data['sub_topic']);
            
          $.each(system_a_results, function(i, item) {
     $('#system_a_results').append(    "<div class='justify-content-center text-center'>"+
