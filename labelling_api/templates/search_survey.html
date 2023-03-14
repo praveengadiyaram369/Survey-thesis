@@ -1,722 +1,697 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <meta charset="utf-8" />
-      <title>mitera</title>
-      <!-- <script src="{{url_for('static', path='scripts/popper.min.js')}}"></script> -->
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-   </head>
-   <body  onload="loadFunction()">
-      <section>
-         <div class="container">
-            <div class="alert alert-primary text-center my-4">
-               <h5>MiTeRa (Militärisches Technologie Radar) </h5>
-               <h6><b>
-               Innovation  |
-               Future products  |
-               Applied research or implementations | 
-               New ways of sourcing  |
-               Technological advances | 
-               Big Data/AI patterns</b>
-               </h6>
-            </div>
-            <div class="text-left my-4">
-               <h6><b>Instructions for taking part in the survey:</b> </h6>
-            </div>
-
-            <div class="row" style="margin: 10px;">
-               <div class="col-2">
-                 <div class="list-group" id="myList" role="tablist">
-                   <a class="list-group-item list-group-item-action text-center active" id="list-step1-list" data-toggle="list" href="#list-step1" role="tab" aria-controls="home"><b>Step 1</b></a>
-                   <a class="list-group-item list-group-item-action text-center" id="list-step2-list" data-toggle="list" href="#list-step2" role="tab" aria-controls="profile"><b>Step 2</b></a>
-                   <a class="list-group-item list-group-item-action text-center" id="list-step3-list" data-toggle="list" href="#list-step3" role="tab" aria-controls="messages"><b>Step 3</b></a>
-                   <a class="list-group-item list-group-item-action text-center" id="list-step4-list" data-toggle="list" href="#list-step4" role="tab" aria-controls="settings"><b>Step 4</b></a>
-                   <a class="list-group-item list-group-item-action text-center" id="list-step5-list" data-toggle="list" href="#list-step5" role="tab" aria-controls="settings"><b>Step 5</b></a>
-
-                 </div>
+   <!DOCTYPE html>
+   <html lang="en">
+      <head>
+         <meta charset="utf-8" />
+         <title>mitera</title>
+         <!-- <script src="{{url_for('static', path='scripts/popper.min.js')}}"></script> -->
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+      </head>
+      <body  onload="loadFunction()">
+         <section>
+            <div class="container">
+               <div class="alert alert-primary text-center my-4">
+                  <h5>MiTeRa (Militärisches Technologie Radar) </h5>
+                  <h6><b>
+                  Innovation  |
+                  Future products  |
+                  Applied research or implementations | 
+                  New ways of sourcing  |
+                  Technological advances | 
+                  Big Data/AI patterns</b>
+                  </h6>
                </div>
-               <div class="col-9">
-                 <div class="tab-content" id="nav-tabContent">
-                   <div class="tab-pane fade show active" id="list-step1" role="tabpanel" aria-labelledby="list-step1-list">
-                     <ul>
-                        <li> Select a search phrase from the drop-down menu <b>"Query"</b>, to which you would like to view search results.    </li>
-                        <li> Click on <b>"Sub-Topics abrufen"</b>. The website will then generate a list of sub-topics, which can be viewed as a drop-down list in the <b>"Sub-topics"</b>.    </li>
-                     </ul>                  
-                  </div>
-                   <div class="tab-pane fade" id="list-step2" role="tabpanel" aria-labelledby="list-step2-list">
-                     <ul>
-                        <li>Read all the sub-topic names and please answer the <b>Question 1</b> about the list of generated sub-topics. </li>
-
-                           <li>Note: <b>"Distinctive"</b> asks if the listed sub-topics are easily distinguishable from each other and <b>"Well Labeled"</b> asks if the listed sub-topics have titles that are well understood. </li>
-                           <ul>
-                              <li><b>Distinctive</b> -- Telekom, IoT, Smart cities, Militär, Communications,... </li>
-
-                                 <li>  <b>Not Distinctive</b> -- 4G, Telekom, Vodafone, Samsung, Apple, Internet, IoT,... </li>
-                                 
-                                    <li> <b> Well-labeled</b> -- Telekom, Militär, Robotik, Information systems, .. </li>
-                                 
-                                       <li>  <b>Not well-labeled</b> -- Fritzi KöhlerGeib, Phones phone, z.B. Terrain, ...</li>
-                              </ul> 
-                              <li>Click on <b>"Submit question 1"</b> to give your rating of the SubTopc list.</li>
-                  </ul> </div>
-                   <div class="tab-pane fade" id="list-step3" role="tabpanel" aria-labelledby="list-step3-list">
-                     <ul>
-                        <li>Select a sub-topic from the drop-down menu <b>"Sub-topics"</b> which you are familiar with and click on <b>"Query + Sub-topic Search"</b> to have the corresponding news documents compiled by retrieval systems A and B. </li>
-
-                           <li>Read through the articles compiled by both systems A and B.  </li>
-                  </ul>
-                   </div>
-                   <div class="tab-pane fade" id="list-step4" role="tabpanel" aria-labelledby="list-step4-list">
-                     <ul>
-                        <li>At the bottom of the page, use <b>Question 2</b> to answer which of the two systems you think has generated the better results for the given search term and the selected sub-topic. </li>
-
-                           <li> With <b>Question 3</b> and <b>Question 4</b>, you can indicate how well you liked the results of System A and System B overall. The higher the score, the better your impression. </li>
-
-                           <li> After answering the questions 2, 3 and 4, click on <b>"Submit questions 2, 3, 4"</b> to give your rating of the SubTopc list. </li>
-
-                     </ul>
-                   </div>
-                   <div class="tab-pane fade" id="list-step5" role="tabpanel" aria-labelledby="list-step5-list">
-                     <ul>
-                        <li>Repeat the <b>Steps 4 & 5</b> multiple times by selecting a different sub-topic everytime.   </li>
-
-                           <li> Optional: If you have provided the survey inputs for multiple sub-topics, then please answer the one last question <b>"Question 5"</b> and click on <b>"Submit Question 5"</b>  </li>
-
-                           <li> You can repeat this survey again on a different keyword starting from <b>"Step 1"</b>.</li>
-
-                     </ul>
-                   </div>
-                 </div>
+               <div class="text-left my-4">
+                  <h6><b>Instructions for taking part in the survey:</b> </h6>
                </div>
-             </div>
-             <hr />
 
+               <div class="row" style="margin: 10px;">
+                  <div class="col-2">
+                  <div class="list-group" id="myList" role="tablist">
+                     <a class="list-group-item list-group-item-action text-center active" id="list-step1-list" data-toggle="list" href="#list-step1" role="tab" aria-controls="home"><b>Step 1</b></a>
+                     <a class="list-group-item list-group-item-action text-center" id="list-step2-list" data-toggle="list" href="#list-step2" role="tab" aria-controls="profile"><b>Step 2</b></a>
+                     <a class="list-group-item list-group-item-action text-center" id="list-step3-list" data-toggle="list" href="#list-step3" role="tab" aria-controls="messages"><b>Step 3</b></a>
+                     <a class="list-group-item list-group-item-action text-center" id="list-step4-list" data-toggle="list" href="#list-step4" role="tab" aria-controls="settings"><b>Step 4</b></a>
+                     <a class="list-group-item list-group-item-action text-center" id="list-step5-list" data-toggle="list" href="#list-step5" role="tab" aria-controls="settings"><b>Step 5</b></a>
 
-            <div class="row justify-content-center">
-                <div class="col-12 col-md-8 col-lg-8 col-xl-6">
-
-                  <div class="alert alert-primary text-center my-4">
-                     <h5><b>Survey</b> </h5>
                   </div>
-
-                  <input type="hidden" name="session_id"  id="session_id" value="{{session_id}}"/>
-
-
-                   <form action="/mda/sub_topic_search_survey" method="POST" id='formid' onkeydown="return event.key != 'Enter';">
-                     <div class="justify-content-center text-center">
-                        <li>Select a search phrase from the drop-down menu <mark>"Query"</mark> and click on <mark>"Sub-Topics abrufen"</mark>. </li>
+                  </div>
+                  <div class="col-9">
+                  <div class="tab-content" id="nav-tabContent">
+                     <div class="tab-pane fade show active" id="list-step1" role="tabpanel" aria-labelledby="list-step1-list">
+                        <ul>
+                           <li> Select a search phrase from the drop-down menu <b>"Query"</b>, to which you would like to view search results.    </li>
+                           <li> Click on <b>"Sub-Topics abrufen"</b>. The website will then generate a list of sub-topics, which can be viewed as a drop-down list in the <b>"Sub-topics"</b>.    </li>
+                        </ul>                  
                      </div>
-                     <br/>
-                     <div class="input-group mb-3">
-                        <div class="input-group-prepend">
-                           <span class="input-group-text" id="inputGroup-sizing-default">Query</span>
+                     <div class="tab-pane fade" id="list-step2" role="tabpanel" aria-labelledby="list-step2-list">
+                        <ul>
+                           <li>Read all the sub-topic names and please answer the <b>Question 1</b> about the list of generated sub-topics. </li>
+
+                              <li>Note: <b>"Distinctive"</b> asks if the listed sub-topics are easily distinguishable from each other and <b>"Well Labeled"</b> asks if the listed sub-topics have titles that are well understood. </li>
+                              <ul>
+                                 <li><b>Distinctive</b> -- Telekom, IoT, Smart cities, Militär, Communications,... </li>
+
+                                    <li>  <b>Not Distinctive</b> -- 4G, Telekom, Vodafone, Samsung, Apple, Internet, IoT,... </li>
+                                    
+                                       <li> <b> Well-labeled</b> -- Telekom, Militär, Robotik, Information systems, .. </li>
+                                    
+                                          <li>  <b>Not well-labeled</b> -- Fritzi KöhlerGeib, Phones phone, z.B. Terrain, ...</li>
+                                 </ul> 
+                                 <li>Click on <b>"Submit question 1"</b> to give your rating of the SubTopc list.</li>
+                     </ul> </div>
+                     <div class="tab-pane fade" id="list-step3" role="tabpanel" aria-labelledby="list-step3-list">
+                        <ul>
+                           <li>Select a sub-topic from the drop-down menu <b>"Sub-topics"</b> which you are familiar with and click on <b>"Query + Sub-topic Search"</b> to have the corresponding news documents compiled by retrieval systems A and B. </li>
+
+                              <li>Read through the articles compiled by both systems A and B.  </li>
+                     </ul>
+                     </div>
+                     <div class="tab-pane fade" id="list-step4" role="tabpanel" aria-labelledby="list-step4-list">
+                        <ul>
+                           <li>At the bottom of the page, use <b>Question 2</b> to answer which of the two systems you think has generated the better results for the given search term and the selected sub-topic. </li>
+
+                              <li> With <b>Question 3</b> and <b>Question 4</b>, you can indicate how well you liked the results of System A and System B overall. The higher the score, the better your impression. </li>
+
+                              <li> After answering the questions 2, 3 and 4, click on <b>"Submit questions 2, 3, 4"</b> to give your rating of the SubTopc list. </li>
+
+                        </ul>
+                     </div>
+                     <div class="tab-pane fade" id="list-step5" role="tabpanel" aria-labelledby="list-step5-list">
+                        <ul>
+                           <li>Repeat the <b>Steps 4 & 5</b> multiple times by selecting a different sub-topic everytime.   </li>
+
+                              <li> Optional: If you have provided the survey inputs for multiple sub-topics, then please answer the one last question <b>"Question 5"</b> and click on <b>"Submit Question 5"</b>  </li>
+
+                              <li> You can repeat this survey again on a different keyword starting from <b>"Step 1"</b>.</li>
+
+                        </ul>
+                     </div>
+                  </div>
+                  </div>
+               </div>
+               <hr />
+
+
+               <div class="row justify-content-center">
+                  <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+
+                     <div class="alert alert-primary text-center my-4">
+                        <h5><b>Survey</b> </h5>
+                     </div>
+
+                     <input type="hidden" name="session_id"  id="session_id" value="{{session_id}}"/>
+
+                     <form action="/mda/sub_topic_search_survey" method="POST" id='formid' onkeydown="return event.key != 'Enter';">
+                        <div class="justify-content-center text-center">
+                           <p style="font-size:14px;  font-weight: 700;">&#x2606; Instruction: Select a search phrase from the drop-down menu <mark>"Query"</mark> and click on <mark>"Sub-Topics abrufen"</mark>.</p> 
                         </div>
-    
-                        <select class="form-select form-control" name="query" id="select_query" aria-label="Default select example"  onchange="get_sub_topics(this);" required>
-                         {% for keyword in query_keyword_list %}
-                         <option value= "{{keyword['id']}}" >{{keyword['name']}}</option>
-                         {% endfor %}
-    
-                        </select>
-                     </div>
+                        <br/>
+                        <div class="input-group mb-3">
+                           <div class="input-group-prepend">
+                              <span class="input-group-text" id="inputGroup-sizing-default">Query</span>
+                           </div>
+                           <select class="form-select form-control" name="query" id="select_query" aria-label="Default select example" >
+                              {% for keyword in query_keyword_list %}
+                              <option value= "{{keyword['id']}}" >{{keyword['name']}}</option>
+                              {% endfor %}
+         
+                             </select>
 
-
-                   <div class="container">
-                     <div class="col-md-12 text-center">
-                        <button type="button" class="btn btn-primary mb-3" id="sub_topics_loader" onclick="get_sub_topics(this);">
-                           <span class="spinner-border spinner-border-sm" id="loader"></span>
-                           Sub-topics abrufen</button>
-                     </div>
-                 </div>
-                 <hr />
- 
-                   <div class="input-group mb-3">
-                     <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Sub-topics</span>
-                     </div>
- 
-                     <select class="form-select form-control" name="sub_topic_selected" id="select-subtopic" aria-label="Default select example">
-                      {% for sub_topic in sub_topic_list %}
-                      <option value= "{{sub_topic['id']}}" >{{sub_topic['name']}}</option>"
-                      {% endfor %}
- 
-                     </select>
-                  </div>
-
-                  <div class="justify-content-center text-center">
-                     <li> Read all the sub-topic names and please answer the <mark>Question 1</mark> and click on <mark>"Submit question 1"</mark>.</li>
-                 </div>
-                 <br/>
-                  <div class="card">
-                     <div class="card-header">
-                         <h5 class="card-title">Question 1</h5>
-                     </div>
-                     <div class="card-body">
-                        <label for="select" style="float: left; vertical-align: baseline;"><h6>Is the above sub-topic clustering output distinctive and well-labeled?   </h6> </label>
-                        <select class="form-select" id="survey_1_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
-                           <option class="dropdown-item" type="button" value="1">Distinctive and well-labeled</option>
-                           <option class="dropdown-item" type="button" value="2">Distinctive and not well-labeled</option>
-                           <option class="dropdown-item" type="button" value="3">Not distinctive and well-labeled</option>
-                           <option class="dropdown-item" type="button" value="4">Not distinctive and not well-labeled</option>
-                        </select>                
-                     </div>
-            
-                     </div>
-                     <br>
+                        </div>
+                        <div class="input-group mb-3">
+                           <div class="input-group-prepend">
+                              <span class="input-group-text" id="inputGroup-sizing-default">Custom query</span>
+                           </div>
+                           <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" maxlength="60" name='custom_query' id="custom_query">
+                        </div>
+                        <div class="form-check">
+                           <input class="form-check-input" type="checkbox" value="True" id="custom_query_check" name="custom_query_check" disabled>
+                           <label class="form-check-label" for="phrase_search">Use custom query</label>
+                        </div>
 
                      <div class="container">
                         <div class="col-md-12 text-center">
-                           <button type="button" class="btn btn-primary mb-3" id="submit_survey_1" onclick="submit_survey_question_1(this);">
-                              Submit question 1</button>
+                           <button type="button" class="btn btn-primary mb-3" id="sub_topics_loader" onclick="get_sub_topics(this);">
+                              <span class="spinner-border spinner-border-sm" id="loader"></span>
+                              Sub-topics abrufen</button>
                         </div>
-                    </div>
-                    <hr />
+                  </div>
+                  <hr />
+   
+                     <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                           <span class="input-group-text" id="inputGroup-sizing-default">Sub-topics</span>
+                        </div>
+   
+                        <select class="form-select form-control" name="sub_topic_selected" id="select-subtopic" aria-label="Default select example">
+                        {% for sub_topic in sub_topic_list %}
+                        <option value= "{{sub_topic['id']}}" >{{sub_topic['name']}}</option>"
+                        {% endfor %}
+   
+                        </select>
+                     </div>
 
- 
-                  <div class="justify-content-center text-center">
-                     <li> Select a sub-topic from the drop-down menu <mark>"Sub-topics"</mark> and click on <mark>"Query + Sub-topic Search"</mark>.</li>
+                     <div class="justify-content-center text-center">
+                        <p style="font-size:14px;  font-weight: 700;">&#x2606; Instruction:  Read all the sub-topic names and please answer the <mark>Question 1</mark> and click on <mark>"Submit question 1"</mark> (please follow the <mark>Step 2</mark> above).</p>
                   </div>
                   <br/>
-
-                   <div class="container">
-                     <div class="col-md-12 text-center">
-                        <button type="submit" class="btn btn-primary mt-2">Query + Sub-topic search</button>
-            
-                     </div>
-                 </div>
-                   <br>
-
-                   <table class="table table-striped table-hover border table-sm">
-                      <thead>
-                         <tr>
-                           <th scope="col">S No.</th>
-                           <th scope="col">Suchparameter</th>
-                           <th scope="col">Werte</th>
-                         </tr>
-                       </thead>
-                       <tbody>
-                         <tr>
-                            <th scope="row">1</th>
-                            <td>Query</td>
-                            <td id="table_search_query">{{search_data['original_query']}}</td>
-                          </tr>
-                         <tr>
-                           <th scope="row">2</th>
-                           <td>Sub-topic</td>
-                           <td id="table_sub_topic">{{search_data['sub_topic']}}</td>
-                         </tr>
-                         
-                       </tbody>
-                   </table>
- 
-                   <input type="hidden" name="UserID"  id="query" value="{{search_data['original_query']}}"/>
-                   <input type="hidden" name="UserID"  id="sub_topic" value="{{search_data['sub_topic']}}"/>
- 
-                  
-                </div>
-             </div>
-
-            <div class ="row">            
-             <div class="justify-content-center  text-center">
-               <li> Read through the articles compiled by both systems A and B.</li>
-            </div>
-         </div>
-            <br/>
-
-             <div class ="row">
-               <div class="col-md-6">
-                   <div class="justify-content-center text-center">
-                     <button type="button" class="btn btn-success"><h5>System A</h5></button>  
-                    </div>
-                   </div>
-
-                   <div class="col-md-6">
-                       <div class="justify-content-center text-center">
-                        <button type="button" class="btn btn-danger"><h5>System B</h5></button>
+                     <div class="card">
+                        <div class="card-header">
+                           <h5 class="card-title">Question 1</h5>
                         </div>
-                   </div>
-               </div>
-               <br>
+                        <div class="card-body">
+                           <label for="select" style="float: left; vertical-align: baseline;"><h6>Is the above sub-topic clustering output distinctive and well-labeled?   </h6> </label>
+                           <select class="form-select" id="survey_1_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
+                              <option class="dropdown-item" type="button" value="1">Distinctive and well-labeled</option>
+                              <option class="dropdown-item" type="button" value="2">Distinctive and not well-labeled</option>
+                              <option class="dropdown-item" type="button" value="3">Not distinctive and well-labeled</option>
+                              <option class="dropdown-item" type="button" value="4">Not distinctive and not well-labeled</option>
+                           </select>                
+                        </div>
+               
+                        </div>
+                        <br>
 
-               <div class="container">
-                  <div class="row">
-                    <div class="col-6" id="system_a_results">
-                     {% for data in result_list_1 %}
-                         <div class="justify-content-center text-center">
-         
-                                 <div class="card">
-                                 <div class="card-header">
-                                     <h6 class="card-title">Titel:    {{data['title']}}</h6>
-                                     <!-- <h6 class="card-title">Veröffentlicht am:    {{data['pub_date']}}</h6> -->
-                                 </div>
-                                 <div class="card-body">
-         
-                                     <p  class="card-text">{{data['text']}} </p>
-                                     <a href="javascript:void(0);" class="readmore-btn">Mehr lesen</a>
-                                     <br>
-                                     <br>                 
-                                 </div>
-         
-                                 </div>
-                             </div>
-                     <br>
-                     {% endfor %}
-                    </div>
-                    <div class="col-6" id="system_b_results">
-                     {% for data in result_list_2 %}
-                         <div class="justify-content-center text-center">
-         
-                                 <div class="card">
-                                 <div class="card-header">
-                                     <h6 class="card-title">Titel:    {{data['title']}}</h6>
-                                     <!-- <h6 class="card-title">Veröffentlicht am:    {{data['pub_date']}}</h6> -->
-                                 </div>
-                                 <div class="card-body">
-         
-                                     <p  class="card-text">{{data['text']}} </p>
-                                     <a href="javascript:void(0);" class="readmore-btn">Mehr lesen</a>
-                                     <br>
-                                     <br>                 
-                                 </div>
-         
-                                 </div>
-                         </div>
-                     <br>
-                     {% endfor %}
-                    </div>
+                        <div class="container">
+                           <div class="col-md-12 text-center">
+                              <button type="button" class="btn btn-primary mb-3" id="submit_survey_1" onclick="submit_survey_question_1(this);">
+                                 Submit question 1</button>
+                           </div>
+                     </div>
+                     <hr />
+
+   
+                     <div class="justify-content-center text-center">
+                        <p style="font-size:14px;  font-weight: 700;">&#x2606; Instruction:  Select a sub-topic from the drop-down menu <mark>"Sub-topics"</mark> and click on <mark>"Query + Sub-topic Search"</mark>.</p>
+                     </div>
+                     <br/>
+
+                     <div class="container">
+                        <div class="col-md-12 text-center">
+                           <button type="submit" class="btn btn-primary mt-2">Query + Sub-topic search</button>
+               
+                        </div>
                   </div>
-                </div>
-               <br>
-            <hr />
-                <br>
-            <div class="text-center">
-               <p>
-               <h5> Answer the questions 2, 3 and 4 based on the above retrieved results and click on <mark>"Submit questions 2, 3, 4"</mark> </h5>
-               </p>
-               <p>
-               Search query: 
-               <h6 id="query_data">{{search_data['original_query']}}</h6>
+                     <br>
+
+                     <table class="table table-striped table-hover border table-sm">
+                        <thead>
+                           <tr>
+                              <th scope="col">S No.</th>
+                              <th scope="col">Suchparameter</th>
+                              <th scope="col">Werte</th>
+                           </tr>
+                        </thead>
+                        <tbody>
+                           <tr>
+                              <th scope="row">1</th>
+                              <td>Query</td>
+                              <td id="table_search_query">{{search_data['original_query']}}</td>
+                           </tr>
+                           <tr>
+                              <th scope="row">2</th>
+                              <td>Sub-topic</td>
+                              <td id="table_sub_topic">{{search_data['sub_topic']}}</td>
+                           </tr>
+                           
+                        </tbody>
+                     </table>
+   
+                     <input type="hidden" name="UserID"  id="query" value="{{search_data['original_query']}}"/>
+                     <input type="hidden" name="UserID"  id="sub_topic" value="{{search_data['sub_topic']}}"/>
+   
+                     <div class ="row">            
+                        <div class="justify-content-center  text-center">
+                        <p style="font-size:14px;  font-weight: 700;">&#x2606; Instruction:  Read through the articles compiled by both <mark>systems A and B</mark> and answer the questions below.</h6> </p>
+                     </div>
+                  </div>
+                  </div>
+               </div>
+
+               <br/>
+
+               <div class ="row">
+                  <div class="col-md-6">
+                     <div class="justify-content-center text-center">
+                        <button type="button" class="btn btn-success"><h5>System A</h5></button>  
+                     </div>
+                     </div>
+
+                     <div class="col-md-6">
+                        <div class="justify-content-center text-center">
+                           <button type="button" class="btn btn-danger"><h5>System B</h5></button>
+                           </div>
+                     </div>
+                  </div>
                   <br>
-                  Sub-topic: 
-                  <h6 id="sub_topic_data">{{search_data['sub_topic']}}</h6>
-               </p>
-           </div>
-           <br>
- 
 
-     <form class="px-4" action="">
-      
+                  <div class="container">
+                     <div class="row">
+                     <div class="col-6" id="system_a_results">
+                        {% for data in result_list_1 %}
+                           <div class="justify-content-center text-center">
+            
+                                    <div class="card">
+                                    <div class="card-header">
+                                       <h6 class="card-title">Titel:    {{data['title']}}</h6>
+                                       <!-- <h6 class="card-title">Veröffentlicht am:    {{data['pub_date']}}</h6> -->
+                                    </div>
+                                    <div class="card-body">
+            
+                                       <p  class="card-text">{{data['text']}} </p>
+                                       <a href="javascript:void(0);" class="readmore-btn">Mehr lesen</a>
+                                       <br>
+                                       <br>                 
+                                    </div>
+            
+                                    </div>
+                              </div>
+                        <br>
+                        {% endfor %}
+                     </div>
+                     <div class="col-6" id="system_b_results">
+                        {% for data in result_list_2 %}
+                           <div class="justify-content-center text-center">
+            
+                                    <div class="card">
+                                    <div class="card-header">
+                                       <h6 class="card-title">Titel:    {{data['title']}}</h6>
+                                       <!-- <h6 class="card-title">Veröffentlicht am:    {{data['pub_date']}}</h6> -->
+                                    </div>
+                                    <div class="card-body">
+            
+                                       <p  class="card-text">{{data['text']}} </p>
+                                       <a href="javascript:void(0);" class="readmore-btn">Mehr lesen</a>
+                                       <br>
+                                       <br>                 
+                                    </div>
+            
+                                    </div>
+                           </div>
+                        <br>
+                        {% endfor %}
+                     </div>
+                     </div>
+                  </div>
+                  <br>
+               <hr />
+                  <br>
+               <div class="text-center">
+                     <p style="font-size:14px;  font-weight: 700;">&#x2606; Instruction:  Answer the questions 2, 3 and 4 based on the above retrieved results and click on <mark>"Submit questions 2, 3, 4"</mark> </p>
+                  <p>
+                  Search query: 
+                  <h6 id="query_data">{{search_data['original_query']}}</h6>
+                     <br>
+                     Sub-topic: 
+                     <h6 id="sub_topic_data">{{search_data['sub_topic']}}</h6>
+                  </p>
+            </div>
+            <br>
+   
 
-       <div class="card">
-         <div class="card-header">
-             <h5 class="card-title">Question 2</h5>
-         </div>
-         <div class="card-body">
-            <label for="select" style="float: left; vertical-align: baseline;"><h5>Which system results better represent MiTeRa relevant news articles according to the given query and sub-topic?    </h5> </label>
-            <select class="form-select" id="survey_2_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
-               <option class="dropdown-item" type="button" value="1">System A</option>
-               <option class="dropdown-item" type="button" value="2">System B</option>
-               <option class="dropdown-item" type="button" value="3">Neither System A nor System B</option>
-            </select>             
-         </div>
+      <form class="px-4" action="">
+         
 
-         </div>
-         <br>
          <div class="card">
             <div class="card-header">
-                <h5 class="card-title">Question 3</h5>
+               <h6 class="card-title">Question 2</h6>
             </div>
             <div class="card-body">
-               <label for="select" style="float: left; vertical-align: baseline;"><h5>Rate the retrieval system A results for the given query and sub-topic (0-10):   </h5> </label>               <output style="font-weight:bold;text-align: center; margin-left: 10px;" id="output_label_3">0</output>
-               <input type="range" class="form-range" min="0" max="10" step="0.1" value="0" id="survey_3_label" oninput="output_label_3.value=survey_3_label.value">           
+               <label for="select" style="float: left; vertical-align: baseline;"><h6>Which system results better represent MiTeRa relevant news articles according to the given query and sub-topic?    </h6> </label>
+               <select class="form-select" id="survey_2_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
+                  <option class="dropdown-item" type="button" value="1">System A</option>
+                  <option class="dropdown-item" type="button" value="2">System B</option>
+                  <option class="dropdown-item" type="button" value="3">Neither System A nor System B</option>
+               </select>             
             </div>
-   
+
             </div>
             <br>
             <div class="card">
                <div class="card-header">
-                   <h5 class="card-title">Question 4</h5>
+                  <h6 class="card-title">Question 3</h6>
                </div>
                <div class="card-body">
-                  <label for="select" style="float: left; vertical-align: baseline;"><h5>Rate the retrieval system B results for the given query and sub-topic (0-10):  </h5> </label>                   <output style="font-weight:bold;text-align: center; margin-left: 10px;"  id="output_label_4">0</output>
-                  <input type="range" class="form-range" min="0" max="10" step="0.1" value="0" id="survey_4_label" oninput="output_label_4.value=survey_4_label.value">           
+                  <label for="select" style="float: left; vertical-align: baseline;"><h6>Rate the retrieval system A results for the given query and sub-topic (0-10):   </h6> </label>               <output style="font-weight:bold;text-align: center; margin-left: 10px;" id="output_label_3">0</output>
+                  <input type="range" class="form-range" min="0" max="10" step="0.1" value="0" id="survey_3_label" oninput="output_label_3.value=survey_3_label.value">           
                </div>
       
                </div>
-
-
-       <br>
-       <div class="container">
-         <div class="col-md-12 text-center">
-            <button type="button" class="btn btn-primary mt-2" id="submit_survey_2" onclick="submit_survey_question_2(this);">Submit questions 2, 3, 4</button>
-
-         </div>
-     </div>
-
-
-     <hr />
-     <div class="card">
-      <div class="card-header">
-          <h5 class="card-title">Question 5 (optional)</h5>
-      </div>
-      <div class="card-body">
-         <label for="select" style="float: left; vertical-align: baseline;"><h5>If you have inspected and labeled more than one sub-topic for the chosen query: Were the sub-topics helpful for you to find the relevant documents related to MiTeRa?   </h5> </label>
-         <select class="form-select" id="survey_5_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
-            <option class="dropdown-item" type="button" value="1">Yes</option>
-            <option class="dropdown-item" type="button" value="2">No</option>
-         </select>             
-      </div>
-
-       </div>     
-       <br>
-       <div class="container">
-         <div class="col-md-12 text-center">
-            <button type="button" class="btn btn-primary mt-2" id="submit_survey_3" onclick="submit_survey_question_5(this);">Submit question 5</button>
-
-         </div>
-     </div>      
-     <br>
-
-           <!-- <p class="text-center"><strong>Any comments?</strong></p> -->
-
-           <!-- Message input -->
-           <!-- <div class="form-outline mb-4">
-           <textarea class="form-control" id="form4Example4" rows="4"></textarea>
-           <label class="form-label" for="form4Example4">Your feedback</label>
-           </div> -->
-       </form>
- 
- 
-      </div>
-
-
-
-            <!-- {% for data in concept_list %}
-            <div class="col-sm-3">
+               <br>
                <div class="card">
-                  <div class="card-body">
-                     <h5 class="card-title">{{data['term']}}: {{data['hits']}}</h5>
+                  <div class="card-header">
+                     <h6 class="card-title">Question 4</h6>
                   </div>
-               </div>
+                  <div class="card-body">
+                     <label for="select" style="float: left; vertical-align: baseline;"><h6>Rate the retrieval system B results for the given query and sub-topic (0-10):  </h6> </label>                   <output style="font-weight:bold;text-align: center; margin-left: 10px;"  id="output_label_4">0</output>
+                     <input type="range" class="form-range" min="0" max="10" step="0.1" value="0" id="survey_4_label" oninput="output_label_4.value=survey_4_label.value">           
+                  </div>
+         
+                  </div>
+
+
+         <br>
+         <div class="container">
+            <div class="col-md-12 text-center">
+               <button type="button" class="btn btn-primary mt-2" id="submit_survey_2" onclick="submit_survey_question_2(this);">Submit questions 2, 3, 4</button>
+
             </div>
-            {% endfor %} -->
-
-            <!-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-               Start Survey
-             </button> -->
-             
-             <!-- <div class="modal fade modal-dialog modal-dialog-centered modal-dialog-scrollable" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-               <div class="modal-dialog">
-                 <div class="modal-content">
-                   <div class="modal-header">
-                     <h5 class="modal-title" id="exampleModalLabel">Survey request</h5>
-                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                   </div>
-                   <div class="modal-body">
-                     
-                   
-                   <div class="modal-footer">
-                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                     <button type="button" class="btn btn-primary">Save Survey</button>
-                   </div>
-                 </div>
-               </div>
-             </div> -->
-    </div>
+      </div>
 
 
+      <hr />
+      <div class="card">
+         <div class="card-header">
+            <h6 class="card-title">Question 5 (optional)</h6>
          </div>
-      </section>
+         <div class="card-body">
+            <label for="select" style="float: left; vertical-align: baseline;"><h6>If you have inspected and labeled more than one sub-topic for the chosen query: Were the sub-topics helpful for you to find the relevant documents related to MiTeRa?   </h6> </label>
+            <select class="form-select" id="survey_5_label" style="width:200px;float: left;margin-left: 10px;vertical-align: baseline;"  aria-label="Default select example">
+               <option class="dropdown-item" type="button" value="1">Yes</option>
+               <option class="dropdown-item" type="button" value="2">No</option>
+            </select>             
+         </div>
 
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
-      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
-      
-      <script> 
+         </div>     
+         <br>
+         <div class="container">
+            <div class="col-md-12 text-center">
+               <button type="button" class="btn btn-primary mt-2" id="submit_survey_3" onclick="submit_survey_question_5(this);">Submit question 5</button>
 
-$("#formid").submit(function(event){
-   load_retrieval_results();
-   event.preventDefault()
-})
+            </div>
+      </div>      
+      <br>
 
-$('#myList a').on('click', function (e) {
-  e.preventDefault()
-  $(this).tab('show')
-})
+         </form>
+   
+   
+         </div>
 
-$(document).on('click', ".readmore-btn", function(){
-           $(this).parent().toggleClass("showContent");
-           var replaceText = $(this).parent().hasClass("showContent") ? "Weniger lesen" : "Mehr lesen";
-           $(this).text(replaceText);
-        });
+      </div>
 
-        $(".readmore-btn").on('click', function(){
-           $(this).parent().toggleClass("showContent");
-           var replaceText = $(this).parent().hasClass("showContent") ? "Weniger lesen" : "Mehr lesen";
-           $(this).text(replaceText);
-        });
 
-        function loadFunction() {
-         document.getElementById("loader").style.visibility = "hidden";
-      }
-  
-        async function get_sub_topics(e) {
-         document.getElementById("loader").style.visibility = "visible";
+            </div>
+         </section>
 
-          try {
-            //   var query = document.getElementById("select_query").value;
-              var sel = document.getElementById("select_query");
-              var query= sel.options[sel.selectedIndex].text;
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+         <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
+         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+         
+         <script> 
 
-              var session_id = document.getElementById("session_id").value;
-  
-  
-              var formData = new FormData();
-              formData.append('query', query);
-              formData.append('min_clust_size', 0);
+   $("#formid").submit(function(event){
+      load_retrieval_results();
+      event.preventDefault()
+   })
+
+   $('#myList a').on('click', function (e) {
+   e.preventDefault()
+   $(this).tab('show')
+   })
+
+   $(document).on('click', ".readmore-btn", function(){
+            $(this).parent().toggleClass("showContent");
+            var replaceText = $(this).parent().hasClass("showContent") ? "Weniger lesen" : "Mehr lesen";
+            $(this).text(replaceText);
+         });
+
+         $(".readmore-btn").on('click', function(){
+            $(this).parent().toggleClass("showContent");
+            var replaceText = $(this).parent().hasClass("showContent") ? "Weniger lesen" : "Mehr lesen";
+            $(this).text(replaceText);
+         });
+
+         function loadFunction() {
+            document.getElementById("loader").style.visibility = "hidden";
+         }
+   
+         async function get_sub_topics(e) {
+            document.getElementById("loader").style.visibility = "visible";
+
+            try {
+               //   var query = document.getElementById("select_query").value;
+               var sel = document.getElementById("select_query");
+               var query= sel.options[sel.selectedIndex].text;
+
+               var custom_query = document.getElementById("custom_query").value;
+               var custom_query_check = document.getElementById("custom_query_check").checked;
+               
+               var final_query = query;
+
+               if (custom_query_check){
+                  final_query = custom_query;
+               }
+
+               var session_id = document.getElementById("session_id").value;
+   
+               var formData = new FormData();
+               formData.append('query', query);
+               formData.append('min_clust_size', 0);
                formData.append('min_samples', 0);
                formData.append('cand_sel_par', 0);
                formData.append('session_id', session_id);
-  
-              var response = await fetch('/mda/get_sub_topics', {
-                  method: 'POST',
-                  body: formData
-              });
-              
-              
-          let data = await response.json();
-           console.log(typeof data);
-           // console.log(data);
-  
-           parsed_data = JSON.parse(data);
-           // console.log(parsed_data);
-  
-           $('#select-subtopic').empty();
-           
-           $.each(parsed_data, function(i, option) {
-          $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
-            });
-
-            document.getElementById('selected_query').innerHTML = 'Anfrage ausgewählt: ' + text;
-
-              
-          } catch (error) {
-              console.error(error);
-          }
-          document.getElementById("loader").style.visibility = "hidden";
-
-          }
-
-          async function submit_survey_question_1(e) {
-  
-            try {
-               var sel = document.getElementById("select_query");
-              var query= sel.options[sel.selectedIndex].text;
-
-
-                  var label = document.getElementById("survey_1_label").value;
-
-                  console.log(label)
-
-                  var formData = new FormData();
-                  formData.append('query', query);
-                  formData.append('label', label);
-
-                  var session_id = document.getElementById("session_id").value;
-                  formData.append('session_id', session_id);
-
-
-                  var response = await fetch('/mda/submit_survey_question_1', {
+   
+               var response = await fetch('/mda/get_sub_topics', {
                      method: 'POST',
                      body: formData
-                  });
-            alert('input for the survey question 1 is submitted !');
+               });
+               
+               
+            let data = await response.json();
+            console.log(typeof data);
+            // console.log(data);
+   
+            parsed_data = JSON.parse(data);
+            // console.log(parsed_data);
+   
+            $('#select-subtopic').empty();
+            
+            $.each(parsed_data, function(i, option) {
+            $('#select-subtopic').append($('<option/>').attr("value", option.id).text(option.name));
+               });
 
-                  
-               let data = await response.json();
-                  data = JSON.parse(data)
-                  console.log(data);
-                  
-               } catch (error) {
-                  console.error(error);
-               }
+               document.getElementById('selected_query').innerHTML = 'Anfrage ausgewählt: ' + text;
+
+               
+            } catch (error) {
+               console.error(error);
             }
-  
-  
-        async function submit_survey_question_2(e) {
-  
-        try {
-         var sel = document.getElementById("select_query");
-              var query= sel.options[sel.selectedIndex].text;
-              var sel2 = document.getElementById("select-subtopic");
-               var sub_topic= sel2.options[sel2.selectedIndex].text;
-               var label_2 = document.getElementById("survey_2_label").value;
-              var label_3 = document.getElementById("survey_3_label").value;
-              var label_4 = document.getElementById("survey_4_label").value;
+            document.getElementById("loader").style.visibility = "hidden";
 
-  
-              var formData = new FormData();
-              formData.append('query', query);
-              formData.append('sub_topic', sub_topic);
-              formData.append('label_2', label_2);
-              formData.append('label_3', label_3);
-              formData.append('label_4', label_4);
+            }
 
-              var session_id = document.getElementById("session_id").value;
-                  formData.append('session_id', session_id);
-  
-              var response = await fetch('/mda/submit_survey_question_2', {
-                 method: 'POST',
-                 body: formData
-              });
-              alert('Inputs for the survey question 2, 3, 4 are submitted !');
-              
-           let data = await response.json();
-              data = JSON.parse(data)
-              console.log(data);
-              
-           } catch (error) {
-              console.error(error);
-           }
-        }
-
-        async function submit_survey_question_5(e) {
-  
-  try {
-         var sel = document.getElementById("select_query");
-              var query= sel.options[sel.selectedIndex].text;
-              
-              
-         var label_5 = document.getElementById("survey_5_label").value;
+            async function submit_survey_question_1(e) {
+   
+               try {
+                  var sel = document.getElementById("select_query");
+               var query= sel.options[sel.selectedIndex].text;
 
 
-        var formData = new FormData();
-        formData.append('query', query);
-        formData.append('label_5', label_5);
+                     var label = document.getElementById("survey_1_label").value;
 
-        var session_id = document.getElementById("session_id").value;
-                  formData.append('session_id', session_id);
+                     console.log(label)
 
-        var response = await fetch('/mda/submit_survey_question_5', {
-           method: 'POST',
-           body: formData
-        });
-        alert('Inputs for the survey question 5 is submitted !');
-        
-     let data = await response.json();
-        data = JSON.parse(data)
-        console.log(data);
-        
-     } catch (error) {
-        console.error(error);
-     }
-  }
-  
-  async function load_retrieval_results() {
-  
-  try {
-   var sel = document.getElementById("select_query");
-   var query= sel.options[sel.selectedIndex].text;
+                     var formData = new FormData();
+                     formData.append('query', query);
+                     formData.append('label', label);
 
-   var sel2 = document.getElementById("select-subtopic");
-   var sub_topic= sel2.options[sel2.selectedIndex].text;
+                     var session_id = document.getElementById("session_id").value;
+                     formData.append('session_id', session_id);
 
-        var formData = new FormData();
-        formData.append('query', query);
-        formData.append('sub_topic', sub_topic);
 
-        var session_id = document.getElementById("session_id").value;
-                  formData.append('session_id', session_id);
+                     var response = await fetch('/mda/submit_survey_question_1', {
+                        method: 'POST',
+                        body: formData
+                     });
+               alert('input for the survey question 1 is submitted !');
 
-        var response = await fetch('/mda/sub_topic_search_ajax', {
-           method: 'POST',
-           body: formData
-        });
-        
-     let data = await response.json();
-        data = JSON.parse(data)
-        console.log(data);
+                     
+                  let data = await response.json();
+                     data = JSON.parse(data)
+                     console.log(data);
+                     
+                  } catch (error) {
+                     console.error(error);
+                  }
+               }
+   
+   
+         async function submit_survey_question_2(e) {
+   
+         try {
+            var sel = document.getElementById("select_query");
+               var query= sel.options[sel.selectedIndex].text;
+               var sel2 = document.getElementById("select-subtopic");
+                  var sub_topic= sel2.options[sel2.selectedIndex].text;
+                  var label_2 = document.getElementById("survey_2_label").value;
+               var label_3 = document.getElementById("survey_3_label").value;
+               var label_4 = document.getElementById("survey_4_label").value;
 
-        table_data = data['search_data']
-        system_a_results = data['system_a_results']
-        system_b_results = data['system_b_results']
-  
-        document.getElementById("table_search_query").innerHTML = table_data['original_query']
-        document.getElementById("table_sub_topic").innerHTML = table_data['sub_topic']
+   
+               var formData = new FormData();
+               formData.append('query', query);
+               formData.append('sub_topic', sub_topic);
+               formData.append('label_2', label_2);
+               formData.append('label_3', label_3);
+               formData.append('label_4', label_4);
 
-         $('#system_a_results').empty();
-         $('#system_b_results').empty();
+               var session_id = document.getElementById("session_id").value;
+                     formData.append('session_id', session_id);
+   
+               var response = await fetch('/mda/submit_survey_question_2', {
+                  method: 'POST',
+                  body: formData
+               });
+               alert('Inputs for the survey question 2, 3, 4 are submitted !');
+               
+            let data = await response.json();
+               data = JSON.parse(data)
+               console.log(data);
+               
+            } catch (error) {
+               console.error(error);
+            }
+         }
 
-         $("#query_data").text(table_data['original_query']);
-         $("#sub_topic_data").text(table_data['sub_topic']);
-           
-         $.each(system_a_results, function(i, item) {
-    $('#system_a_results').append(    "<div class='justify-content-center text-center'>"+
-        "<div class='card'>"+
-            "<div class='card-header'>"+
-                "<h6 class='card-title'>" + item.title + "</h6>"+
-                "</div>"+
-                "<div class='card-body'>"+
-                    "<p  class='card-text'>" + item.text + "</p>"+
-                    "<a href='javascript:void(0);' class='readmore-btn'>Mehr lesen</a>"+
-              "<br>"+
-              "<br>"+
-           "</div>"+
-        "</div>"+
-     "</div>"+
-     "<br>");
-      });
+         async function submit_survey_question_5(e) {
+   
+   try {
+            var sel = document.getElementById("select_query");
+               var query= sel.options[sel.selectedIndex].text;
+               
+               
+            var label_5 = document.getElementById("survey_5_label").value;
 
-      $.each(system_b_results, function(i, item) {
-    $('#system_b_results').append(    "<div class='justify-content-center text-center'>"+
-        "<div class='card'>"+
-            "<div class='card-header'>"+
-                "<h6 class='card-title'>" + item.title + "</h6>"+
-                "</div>"+
-                "<div class='card-body'>"+
-                    "<p  class='card-text'>" + item.text + "</p>"+
-                    "<a href='javascript:void(0);' class='readmore-btn'>Mehr lesen</a>"+
-              "<br>"+
-              "<br>"+
-           "</div>"+
-        "</div>"+
-     "</div>"+
-     "<br>");
-      });
-        
-     } catch (error) {
-        console.error(error);
-     }
-  }
-        
-        </script>
-   </body>
-<style>
 
-mark {
-  background-color: lightcyan;
-}
+         var formData = new FormData();
+         formData.append('query', query);
+         formData.append('label_5', label_5);
 
-.card-body p{
-   font-size: 15px;
-   line-height: 20px;
-   height: 60px;
-   overflow: hidden;
-}
+         var session_id = document.getElementById("session_id").value;
+                     formData.append('session_id', session_id);
 
-.card-body a{
-   font-size: 15px;
-}
+         var response = await fetch('/mda/submit_survey_question_5', {
+            method: 'POST',
+            body: formData
+         });
+         alert('Inputs for the survey question 5 is submitted !');
+         
+      let data = await response.json();
+         data = JSON.parse(data)
+         console.log(data);
+         
+      } catch (error) {
+         console.error(error);
+      }
+   }
+   
+   async function load_retrieval_results() {
+   
+   try {
+      var sel = document.getElementById("select_query");
+      var query= sel.options[sel.selectedIndex].text;
 
-.card-body.showContent p{
-   height: auto;
-}
+      var sel2 = document.getElementById("select-subtopic");
+      var sub_topic= sel2.options[sel2.selectedIndex].text;
 
-/* .card-body.showContent a.readmore-btn{
-   font-c: red;
-} */
+         var formData = new FormData();
+         formData.append('query', query);
+         formData.append('sub_topic', sub_topic);
 
-</style>
+         var session_id = document.getElementById("session_id").value;
+                     formData.append('session_id', session_id);
 
-</html>
+         var response = await fetch('/mda/sub_topic_search_ajax', {
+            method: 'POST',
+            body: formData
+         });
+         
+      let data = await response.json();
+         data = JSON.parse(data)
+         console.log(data);
+
+         table_data = data['search_data']
+         system_a_results = data['system_a_results']
+         system_b_results = data['system_b_results']
+   
+         document.getElementById("table_search_query").innerHTML = table_data['original_query']
+         document.getElementById("table_sub_topic").innerHTML = table_data['sub_topic']
+
+            $('#system_a_results').empty();
+            $('#system_b_results').empty();
+
+            $("#query_data").text(table_data['original_query']);
+            $("#sub_topic_data").text(table_data['sub_topic']);
+            
+            $.each(system_a_results, function(i, item) {
+      $('#system_a_results').append(    "<div class='justify-content-center text-center'>"+
+         "<div class='card'>"+
+               "<div class='card-header'>"+
+                  "<h6 class='card-title'>" + item.title + "</h6>"+
+                  "</div>"+
+                  "<div class='card-body'>"+
+                     "<p  class='card-text'>" + item.text + "</p>"+
+                     "<a href='javascript:void(0);' class='readmore-btn'>Mehr lesen</a>"+
+               "<br>"+
+               "<br>"+
+            "</div>"+
+         "</div>"+
+      "</div>"+
+      "<br>");
+         });
+
+         $.each(system_b_results, function(i, item) {
+      $('#system_b_results').append(    "<div class='justify-content-center text-center'>"+
+         "<div class='card'>"+
+               "<div class='card-header'>"+
+                  "<h6 class='card-title'>" + item.title + "</h6>"+
+                  "</div>"+
+                  "<div class='card-body'>"+
+                     "<p  class='card-text'>" + item.text + "</p>"+
+                     "<a href='javascript:void(0);' class='readmore-btn'>Mehr lesen</a>"+
+               "<br>"+
+               "<br>"+
+            "</div>"+
+         "</div>"+
+      "</div>"+
+      "<br>");
+         });
+         
+      } catch (error) {
+         console.error(error);
+      }
+   }
+         
+         </script>
+      </body>
+   <style>
+   ul {
+   list-style-image: url('sqpurple.gif');
+   }
+   mark {
+   background-color: lightgoldenrodyellow;
+   }
+
+   .card-body p{
+      font-size: 15px;
+      line-height: 20px;
+      height: 60px;
+      overflow: hidden;
+   }
+
+   .card-body a{
+      font-size: 15px;
+   }
+
+   .card-body.showContent p{
+      height: auto;
+   }
+
+   /* .card-body.showContent a.readmore-btn{
+      font-c: red;
+   } */
+
+   </style>
+
+   </html>
