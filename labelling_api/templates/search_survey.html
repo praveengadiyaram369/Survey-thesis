@@ -32,15 +32,18 @@
                    <a class="list-group-item list-group-item-action text-center" id="list-step3-list" data-toggle="list" href="#list-step3" role="tab" aria-controls="messages"><b>Step 3</b></a>
                    <a class="list-group-item list-group-item-action text-center" id="list-step4-list" data-toggle="list" href="#list-step4" role="tab" aria-controls="settings"><b>Step 4</b></a>
                    <a class="list-group-item list-group-item-action text-center" id="list-step5-list" data-toggle="list" href="#list-step5" role="tab" aria-controls="settings"><b>Step 5</b></a>
-                   <a class="list-group-item list-group-item-action text-center" id="list-step6-list" data-toggle="list" href="#list-step6" role="tab" aria-controls="settings"><b>Step 6</b></a>
 
                  </div>
                </div>
                <div class="col-9">
                  <div class="tab-content" id="nav-tabContent">
-                   <div class="tab-pane fade show active" id="list-step1" role="tabpanel" aria-labelledby="list-step1-list">Select a search phrase from the drop-down menu <b>"Query"</b>, to which you would like to view search results. </div>
-                   <div class="tab-pane fade" id="list-step2" role="tabpanel" aria-labelledby="list-step2-list">Click on <b>"Sub-Topics abrufen"</b>. The website will then generate a list of sub-topics, which can be viewed as a drop-down list in the <b>"Sub-topic (Terms | Documents)"</b>.</div>
-                   <div class="tab-pane fade" id="list-step3" role="tabpanel" aria-labelledby="list-step3-list">
+                   <div class="tab-pane fade show active" id="list-step1" role="tabpanel" aria-labelledby="list-step1-list">
+                     <ul>
+                        <li> Select a search phrase from the drop-down menu <b>"Query"</b>, to which you would like to view search results.    </li>
+                        <li> Click on <b>"Sub-Topics abrufen"</b>. The website will then generate a list of sub-topics, which can be viewed as a drop-down list in the <b>"Sub-topics"</b>.    </li>
+                     </ul>                  
+                  </div>
+                   <div class="tab-pane fade" id="list-step2" role="tabpanel" aria-labelledby="list-step2-list">
                      <ul>
                         <li>Read all the sub-topic names and please answer the <b>Question 1</b> about the list of generated sub-topics. </li>
 
@@ -56,14 +59,14 @@
                               </ul> 
                               <li>Click on <b>"Submit question 1"</b> to give your rating of the SubTopc list.</li>
                   </ul> </div>
-                   <div class="tab-pane fade" id="list-step4" role="tabpanel" aria-labelledby="list-step4-list">
+                   <div class="tab-pane fade" id="list-step3" role="tabpanel" aria-labelledby="list-step3-list">
                      <ul>
-                        <li>Select a sub-topic from the drop-down menu <b>"Sub-topic (Terms | Documents)"</b> which you are familiar with and click on <b>"Query + Sub-topic Search"</b> to have the corresponding news documents compiled by retrieval systems A and B. </li>
+                        <li>Select a sub-topic from the drop-down menu <b>"Sub-topics"</b> which you are familiar with and click on <b>"Query + Sub-topic Search"</b> to have the corresponding news documents compiled by retrieval systems A and B. </li>
 
                            <li>Read through the articles compiled by both systems A and B.  </li>
                   </ul>
                    </div>
-                   <div class="tab-pane fade" id="list-step5" role="tabpanel" aria-labelledby="list-step5-list">
+                   <div class="tab-pane fade" id="list-step4" role="tabpanel" aria-labelledby="list-step4-list">
                      <ul>
                         <li>At the bottom of the page, use <b>Question 2</b> to answer which of the two systems you think has generated the better results for the given search term and the selected sub-topic. </li>
 
@@ -73,7 +76,7 @@
 
                      </ul>
                    </div>
-                   <div class="tab-pane fade" id="list-step6" role="tabpanel" aria-labelledby="list-step6-list">
+                   <div class="tab-pane fade" id="list-step5" role="tabpanel" aria-labelledby="list-step5-list">
                      <ul>
                         <li>Repeat the <b>Steps 4 & 5</b> multiple times by selecting a different sub-topic everytime.   </li>
 
@@ -100,7 +103,10 @@
 
 
                    <form action="/mda/sub_topic_search_survey" method="POST" id='formid' onkeydown="return event.key != 'Enter';">
-
+                     <div class="justify-content-center text-center">
+                        <li>Select a search phrase from the drop-down menu <mark>"Query"</mark> and click on <mark>"Sub-Topics abrufen"</mark>. </li>
+                     </div>
+                     <br/>
                      <div class="input-group mb-3">
                         <div class="input-group-prepend">
                            <span class="input-group-text" id="inputGroup-sizing-default">Query</span>
@@ -115,13 +121,6 @@
                      </div>
 
 
-                   <!-- <div class="input-group mb-3">
-                      <div class="input-group-prepend">
-                         <span class="input-group-text" id="inputGroup-sizing-default">Suchanfrage</span>
-                      </div>
-                      <input type="text" class="form-control" aria-label="Default" aria-describedby="inputGroup-sizing-default" name='query' id='query' value="{{query}}" required>
-                   </div> -->
-
                    <div class="container">
                      <div class="col-md-12 text-center">
                         <button type="button" class="btn btn-primary mb-3" id="sub_topics_loader" onclick="get_sub_topics(this);">
@@ -130,16 +129,10 @@
                      </div>
                  </div>
                  <hr />
-
-                   <!-- <div class="row">
-                      <div class="col text-center">
-                         <h6 id="selected_query">Anfrage ausgewählt: {{query}} </h6>
-                      </div>
-                   </div>  -->
  
                    <div class="input-group mb-3">
                      <div class="input-group-prepend">
-                        <span class="input-group-text" id="inputGroup-sizing-default">Sub-topic (Terms | Documents)</span>
+                        <span class="input-group-text" id="inputGroup-sizing-default">Sub-topics</span>
                      </div>
  
                      <select class="form-select form-control" name="sub_topic_selected" id="select-subtopic" aria-label="Default select example">
@@ -150,6 +143,10 @@
                      </select>
                   </div>
 
+                  <div class="justify-content-center text-center">
+                     <li> Read all the sub-topic names and please answer the <mark>Question 1</mark> and click on <mark>"Submit question 1"</mark>.</li>
+                 </div>
+                 <br/>
                   <div class="card">
                      <div class="card-header">
                          <h5 class="card-title">Question 1</h5>
@@ -176,59 +173,11 @@
                     <hr />
 
  
-                      <!-- <div class="input-group mb-3">
-                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Sprache</span>
-                         </div>
-                         <select class="form-select form-control" name="lang" id="select-doc" aria-label="Default select example">
-                            <option value="1">deutsch</option>
-                            <option value="2">englisch</option>
-                            <option value="3" selected>multilingual</option>
-                         </select>
-                      </div>
-                      <div class="input-group mb-3">
-                         <div class="input-group-prepend">
-                            <span class="input-group-text" id="inputGroup-sizing-default">Anzahl der Abrufe</span>
-                         </div>
-                        <input type="number" min="1" value="15" class="form-control" id="match_top" name="match_top">
-                      </div>
-                   
-                      <div class="m-2">
-                         <div class="btn-group  btn-group-toggle">
-                             <input type="radio" class="btn-check" name="search_type" value="es_search" id="radio1" autocomplete="off" disabled>
-                             <label class="btn btn-outline-primary" for="radio1">BM-25 Suche</label>
-                         
-                             <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" disabled>
-                             <label class="btn btn-outline-primary" for="radio2">Semantische Suche</label>
- 
-                             <input type="radio" class="btn-check" name="search_type" value="optimistic_search" id="radio3" autocomplete="off" disabled>
-                             <label class="btn btn-outline-primary" for="radio3">Optimistische Suche</label>
- 
-                             <input type="radio" class="btn-check" name="search_type" value="top_candidate_pool" id="radio3" autocomplete="off" disabled>
-                             <label class="btn btn-outline-primary" for="radio3">Top candidate pool</label>
- 
-                             <input type="radio" class="btn-check" name="search_type" value="semantic_search" id="radio2" autocomplete="off" checked>
-                             <label class="btn btn-outline-primary" for="radio2">Sub-topic Suche</label>
- 
-                         </div>
-                     </div>
-                   
-                   <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="phrase_query" >
-                      <label class="form-check-label" for="phrase_search">Phrasensuche</label>
-                   </div>
-                   <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="fuzzy_query" >
-                      <label class="form-check-label" for="fuzzy_search">Fuzzysuche</label>
-                   </div> -->
-                   <!-- <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="search_concept" disabled>
-                      <label class="form-check-label" for="concept_search">Search Concept</label>
-                   </div>
-                   <div class="form-check">
-                      <input class="form-check-input" type="checkbox" value="True" id="flexCheckDefault" name="search_archive" disabled>
-                      <label class="form-check-label" for="search_archive">Search Archive</label>
-                   </div> -->
+                  <div class="justify-content-center text-center">
+                     <li> Select a sub-topic from the drop-down menu <mark>"Sub-topics"</mark> and click on <mark>"Query + Sub-topic Search"</mark>.</li>
+                  </div>
+                  <br/>
+
                    <div class="container">
                      <div class="col-md-12 text-center">
                         <button type="submit" class="btn btn-primary mt-2">Query + Sub-topic search</button>
@@ -236,8 +185,7 @@
                      </div>
                  </div>
                    <br>
-               
- 
+
                    <table class="table table-striped table-hover border table-sm">
                       <thead>
                          <tr>
@@ -257,51 +205,23 @@
                            <td>Sub-topic</td>
                            <td id="table_sub_topic">{{search_data['sub_topic']}}</td>
                          </tr>
-                         <!-- <tr>
-                           <th scope="row">3</th>
-                           <td>Searchstrategie</td>
-                           <td>{{search_data['search_strategy']}}</td>
-                         </tr>
-                          <tr>
-                            <th scope="row">4</th>
-                            <td>Sprache</td>
-                            <td>{{search_data['language']}}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">6</th>
-                            <td>Kommentare</td>
-                            <td>{{search_data['comments']}}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">7</th>
-                            <td>Elastic search results</td>
-                            <td>{{search_data['es_result_cnt']}}</td>
-                          </tr>
-                           <tr>
-                             <th scope="row">8</th>
-                             <td>Semantic search results</td>
-                             <td>{{search_data['ss_result_cnt']}}</td>
-                           </tr>
-                           <tr>
-                             <th scope="row">9</th>
-                             <td>Candidate pool results</td>
-                             <td>{{search_data['cdd_result_cnt']}}</td>
-                           </tr> -->
+                         
                        </tbody>
                    </table>
  
                    <input type="hidden" name="UserID"  id="query" value="{{search_data['original_query']}}"/>
                    <input type="hidden" name="UserID"  id="sub_topic" value="{{search_data['sub_topic']}}"/>
  
-                   <!-- <br>
-                   <div class="row">
-                      <div class="col-8 d-flex justify-content-center text-center">
-                         <h5>Anzahl der gefundenen Top-Dokumente: {{total_hits}}</h5>
-                      </div>
-                   </div>
-                   <br> -->
+                  
                 </div>
              </div>
+
+            <div class ="row">            
+             <div class="justify-content-center  text-center">
+               <li> Read through the articles compiled by both systems A and B.</li>
+            </div>
+         </div>
+            <br/>
 
              <div class ="row">
                <div class="col-md-6">
@@ -371,7 +291,7 @@
                 <br>
             <div class="text-center">
                <p>
-               <strong><h5> Fill out the survey based on the above retrieved results: </h5></strong>
+               <h5> Answer the questions 2, 3 and 4 based on the above retrieved results and click on <mark>"Submit questions 2, 3, 4"</mark> </h5>
                </p>
                <p>
                Search query: 
@@ -773,6 +693,10 @@ $(document).on('click', ".readmore-btn", function(){
         </script>
    </body>
 <style>
+
+mark {
+  background-color: lightcyan;
+}
 
 .card-body p{
    font-size: 15px;
