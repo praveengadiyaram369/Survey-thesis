@@ -523,14 +523,14 @@ def get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par):
     cluster_data_df['topic'] = cluster_data_df.apply(lambda x:get_nearest_keyword(x['candidate_words'], x['candidate_vecs'], x['mean_vec']), axis=1)
     cluster_data_df['topic'] = cluster_data_df.apply(lambda x:x['topic'][0].upper()+x['topic'][1:], axis=1)
 
-    # cluster_data_df['topic_sim'] = cluster_data_df.apply(lambda x:cosine_similarity(get_modified_vectors(x['mean_vec']), get_modified_vectors(query_vec))[0][0], axis=1)
-    cluster_data_df['cluster_size'] = cluster_data_df.apply(lambda x:len(x['candidate_words']), axis=1)
+    cluster_data_df['topic_sim'] = cluster_data_df.apply(lambda x:cosine_similarity(get_modified_vectors(x['mean_vec']), get_modified_vectors(query_vec))[0][0], axis=1)
+    # cluster_data_df['cluster_size'] = cluster_data_df.apply(lambda x:len(x['candidate_words']), axis=1)
 
     cluster_data_df['page_id_list'] = cluster_data_df.apply(lambda x:get_topic_documents(x['candidate_words'], final_df), axis=1)
 
     # cluster_data_df['topic_name'] = cluster_data_df.apply(lambda x:x['topic']+' ('+str(len(x['candidate_words']))+' | '+str(len(x['page_id_list']))+')', axis=1)
 
-    cluster_data_df = cluster_data_df.sort_values(by=['cluster_size'], ascending=False)
+    cluster_data_df = cluster_data_df.sort_values(by=['topic_sim'], ascending=False)
     cluster_data_df = cluster_data_df.reset_index(drop=True)
 
     top_cluster_name = cluster_data_df.topic.values[0]
