@@ -178,63 +178,58 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
     if query.isnumeric():
         query = query_keywords_dict[str(query)]
 
-    query_keyword_list = []
-    with open(os.getcwd()+'/../query_keywords_example.txt', 'r') as f:
-        query_keyword_list = f.read().splitlines()
-
     start_time = time.time()
-    for query in query_keyword_list:
 
-        logging.info(f'Query selected: {query}')
+    logging.info(f'Query selected: {query}')
 
-        min_clust_size = int(min_clust_size)
-        min_samples = int(min_samples)
-        cand_sel_par = int(cand_sel_par)
+    min_clust_size = int(min_clust_size)
+    min_samples = int(min_samples)
+    cand_sel_par = int(cand_sel_par)
 
-        if min_clust_size == 0:
-            min_clust_size = MIN_CLUSTER_SIZE
-        
-        if min_samples == 0:
-            min_samples = MIN_SAMPLES
+    if min_clust_size == 0:
+        min_clust_size = MIN_CLUSTER_SIZE
+    
+    if min_samples == 0:
+        min_samples = MIN_SAMPLES
 
-        if cand_sel_par == 0:
-            cand_sel_par = CP_THRESHOLD
+    if cand_sel_par == 0:
+        cand_sel_par = CP_THRESHOLD
 
-        lang = 3
-        match_top = 55
+    lang = 3
+    match_top = 55
 
-        is_german_compoundword = False
-        for word in query.split():
-            if detect_german_compoundword(word):
-                is_german_compoundword = True
-                break
+    is_german_compoundword = False
+    for word in query.split():
+        if detect_german_compoundword(word):
+            is_german_compoundword = True
+            break
 
-        search_concept = False
-        fuzzy_query = False
-        phrase_query = False
+    search_concept = False
+    fuzzy_query = False
+    phrase_query = False
 
-        total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off=0.75)
+    total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off=0.75)
 
-        if is_german_compoundword:
-            lang = 1
-        total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+    if is_german_compoundword:
+        lang = 1
+    total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
 
-        results = get_merged_results(results_semantic, results_es)
+    results = get_merged_results(results_semantic, results_es)
 
-        topic_dict = get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par)
-        write_document_data(topic_dict, session_data+session_id+'.json')
+    topic_dict = get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par)
+    write_document_data(topic_dict, session_data+session_id+'.json')
 
-        sub_topics = list(topic_dict.keys())
-        sub_topics_dict = dict()
-        sub_topic_list = []
+    sub_topics = list(topic_dict.keys())
+    sub_topics_dict = dict()
+    sub_topic_list = []
 
-        for idx, topic in enumerate(sub_topics):
-            sub_topics_dict[str(idx+1)] = topic
-            sub_topic_list.append({'id':str(idx+1), 'name': topic})
+    for idx, topic in enumerate(sub_topics):
+        sub_topics_dict[str(idx+1)] = topic
+        sub_topic_list.append({'id':str(idx+1), 'name': topic})
 
     end_time = time.time()
 
-    time_taken = round((end_time-start_time)/len(query_keyword_list), 2)
+    time_taken = round((end_time-start_time), 2)
     logging.info(f'Time taken: {time_taken}')
 
     json_compatible_item_data = jsonable_encoder(json.dumps(sub_topic_list))
