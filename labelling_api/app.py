@@ -15,6 +15,7 @@ from survey_db_utils import *
 import json
 from random import shuffle
 import uuid
+import time
 
 app = FastAPI(debug=True, root_path="/mda")
 templates = Jinja2Templates(directory="templates/")
@@ -177,52 +178,62 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
     if query.isnumeric():
         query = query_keywords_dict[str(query)]
 
-    logging.info(f'Query selected: {query}')
+    query_list, query_keywords_dict = get_keyword_query_data()
 
-    min_clust_size = int(min_clust_size)
-    min_samples = int(min_samples)
-    cand_sel_par = int(cand_sel_par)
+    start_time = time.time()
+    for query in query_list:
 
-    if min_clust_size == 0:
-        min_clust_size = MIN_CLUSTER_SIZE
-    
-    if min_samples == 0:
-        min_samples = MIN_SAMPLES
+        logging.info(f'Query selected: {query}')
 
-    if cand_sel_par == 0:
-        cand_sel_par = CP_THRESHOLD
+        min_clust_size = int(min_clust_size)
+        min_samples = int(min_samples)
+        cand_sel_par = int(cand_sel_par)
 
-    lang = 3
-    match_top = 55
+        if min_clust_size == 0:
+            min_clust_size = MIN_CLUSTER_SIZE
+        
+        if min_samples == 0:
+            min_samples = MIN_SAMPLES
 
-    is_german_compoundword = False
-    for word in query.split():
-        if detect_german_compoundword(word):
-            is_german_compoundword = True
-            break
+        if cand_sel_par == 0:
+            cand_sel_par = CP_THRESHOLD
 
-    search_concept = False
-    fuzzy_query = False
-    phrase_query = False
+        lang = 3
+        match_top = 55
 
-    total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off=0.75)
+        is_german_compoundword = False
+        for word in query.split():
+            if detect_german_compoundword(word):
+                is_german_compoundword = True
+                break
 
-    if is_german_compoundword:
-        lang = 1
-    total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
+        search_concept = False
+        fuzzy_query = False
+        phrase_query = False
 
-    results = get_merged_results(results_semantic, results_es)
+        total_hits_semantic, results_semantic = get_query_result_semantic(query, lang, match_top, cut_off=0.75)
 
-    topic_dict = get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par)
-    write_document_data(topic_dict, session_data+session_id+'.json')
+        if is_german_compoundword:
+            lang = 1
+        total_hits_es, results_es = get_query_result(es, query, lang, phrase_query, fuzzy_query, search_concept, match_top)
 
-    sub_topics = list(topic_dict.keys())
-    sub_topics_dict = dict()
-    sub_topic_list = []
+        results = get_merged_results(results_semantic, results_es)
 
-    for idx, topic in enumerate(sub_topics):
-        sub_topics_dict[str(idx+1)] = topic
-        sub_topic_list.append({'id':str(idx+1), 'name': topic})
+        topic_dict = get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par)
+        write_document_data(topic_dict, session_data+session_id+'.json')
+
+        sub_topics = list(topic_dict.keys())
+        sub_topics_dict = dict()
+        sub_topic_list = []
+
+        for idx, topic in enumerate(sub_topics):
+            sub_topics_dict[str(idx+1)] = topic
+            sub_topic_list.append({'id':str(idx+1), 'name': topic})
+
+    end_time = time.time()
+
+    time_taken = round((start_time-end_time)/len(query_list), 2)
+    logging.info(f'Time taken: {time_taken}')
 
     json_compatible_item_data = jsonable_encoder(json.dumps(sub_topic_list))
     return JSONResponse(content=json_compatible_item_data)
