@@ -104,7 +104,9 @@ def get_sent_transformers_keywords(keywords, query_vec, max_keyword_cnt=30):
     keywords = list(dict(keywords).keys())
 
     for kw in keywords: 
-        candidate_embeddings_keywords.append(m.unpackb(rdb.get(kw)))
+        # candidate_embeddings_keywords.append(m.unpackb(rdb.get(kw)))
+        candidate_embeddings_keywords.append(tf_model(kw)['outputs'].numpy()[0])
+
                 
     query_distances = cosine_similarity([query_vec], candidate_embeddings_keywords)
     subtopic_keywords_dict = dict()

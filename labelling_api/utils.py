@@ -503,7 +503,9 @@ def get_subtopic(results, query, min_clust_size, min_samples, cand_sel_par):
     for idx, row in final_df.iterrows():
         final_candidate_pool.extend(row['candidate_pool'])
 
-    final_candidate_pool_vecs = [m.unpackb(rdb.get(nc)) for nc in final_candidate_pool]
+    # final_candidate_pool_vecs = [m.unpackb(rdb.get(nc)) for nc in final_candidate_pool]
+    final_candidate_pool_vecs = [tf_model(nc)['outputs'].numpy()[0] for nc in final_candidate_pool]
+
     df_data = []
     for word, vec in zip(final_candidate_pool, final_candidate_pool_vecs):
         df_data.append((word, vec))

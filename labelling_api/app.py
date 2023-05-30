@@ -178,10 +178,12 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
     if query.isnumeric():
         query = query_keywords_dict[str(query)]
 
-    query_list, query_keywords_dict = get_keyword_query_data()
+    query_keyword_list = []
+    with open(os.getcwd()+'/../query_keywords_example.txt', 'r') as f:
+        query_keyword_list = f.read().splitlines()
 
     start_time = time.time()
-    for query in query_list:
+    for query in query_keyword_list:
 
         logging.info(f'Query selected: {query}')
 
@@ -232,7 +234,7 @@ async def get_sub_topics(request: Request, query: str=Form(...), min_clust_size:
 
     end_time = time.time()
 
-    time_taken = round((start_time-end_time)/len(query_list), 2)
+    time_taken = round((end_time-start_time)/len(query_keyword_list), 2)
     logging.info(f'Time taken: {time_taken}')
 
     json_compatible_item_data = jsonable_encoder(json.dumps(sub_topic_list))
