@@ -25,7 +25,7 @@ app.mount('/static',
         name='static')
 
 username = 'elastic'
-password = 'mit22fkie!'
+password = 'elastic!'
 
 hostname = 'elasticsearch'
 port = '9200'

@@ -15,8 +15,7 @@ services:
     image: mda-webapp:latest
     restart: unless-stopped
     volumes: 
-      - /mnt/data/mitera-osint/rss_backup/210705_news:/usr/src/web_app/data
-      # - C:/Users/sri.sai.praveen.gadi/Downloads/scraping_output/210705_news/data:/usr/src/web_app/data
+      - /mnt/data/xxx-osint/rss_backup/210705_news:/usr/src/web_app/data
     networks:
       - public_frontend
     labels:

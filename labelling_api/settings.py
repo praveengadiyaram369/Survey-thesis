@@ -26,7 +26,6 @@ import string
 from nltk.corpus import stopwords
 
 basepath = '/usr/src/web_app/data/'
-# basepath = 'C:/Users/sri.sai.praveen.gadi/Music/data_mount/'
 
 technology_document_data_path = basepath + 'data/input/technologie_document_data.json'
 military_document_data_path =   basepath + 'data/input/military_document_data.json'
@@ -41,7 +40,7 @@ classified_pos_docs_path = basepath + 'data/input/new_labeled_negative_set.json'
 third_class_docs_path = basepath + 'data/output/third_class_data.txt'
 aug_docs_path = basepath + 'data/output/doc_aug_info_data.txt'
 
-es_index = 'mitera_scraped_docs'
+es_index = 'xxx_scraped_docs'
 
 tf_model = hub.load(basepath+ 'models/USE_model')
 fasttext_model = fasttext.load_model(basepath + 'models/lid.176.bin')
@@ -58,7 +57,7 @@ de_df = pd.read_pickle(basepath+'de_dataframe.pkl')
 # final_keywords_dataframe = pd.read_pickle(basepath+'final_keywords_dataframe.pkl')
 final_keywords_dataframe = pd.read_pickle(basepath+'final_keywords_dataframe_cdd.pkl')
 
-LOG_FILE = basepath + f'mitera_webapp_log.log'
+LOG_FILE = basepath + f'xxx_webapp_log.log'
 logging.basicConfig(handlers=[logging.FileHandler(filename=LOG_FILE, 
                                                  encoding='utf-8', mode='a+')],
                     level=logging.INFO)
@@ -84,4 +83,4 @@ MIN_SAMPLES = 10
 
 MAX_SURVEY_COUNT = 10
 survey_sqlite_db_path = basepath+'survey_results_dataset.db'
-session_data = basepath+'mitera_session_data/'
+session_data = basepath+'xxx_session_data/'

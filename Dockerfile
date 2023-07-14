@@ -4,9 +4,6 @@ FROM python:3.7-slim
 HEALTHCHECK --interval=30s --timeout=5s --retries=3 CMD wget --no-proxy -O - -q localhost:8080
 # HEALTHCHECK NONE
 
-ENV http_proxy=http://www-proxy.fkie.fraunhofer.de:3128/
-ENV https_proxy=http://www-proxy.fkie.fraunhofer.de:3128/
-ENV no_proxy="auth,localhost,127.0.0.1,192.168.0.1/24"
 
 RUN apt-get update -qq && apt-get install --no-install-recommends -y wget g++
 ENV PROJECT_DIR /usr/src/web_app

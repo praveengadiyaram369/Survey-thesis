@@ -18,10 +18,10 @@ def insert_survey_output_label(session_id, query, survey_label_5):
 
     logging.info('before inserting into the table')
 
-    insert_table_query = '''INSERT INTO mitera_survey_output VALUES (?, ?, ?, ?);'''
+    insert_table_query = '''INSERT INTO xxx_survey_output VALUES (?, ?, ?, ?);'''
     sqlite_common_query_seq(insert_table_query, sql_select=False, sql_insert_params=(session_id, query, int(survey_label_5), datetime.now()))
 
-    select_table_query = """SELECT session_id, query, survey_label_5  FROM mitera_survey_output where session_id= ? and query= ?"""
+    select_table_query = """SELECT session_id, query, survey_label_5  FROM xxx_survey_output where session_id= ? and query= ?"""
     get_db_contents(select_table_query, [session_id, query])
 
     logging.info(f'finished inserting into the table: query: {query}, label:{survey_label_5}')
@@ -63,7 +63,7 @@ def create_survey_tables():
     );"""
     sqlite_common_query_seq(create_table_query_2)
 
-    create_table_query_3 = """CREATE TABLE IF NOT EXISTS mitera_survey_output (
+    create_table_query_3 = """CREATE TABLE IF NOT EXISTS xxx_survey_output (
         session_id text NOT NULL,
         query text NOT NULL,
         survey_label_5 integer NOT NULL, 
